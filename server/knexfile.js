@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { DB_LOCAL_DBNAME, DB_LOCAL_USER, DB_LOCAL_PASSWORD } = process.env;
 
 module.exports = {
