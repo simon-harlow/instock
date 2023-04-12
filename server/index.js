@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
-const PORT = 8080;
 const cors = require("cors");
 
 app.use(cors());
+router.use(express.json());
 
 // helpful console output for each interaction, good for auditing purposes
 app.use((req, res, next) => {
