@@ -15,7 +15,6 @@ exports.addWarehouse = (req, res) => {
   }
 
   knex("warehouse").then((data) => {
-    const newWarehouseURL = `/warehouses/${data[0]}`;
-    res.status(201).location(newWarehouseURL).send(newWarehouseURL);
+    res.send(data);
   });
 };
