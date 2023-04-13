@@ -1,6 +1,8 @@
+const validation = require('./validation');
+
 const knex = require('knex')(require('../knexfile'));
 
-exports.addWarehouse = (req, res) => {
+const addWarehouse = (req, res) => {
     if (
         !req.body.warehouse_name ||
         !req.body.address ||
@@ -8,13 +10,15 @@ exports.addWarehouse = (req, res) => {
         !req.body.country ||
         !req.body.contact_name ||
         !req.body.contact_position ||
-        !req.body.contact_email ||
+        !validation.emailValidate(req.body.contact_email) ||
         !req.body.contact_phone
     ) {
-        return res.status(400).send('Please enter non-empty fields');
+        return res.status(400).send('Please enter valid fields');
     }
 
     knex('warehouse').then(data => {
-        res.send();
+        res.send('success');
     });
 };
+
+module.exports = { addWarehouse };
