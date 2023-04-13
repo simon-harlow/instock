@@ -32,3 +32,10 @@ The site is for a company to manage the inventory of stock across multiple wareh
 * [Rajat](https://github.com/rjtbansal)
 * [Roisin](https://github.com/RoisOneill)
 * [Jason](https://github.com/projectyang)
+
+## Please add .env by following template
+PORT=8080
+BACKEND_URL=http://localhost
+DB_LOCAL_DBNAME=instock
+DB_LOCAL_USER=root
+DB_LOCAL_PASSWORD=rootroot
