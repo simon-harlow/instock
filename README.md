@@ -1,5 +1,14 @@
 # InStock
 
+## Setup for Team Members
+
+Copy this file to .env and replace the values with your own configuration values.
+
+```
+#The port that the server will listen on.
+PORT=8080
+```
+
 ## Description
 This was a group project and the first project where we were using a MySQL database to store data.
 

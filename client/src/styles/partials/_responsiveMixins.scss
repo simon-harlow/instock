@@ -1,0 +1,22 @@
+@use './breakpoints' as *;
+
+//Mobile responsive mixin
+@mixin mobile {
+    @media (min-width: $mobile-min-width) and (max-width: $mobile-max-width) {
+        @content;
+    }
+}
+
+//Tablet responsive mixin
+@mixin tablet {
+    @media (min-width: $tablet-min-width) and (max-width: $tablet-max-width) {
+        @content;
+    }
+}
+
+//Desktop responsive mixin
+@mixin desktop {
+    @media (min-width: $desktop-min-width) and (max-width: $desktop-max-width){
+        @content;
+    }
+}

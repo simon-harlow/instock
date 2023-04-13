@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
-const PORT = 8080;
 const cors = require("cors");
+const PORT = require('dotenv').config()
 
 app.use(cors());
+
 
 // helpful console output for each interaction, good for auditing purposes
 app.use((req, res, next) => {
@@ -15,6 +16,6 @@ app.use((req, res, next) => {
 
 
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
 });
