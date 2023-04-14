@@ -3,3 +3,9 @@ exports.emailValidate = email => {
     const valid = re.exec(email);
     return valid;
 };
+
+exports.nonEmptyValidate = item => {
+    const re = /^(?!\s*$)/;
+    const valid = re.exec(item);
+    return valid;
+};
