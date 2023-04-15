@@ -114,6 +114,7 @@ const deleteWarehouse = (req, res) => {
 const getInventories = (req, res) => {
     knex('inventories')
         .where({ warehouse_id: req.params.id })
+        .select('id', 'item_name', 'category', 'status', 'quantity')
         .then(data => {
             if (data.length === 0) {
                 res
