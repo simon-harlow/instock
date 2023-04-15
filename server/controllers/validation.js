@@ -1,3 +1,5 @@
+const { validate: uuidValidate } = require('uuid');
+
 exports.emailValidate = email => {
     const re = /^[a-zA-Z0-9]+([\.\-\_]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\.\-]?[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]{2,3})$/;
     const valid = re.exec(email);
@@ -15,3 +17,18 @@ exports.nonEmptyValidate = item => {
     const valid = re.exec(item);
     return valid;
 };
+
+exports.quantityValidate = quantity => {
+    const numPassed = parseInt(quantity);
+    if (isNaN(numPassed) || numPassed !== quantity) {
+        // input is not a valid integer
+        return false;
+    } else {
+        // input is a valid integer
+        return true;
+    }
+};
+
+exports.uuidValidate = id => {
+    return uuidValidate(id);
+}
