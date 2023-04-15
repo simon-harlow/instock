@@ -69,8 +69,12 @@ const deleteWarehouse = (req, res) => {
     knex('warehouses')
         .delete()
         .where({ id: req.params.id })
-        .then(() => {
-            res.status(204).send(`Warehouse with id: ${req.params.id} has been deleted`);
+        .then((data) => {
+            if (data === 0) {
+                res.status(400).send(`Warehouse with id: ${req.params.id} does not exist`);
+            } else {
+                res.status(200).send(`Warehouse with id: ${req.params.id} has been deleted`);
+            }
         })
         .catch((err) =>
             res.status(400).send(`Error deleting Warehouse ${req.params.id} ${err}`)
