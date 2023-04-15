@@ -15,7 +15,9 @@ app.use((req, res, next) => {
 // Put routes here
 app.use(express.json());
 const warehouseRoutes = require('./routes/warehouseRoute');
+const inventoryRoutes = require('./routes/inventoryRoute')
 app.use('/api/warehouses', warehouseRoutes);
+app.use('/api/inventories', inventoryRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

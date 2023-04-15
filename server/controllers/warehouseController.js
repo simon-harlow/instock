@@ -8,7 +8,6 @@ const index = (_req, res) => {
             data.map(warehouse => {
                 delete warehouse.created_at;
                 delete warehouse.updated_at;
-                return warehouse;
             });
             res.status(200).json(data);
         })
@@ -21,7 +20,6 @@ const singleWarehouse = (req, res) => {
     knex('warehouses')
         .where({ id: req.params.id })
         .then(data => {
-            console.log(data.length);
             if (data.length === 0) {
                 return res
                     .status(404)
