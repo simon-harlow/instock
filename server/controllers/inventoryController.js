@@ -70,7 +70,6 @@ const addInventory = (req, res) => {
                     .then(data => {
                         res.status(201).send(newInventory);
                     })
-                
             }
         })
         .catch((err) =>
