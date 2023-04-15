@@ -17,6 +17,7 @@ const index = (_req, res) => {
         });
 };
 
+
 const singleWarehouse = (req, res) => {
     knex('warehouses')
         .where({ id: req.params.id })
@@ -65,4 +66,36 @@ const addWarehouse = (req, res) => {
         });
 };
 
-module.exports = { index, singleWarehouse, addWarehouse };
+const editWarehouse = (req, res) => {
+    if (
+        !validation.nonEmptyValidate(req.body.warehouse_name) ||
+        !validation.nonEmptyValidate(req.body.address) ||
+        !validation.nonEmptyValidate(req.body.city) ||
+        !validation.nonEmptyValidate(req.body.country) ||
+        !validation.nonEmptyValidate(req.body.contact_name) ||
+        !validation.nonEmptyValidate(req.body.contact_position) ||
+        !validation.emailValidate(req.body.contact_email) ||
+        !validation.phoneValidate(req.body.contact_phone)
+    ) {
+        return res.status(400).send('Please enter valid fields');
+    }
+    const updatedWarehouse = {id: req.params.id , ...req.body };
+    console.log(updatedWarehouse);
+    knex('warehouses')
+        .update(  updatedWarehouse)
+        .where({ id: req.params.id })
+        .then(data =>{
+            console.log(data);
+            if(data === 0 ){
+                res.status(400).send(`Error warehouse with id: ${req.params.id} is not defined`);
+            }
+            res.status(200).send(updatedWarehouse);
+        })
+        .catch(err =>{
+            res.status(400).send(`Error warehouse with id: ${req.params.id} err ${err}`);
+        });
+};
+
+
+
+module.exports = { index, singleWarehouse, addWarehouse, editWarehouse };
