@@ -55,7 +55,7 @@ const updateInventory = (req, res) => {
         return res.status(400).send('Please enter valid fields');
     }
 
-    // Check if warehouse_id is a valid foreign key value in the warehouses table
+    // if time, we can re-factor this to be a join on the warehouse_id field
     knex('warehouses')
         .where({ id: req.body.warehouse_id })
         .select('id')
@@ -65,17 +65,38 @@ const updateInventory = (req, res) => {
             }
 
             return knex('inventories')
-                .update(req.body)
                 .where({ id: req.params.id })
-                .then(() => {
-                    res.status(200).send(`Inventory with id: ${req.params.id} has been updated`);
+                .select('*')
+                .then((rows) => {
+                    if (!rows.length) {
+                        return res.status(400).send(`Inventory item with id ${req.params.id} not found`);
+                    }
+
+                    return knex('inventories')
+                        .update(req.body)
+                        .where({ id: req.params.id })
+                        .then(() => {
+                            const updatedItem = {
+                                id: req.params.id,
+                                warehouse_id: req.body.warehouse_id,
+                                item_name: req.body.item_name,
+                                description: req.body.description,
+                                category: req.body.category,
+                                status: req.body.status,
+                                quantity: req.body.quantity
+                            };
+                            res.status(200).send(updatedItem);
+                        })
+                        .catch((err) =>
+                            res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`)
+                        );
                 })
                 .catch((err) =>
-                    res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`)
+                    res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
                 );
         })
         .catch((err) =>
-            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+            res.status(400).send(`Error retrieving warehouse ${req.body.warehouse_id} ${err}`)
         );
 };
 
