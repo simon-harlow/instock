@@ -111,4 +111,24 @@ const deleteWarehouse = (req, res) => {
         );
 };
 
-module.exports = { index, singleWarehouse, addWarehouse, deleteWarehouse, editWarehouse };
+const getInventories = (req, res) => {
+    knex('inventories')
+        .where({ warehouse_id: req.params.id })
+        .then(data => {
+            if (data.length === 0) {
+                res
+                    .status(404)
+                    .send(`Record with id: ${req.params.id} is not found`);
+            }
+            else{
+                res.status(200).send(data);
+            }
+        })
+        .catch(err =>
+            res
+                .status(400)
+                .send(`Error retrieving warehouse ${req.params.id} ${err}`)
+        );
+};
+
+module.exports = { index, singleWarehouse, addWarehouse, deleteWarehouse, editWarehouse, getInventories };
