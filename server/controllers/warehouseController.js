@@ -8,7 +8,6 @@ const index = (_req, res) => {
             data.map(warehouse => {
                 delete warehouse.created_at;
                 delete warehouse.updated_at;
-                return warehouse;
             });
             res.status(200).json(data);
         })
@@ -22,7 +21,6 @@ const singleWarehouse = (req, res) => {
     knex('warehouses')
         .where({ id: req.params.id })
         .then(data => {
-            console.log(data.length);
             if (data.length === 0) {
                 return res
                     .status(404)
@@ -97,6 +95,20 @@ const editWarehouse = (req, res) => {
         });
 };
 
+const deleteWarehouse = (req, res) => {
+    knex('warehouses')
+        .delete()
+        .where({ id: req.params.id })
+        .then((data) => {
+            if (data === 0) {
+                res.status(400).send(`Warehouse with id: ${req.params.id} does not exist`);
+            } else {
+                res.status(200).send(`Warehouse with id: ${req.params.id} has been deleted`);
+            }
+        })
+        .catch((err) =>
+            res.status(400).send(`Error deleting Warehouse ${req.params.id} ${err}`)
+        );
+};
 
-
-module.exports = { index, singleWarehouse, addWarehouse, editWarehouse };
+module.exports = { index, singleWarehouse, addWarehouse, deleteWarehouse, editWarehouse };
