@@ -11,7 +11,7 @@ import ItemForm from './components/ItemForm/ItemForm';
 
 function App() {
     return (
-        <>
+        <div className='App'>
             <BrowserRouter>
                 <Box>hw</Box>
                 <Routes>
@@ -26,7 +26,7 @@ function App() {
                     <Route path="/inventories/edit/:iid" element={<ItemForm />}></Route>
                 </Routes>
             </BrowserRouter>
-        </>
+        </div>
     );
 }
 
