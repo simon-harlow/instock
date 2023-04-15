@@ -43,9 +43,11 @@ const singleInventory = (req, res) => {
         );
 };
 
-const updateInventory = (req, res) => {
+
+const addInventory = (req, res) => {
+    console.log(req.body);
     if (
-        !validation.uuidValidate(req.body.warehouse_id) ||
+        !validation.nonEmptyValidate(req.body.warehouse_id) ||
         !validation.nonEmptyValidate(req.body.item_name) ||
         !validation.nonEmptyValidate(req.body.description) ||
         !validation.nonEmptyValidate(req.body.category) ||
@@ -54,8 +56,6 @@ const updateInventory = (req, res) => {
     ) {
         return res.status(400).send('Please enter valid fields');
     }
-
-    // Check if warehouse_id is a valid foreign key value in the warehouses table
     knex('warehouses')
         .where({ id: req.body.warehouse_id })
         .select('id')
@@ -63,45 +63,20 @@ const updateInventory = (req, res) => {
             if (!rows.length) {
                 return res.status(400).send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
             }
-
-            return knex('inventories')
-                .update(req.body)
-                .where({ id: req.params.id })
-                .then(() => {
-                    res.status(200).send(`Inventory with id: ${req.params.id} has been updated`);
-                })
-                .catch((err) =>
-                    res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`)
-                );
+            else{
+                const newInventory = {id: uuid(), ...req.body};
+                return knex('inventories')
+                    .insert(newInventory)
+                    .then(data => {
+                        res.status(201).send(newInventory);
+                    })
+                
+            }
         })
         .catch((err) =>
-            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+            res.status(400).send(`Error creating inventory ${req.params.id} ${err}`)
         );
-};
-
-const addInventory = (req, res) => {
-    console.log(req.body);
-    if (
-        !validation.uuidValidate(req.body.warehouse_id) ||
-        !validation.nonEmptyValidate(req.body.item_name) ||
-        !validation.nonEmptyValidate(req.body.description) ||
-        !validation.nonEmptyValidate(req.body.category) ||
-        !validation.nonEmptyValidate(req.body.status) ||
-        !validation.nonEmptyValidate(req.body.quantity)
-    ) {
-        return res.status(400).send('Please enter valid fields');
-    }
-
-    const newInventory = { id: uuid(), ...req.body };
     
-    knex('inventories')
-        .insert(newInventory)
-        .then(data => {
-            res.status(201).send(newInventory);
-        })
-        .catch((err) =>
-            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
-        );
 };
 
-module.exports = { index, singleInventory, updateInventory, addInventory };
+module.exports = { index, singleInventory, addInventory };
