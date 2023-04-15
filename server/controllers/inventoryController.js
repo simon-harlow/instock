@@ -87,16 +87,16 @@ const addInventory = (req, res) => {
         !validation.nonEmptyValidate(req.body.description) ||
         !validation.nonEmptyValidate(req.body.category) ||
         !validation.nonEmptyValidate(req.body.status) ||
-        !validation.quantityValidate(req.body.quantity)
+        !validation.nonEmptyValidate(req.body.quantity)
     ) {
         return res.status(400).send('Please enter valid fields');
     }
 
     const newInventory = { id: uuid(), ...req.body };
-
+    
     knex('inventories')
         .insert(newInventory)
-        .then(_data => {
+        .then(data => {
             res.status(201).send(newInventory);
         })
         .catch((err) =>
