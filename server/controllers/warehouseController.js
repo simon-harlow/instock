@@ -2,6 +2,43 @@ const { v4: uuid } = require('uuid');
 const validation = require('./validation');
 const knex = require('knex')(require('../knexfile'));
 
+const index = (_req, res) => {
+    knex('warehouses')
+        .then(data => {
+            data.map(warehouse => {
+                delete warehouse.created_at;
+                delete warehouse.updated_at;
+                return warehouse;
+            });
+            res.status(200).json(data);
+        })
+        .catch(err => {
+            res.status(400).send(`Error retrieving Warehouses: ${err}`);
+        });
+};
+
+const singleWarehouse = (req, res) => {
+    knex('warehouses')
+        .where({ id: req.params.id })
+        .then(data => {
+            console.log(data.length);
+            if (data.length === 0) {
+                return res
+                    .status(404)
+                    .send(`Record with id: ${req.params.id} is not found`);
+            }
+
+            delete data[0].created_at;
+            delete data[0].updated_at;
+            res.status(200).json(data[0]);
+        })
+        .catch(err =>
+            res
+                .status(400)
+                .send(`Error retrieving warehouse ${req.params.id} ${err}`)
+        );
+};
+
 const addWarehouse = (req, res) => {
     if (
         !validation.nonEmptyValidate(req.body.warehouse_name) ||
@@ -28,4 +65,4 @@ const addWarehouse = (req, res) => {
         });
 };
 
-module.exports = { addWarehouse };
+module.exports = { index, singleWarehouse, addWarehouse };
