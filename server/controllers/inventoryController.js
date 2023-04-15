@@ -79,4 +79,29 @@ const updateInventory = (req, res) => {
         );
 };
 
-module.exports = { index, singleInventory, updateInventory };
+const addInventory = (req, res) => {
+    console.log(req.body);
+    if (
+        !validation.uuidValidate(req.body.warehouse_id) ||
+        !validation.nonEmptyValidate(req.body.item_name) ||
+        !validation.nonEmptyValidate(req.body.description) ||
+        !validation.nonEmptyValidate(req.body.category) ||
+        !validation.nonEmptyValidate(req.body.status) ||
+        !validation.quantityValidate(req.body.quantity)
+    ) {
+        return res.status(400).send('Please enter valid fields');
+    }
+
+    const newInventory = { id: uuid(), ...req.body };
+
+    knex('inventories')
+        .insert(newInventory)
+        .then(_data => {
+            res.status(201).send(newInventory);
+        })
+        .catch((err) =>
+            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+        );
+};
+
+module.exports = { index, singleInventory, updateInventory, addInventory };
