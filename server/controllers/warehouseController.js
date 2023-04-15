@@ -1,5 +1,5 @@
+const { v4: uuid } = require('uuid');
 const validation = require('./validation');
-
 const knex = require('knex')(require('../knexfile'));
 
 const addWarehouse = (req, res) => {
@@ -16,9 +16,16 @@ const addWarehouse = (req, res) => {
         return res.status(400).send('Please enter valid fields');
     }
 
-    knex('warehouse').then(data => {
-        res.send('success');
-    });
+    const newWarehouse = { id: uuid(), ...req.body };
+
+    knex('warehouses')
+        .insert(newWarehouse)
+        .then(_data => {
+            res.status(201).send(newWarehouse);
+        })
+        .catch(err => {
+            res.status(400).send(`Error creating Warehouse: ${err}`);
+        });
 };
 
 module.exports = { addWarehouse };
