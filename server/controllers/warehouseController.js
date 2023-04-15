@@ -85,11 +85,12 @@ const editWarehouse = (req, res) => {
         .update(  updatedWarehouse)
         .where({ id: req.params.id })
         .then(data =>{
-            console.log(data);
             if(data === 0 ){
-                res.status(400).send(`Error warehouse with id: ${req.params.id} is not defined`);
+                res.status(404).send(`Error warehouse with id: ${req.params.id} is not defined`);
             }
-            res.status(200).send(updatedWarehouse);
+            else{
+                res.status(200).send(updatedWarehouse);
+            }
         })
         .catch(err =>{
             res.status(400).send(`Error warehouse with id: ${req.params.id} err ${err}`);
