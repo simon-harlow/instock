@@ -13,8 +13,8 @@ app.use((req, res, next) => {
 });
 
 // Put routes here
-const warehouseRoutes = require('./routes/warehouseRoute');
 app.use(express.json());
+const warehouseRoutes = require('./routes/warehouseRoute');
 app.use('/api/warehouses', warehouseRoutes);
 
 app.listen(PORT, () => {
