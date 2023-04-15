@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Arrow_back, Arrow_drop, Chevron_right, Close } from './assets/modifiedLogos';
-import { Button } from '@chakra-ui/react';
+// import { Arrow_back, Arrow_drop, Chevron_right, Close } from './assets/modifiedLogos';
+import { Box } from '@chakra-ui/react';
 import Warehouses from './components/Warehouses/Warehouses';
 import WarehouseDetail from './components/WarehouseDetails/WarehouseDetails';
 import WarehousesForm from './components/WarehouseForm/WarehouseForm';
@@ -11,19 +11,22 @@ import ItemForm from './components/ItemForm/ItemForm';
 
 function App() {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={Warehouses}></Route>
-                <Route path="/warehouses" element={Warehouses}></Route>
-                <Route path="/warehouses/:wid" element={WarehouseDetail}></Route>
-                <Route path="/warehouses/new" element={WarehousesForm}></Route>
-                <Route path="/warehouses/edit/:wid" element={WarehousesForm}></Route>
-                <Route path="/inventories" element={Inventories}></Route>
-                <Route path="/inventories/:iid/:wid" element={Item}></Route>
-                <Route path="/inventories/new" element={ItemForm}></Route>
-                <Route path="/inventories/edit/:iid" element={ItemForm}></Route>
-            </Routes>
-        </BrowserRouter>
+        <>
+            <BrowserRouter>
+                <Box>hw</Box>
+                <Routes>
+                    <Route path="/" element={<Warehouses />}></Route>
+                    <Route path="/warehouses" element={<Warehouses />}></Route>
+                    <Route path="/warehouses/:wid" element={<WarehouseDetail />}></Route>
+                    <Route path="/warehouses/new" element={<WarehousesForm />}></Route>
+                    <Route path="/warehouses/edit/:wid" element={<WarehousesForm />}></Route>
+                    <Route path="/inventories" element={<Inventories />}></Route>
+                    <Route path="/inventories/:iid/:wid" element={<Item />}></Route>
+                    <Route path="/inventories/new" element={<ItemForm />}></Route>
+                    <Route path="/inventories/edit/:iid" element={<ItemForm />}></Route>
+                </Routes>
+            </BrowserRouter>
+        </>
     );
 }
 
