@@ -15,4 +15,25 @@ const index = (_req, res) => {
         });
 };
 
-module.exports = { index };
+const singleInventory = (req, res) => {
+    knex('inventories')
+        .where({ id: req.params.id })
+        .then(data => {
+            if (data.length === 0) {
+                return res
+                    .status(404)
+                    .send(`Record with id: ${req.params.id} is not found`);
+            }
+
+            delete data[0].created_at;
+            delete data[0].updated_at;
+            res.status(200).json(data[0]);
+        })
+        .catch(err =>
+            res
+                .status(400)
+                .send(`Error retrieving warehouse ${req.params.id} ${err}`)
+        );
+};
+
+module.exports = { index, singleInventory };
