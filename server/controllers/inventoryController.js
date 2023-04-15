@@ -55,7 +55,7 @@ const updateInventory = (req, res) => {
         return res.status(400).send('Please enter valid fields');
     }
 
-    // Check if warehouse_id is a valid foreign key value in the warehouses table
+    // if time, we can re-factor this to be a join on the warehouse_id field
     knex('warehouses')
         .where({ id: req.body.warehouse_id })
         .select('id')
@@ -67,8 +67,16 @@ const updateInventory = (req, res) => {
             return knex('inventories')
                 .update(req.body)
                 .where({ id: req.params.id })
-                .then(() => {
-                    res.status(200).send(`Inventory with id: ${req.params.id} has been updated`);
+                .then((data) => {
+                    if (data === 0) {
+                        res.status(400).send(`Inventory item with id ${req.params.id} not found`);
+                    } else {
+                        const updatedItem = {
+                            id: req.params.id,
+                            ... req.body
+                        };
+                        res.status(200).send(updatedItem);
+                    }
                 })
                 .catch((err) =>
                     res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`)
