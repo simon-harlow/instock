@@ -6,6 +6,9 @@ router
     .get(warehouseController.index)
     .post(warehouseController.addWarehouse);
 
-router.route('/:id').get(warehouseController.singleWarehouse);
+router
+    .route('/:id')
+    .get(warehouseController.singleWarehouse)
+    .delete(warehouseController.deleteWarehouse);
 
 module.exports = router;
