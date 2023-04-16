@@ -87,6 +87,25 @@ const updateInventory = (req, res) => {
         );
 };
 
+
+const deleteInventory = (req, res) => {
+
+    knex('inventories')
+        .delete()
+        .where('id', '=', req.params.id)
+        .then((data) => {
+            if (data === 0) {
+                res.status(404).send(`Inventory item with id: ${req.params.id} not found`);
+            } else{
+                res.status(200).send(`Inventory item with id: ${req.params.id} has been deleted`);
+            }
+        })
+        .catch((err) =>
+            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+        );
+};
+
+
 const addInventory = (req, res) => {
     console.log(req.body);
     if (
@@ -121,4 +140,4 @@ const addInventory = (req, res) => {
     
 };
 
-module.exports = { index, singleInventory, updateInventory, addInventory };
+module.exports = { index, singleInventory, updateInventory, deleteInventory, addInventory };
