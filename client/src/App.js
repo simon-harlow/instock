@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import { Arrow_back, Arrow_drop, Chevron_right, Close } from './assets/modifiedLogos';
-import { Box } from '@chakra-ui/react';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 import Warehouses from './components/Warehouses/Warehouses';
 import WarehouseDetail from './components/WarehouseDetails/WarehouseDetails';
 import WarehousesForm from './components/WarehouseForm/WarehouseForm';
@@ -11,9 +12,9 @@ import ItemForm from './components/ItemForm/ItemForm';
 
 function App() {
     return (
-        <div className='App'>
+        <div className="App">
             <BrowserRouter>
-                <Box>hw</Box>
+                <Header />
                 <Routes>
                     <Route path="/" element={<Warehouses />}></Route>
                     <Route path="/warehouses" element={<Warehouses />}></Route>
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/inventories/new" element={<ItemForm />}></Route>
                     <Route path="/inventories/edit/:iid" element={<ItemForm />}></Route>
                 </Routes>
+                <Footer />
             </BrowserRouter>
         </div>
     );
