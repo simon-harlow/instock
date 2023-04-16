@@ -1,19 +1,33 @@
-import React from "react";
-import { Arrow_back, Arrow_drop, Chevron_right, Close } from "./assets/modifiedLogos"
-import { Button } from '@chakra-ui/react';
-
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// import { Arrow_back, Arrow_drop, Chevron_right, Close } from './assets/modifiedLogos';
+import { Box } from '@chakra-ui/react';
+import Warehouses from './components/Warehouses/Warehouses';
+import WarehouseDetail from './components/WarehouseDetails/WarehouseDetails';
+import WarehousesForm from './components/WarehouseForm/WarehouseForm';
+import Inventories from './components/Inventories/Inventories';
+import Item from './components/Item/Item';
+import ItemForm from './components/ItemForm/ItemForm';
 
 function App() {
-  return (
-    <>
-  <div >InStock 4 initial project setup</div>
-  <Button bg="$InstockIndigo" fontFamily="Titillium Web" fontWeight="normal" leftIcon={<Arrow_back/>}>Button</Button>
-  <Button bg="$InstockIndigo" fontFamily="Titillium Web" fontWeight="normal" leftIcon={<Arrow_drop/>}>Button</Button>
-  <Button bg="$InstockIndigo" textStyle='Titillium Web' fontWeight='semibold' leftIcon={<Chevron_right/>}>Button</Button>
-  <Button bg="$InstockIndigo" textStyle='Titillium Web' fontWeight='semibold' leftIcon={<Close/>}>Button</Button>
-
-  </>
-  )
-};
+    return (
+        <div className='App'>
+            <BrowserRouter>
+                <Box>hw</Box>
+                <Routes>
+                    <Route path="/" element={<Warehouses />}></Route>
+                    <Route path="/warehouses" element={<Warehouses />}></Route>
+                    <Route path="/warehouses/:wid" element={<WarehouseDetail />}></Route>
+                    <Route path="/warehouses/new" element={<WarehousesForm />}></Route>
+                    <Route path="/warehouses/edit/:wid" element={<WarehousesForm />}></Route>
+                    <Route path="/inventories" element={<Inventories />}></Route>
+                    <Route path="/inventories/:iid/:wid" element={<Item />}></Route>
+                    <Route path="/inventories/new" element={<ItemForm />}></Route>
+                    <Route path="/inventories/edit/:iid" element={<ItemForm />}></Route>
+                </Routes>
+            </BrowserRouter>
+        </div>
+    );
+}
 
 export default App;

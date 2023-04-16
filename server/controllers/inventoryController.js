@@ -43,6 +43,49 @@ const singleInventory = (req, res) => {
         );
 };
 
+const updateInventory = (req, res) => {
+    if (
+        !validation.uuidValidate(req.body.warehouse_id) ||
+        !validation.nonEmptyValidate(req.body.item_name) ||
+        !validation.nonEmptyValidate(req.body.description) ||
+        !validation.nonEmptyValidate(req.body.category) ||
+        !validation.nonEmptyValidate(req.body.status) ||
+        !validation.quantityValidate(req.body.quantity)
+    ) {
+        return res.status(400).send('Please enter valid fields');
+    }
+
+    // if time, we can re-factor this to be a join on the warehouse_id field
+    knex('warehouses')
+        .where({ id: req.body.warehouse_id })
+        .select('id')
+        .then((rows) => {
+            if (!rows.length) {
+                return res.status(400).send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
+            }
+
+            return knex('inventories')
+                .update(req.body)
+                .where({ id: req.params.id })
+                .then((data) => {
+                    if (data === 0) {
+                        res.status(400).send(`Inventory item with id ${req.params.id} not found`);
+                    } else {
+                        const updatedItem = {
+                            id: req.params.id,
+                            ... req.body
+                        };
+                        res.status(200).send(updatedItem);
+                    }
+                })
+                .catch((err) =>
+                    res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`)
+                );
+        })
+        .catch((err) =>
+            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+        );
+};
 
 const addInventory = (req, res) => {
     console.log(req.body);
@@ -78,4 +121,4 @@ const addInventory = (req, res) => {
     
 };
 
-module.exports = { index, singleInventory, addInventory };
+module.exports = { index, singleInventory, updateInventory, addInventory };
