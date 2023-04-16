@@ -2,10 +2,10 @@ import { extendTheme } from '@chakra-ui/react';
 
 export const themes = extendTheme({
     breakpoints: {
-        sm: "320px",
-        md: "768px",
-        lg: "960px",
-        xl: "1200px",
+        sm: '320px',
+        md: '768px',
+        lg: '960px',
+        xl: '1200px',
     },
     colors: {
         $InstockBlack: '#13182C',
@@ -13,24 +13,24 @@ export const themes = extendTheme({
         $White: '#FFFFFF',
 
         //Secondary Colors
-        $Slate: '5C667E',
-        $Cloud: 'BDC5D5',
+        $Slate: '#5C667E',
+        $Cloud: '#BDC5D5',
 
         //Background Colors
-        $Graphite: '232940',
-        $LightGrey: 'f7f8f9',
+        $Graphite: '#232940',
+        $LightGrey: '#f7f8f9',
 
         //Supporting Colors:
         $Green: '158463',
         $Red: 'C94515',
     },
-    
+
     fonts: {
         heading: 'Titillium Web',
         body: 'Titillium Web',
-        mono:'Titillium Web',
+        mono: 'Titillium Web',
     },
-    fontWeights:{
+    fontWeights: {
         normal: 400,
         semibold: 600,
         bold: 700,
@@ -48,7 +48,7 @@ export const themes = extendTheme({
     //         fontFamily: 'Titillium Web',
     //         fontWeight: 'bold'
     //     }
-        
+
     // },
 
     fontSizes: {
