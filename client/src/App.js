@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import { Arrow_back, Arrow_drop, Chevron_right, Close } from './assets/modifiedLogos';
+// import { Add_black, Add_white, Arrow_back, Arrow_drop, Chevron_right, Close } from './assets/modifiedIcons';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Warehouses from './components/Warehouses/Warehouses';
