@@ -12,6 +12,18 @@ export const Add_black = createIcon({
   ),
 })
 
+export const Add_white = createIcon({
+  displayName: 'Add_white',
+  viewBox: '0 0 24 24',
+  // path can also be an array of elements, if you have multiple paths, lines, shapes, etc.
+  path: (
+    <path
+      fill='white'
+      d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'
+    />
+  ),
+})
+
 export const Arrow_back = createIcon({
   displayName: 'Arrow_back',
   viewBox: '0 0 24 24',
