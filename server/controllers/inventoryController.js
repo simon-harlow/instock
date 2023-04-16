@@ -94,9 +94,9 @@ const deleteInventory = (req, res) => {
         .where('id', '=', req.params.id)
         .then((data) => {
             if (data === 0) {
-                res.status(404).send(`Inventory item with id ${req.params.id} not found`);
+                res.status(404).send(`Inventory item with id: ${req.params.id} not found`);
             } else{
-                res.status(200).send(`Warehouse with id: ${req.params.id} has been deleted`);
+                res.status(200).send(`Inventory item with id: ${req.params.id} has been deleted`);
             }
         })
         .catch((err) =>
