@@ -87,4 +87,38 @@ const updateInventory = (req, res) => {
         );
 };
 
-module.exports = { index, singleInventory, updateInventory };
+const addInventory = (req, res) => {
+    console.log(req.body);
+    if (
+        !validation.nonEmptyValidate(req.body.warehouse_id) ||
+        !validation.nonEmptyValidate(req.body.item_name) ||
+        !validation.nonEmptyValidate(req.body.description) ||
+        !validation.nonEmptyValidate(req.body.category) ||
+        !validation.nonEmptyValidate(req.body.status) ||
+        !validation.quantityValidate(req.body.quantity)
+    ) {
+        return res.status(400).send('Please enter valid fields');
+    }
+    knex('warehouses')
+        .where({ id: req.body.warehouse_id })
+        .select('id')
+        .then((rows) => {
+            if (!rows.length) {
+                return res.status(400).send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
+            }
+            else{
+                const newInventory = {id: uuid(), ...req.body};
+                return knex('inventories')
+                    .insert(newInventory)
+                    .then(data => {
+                        res.status(201).send(newInventory);
+                    })
+            }
+        })
+        .catch((err) =>
+            res.status(400).send(`Error creating inventory ${req.params.id} ${err}`)
+        );
+    
+};
+
+module.exports = { index, singleInventory, updateInventory, addInventory };
