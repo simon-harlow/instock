@@ -9,6 +9,7 @@ import WarehousesForm from './components/WarehouseForm/WarehouseForm';
 import Inventories from './components/Inventories/Inventories';
 import Item from './components/Item/Item';
 import ItemForm from './components/ItemForm/ItemForm';
+import Error from './components/Error/Error';
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/inventories/:iid/:wid" element={<Item />}></Route>
                     <Route path="/inventories/new" element={<ItemForm />}></Route>
                     <Route path="/inventories/edit/:iid" element={<ItemForm />}></Route>
+                    <Route path="/*" element={<Error />}></Route>
                 </Routes>
                 <Footer />
             </BrowserRouter>
