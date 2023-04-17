@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flex, Box, Button, Center, Link } from '@chakra-ui/react';
-import { Delete, Edit, ChevronRight } from '../../assets/modifiedLogos';
+import { Delete, Edit, ChevronRight } from '../../assets/modifiedIcons';
 
 function Inventory(props) {
     return (

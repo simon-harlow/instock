@@ -4,7 +4,7 @@ import { useMediaQuery } from '@chakra-ui/media-query';
 import { getInventories } from '../axios';
 import Inventory from './Inventory';
 import InventoryMobile from './InventoryMobile';
-import { Sort } from '../../assets/modifiedLogos';
+import { Sort } from '../../assets/modifiedIcons';
 
 function Inventories() {
     const [inventories, setInventories] = useState([]);
