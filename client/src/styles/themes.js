@@ -13,16 +13,16 @@ export const themes = extendTheme({
         $White: '#FFFFFF',
 
         //Secondary Colors
-        $Slate: '5C667E',
-        $Cloud: 'BDC5D5',
+        $Slate: '#5C667E',
+        $Cloud: '#BDC5D5',
 
         //Background Colors
-        $Graphite: '232940',
-        $LightGrey: 'f7f8f9',
+        $Graphite: '#232940',
+        $LightGrey: '#f7f8f9',
 
         //Supporting Colors:
-        $Green: '158463',
-        $Red: 'C94515',
+        $Green: '#158463',
+        $Red: '#C94515',
     },
     
     fonts: {
