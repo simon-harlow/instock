@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Heading, Input, Button, Box } from '@chakra-ui/react';
+import { Flex, Heading, Input, Button, Link } from '@chakra-ui/react';
+import { useMediaQuery } from '@chakra-ui/media-query';
 import { getInventories } from '../axios';
 import Inventory from './Inventory';
+import InventoryMobile from './InventoryMobile';
 import { Sort } from '../../assets/modifiedLogos';
 
 function Inventories() {
     const [inventories, setInventories] = useState([]);
+    const [isTablet] = useMediaQuery('(min-width: 768px)');
 
     useEffect(() => {
         getInventories().then(response => {
@@ -15,7 +18,8 @@ function Inventories() {
 
     return (
         <Flex
-            mx={{ base: '4', sm: '4', md: '8' }}
+            mx={{ base: '4', sm: '4', md: '8', xl: 'auto' }}
+            w={{ xl: '1020px' }}
             borderRadius={'3px'}
             boxShadow="md"
             rounded="md"
@@ -42,16 +46,18 @@ function Inventories() {
                     h={10}
                     w={{ base: '100%', md: '185px', xl: '274px' }}
                 />
-                <Button
-                    bg={'$InstockIndigo'}
-                    color={'white'}
-                    borderRadius={20}
-                    h={10}
-                    w={{ base: '100%', md: '128px' }}
-                    _hover={{ bg: '$Graphite' }}
-                >
-                    + Add New Item
-                </Button>
+                <Link href={'/inventories/new'}>
+                    <Button
+                        bg={'$InstockIndigo'}
+                        color={'white'}
+                        borderRadius={20}
+                        h={10}
+                        w={{ base: '100%', md: '128px' }}
+                        _hover={{ bg: '$Graphite' }}
+                    >
+                        + Add New Item
+                    </Button>
+                </Link>
             </Flex>
             <Flex
                 justifyContent="space-between"
@@ -90,7 +96,7 @@ function Inventories() {
                     Category
                 </Button>
                 <Button
-                    w="75px"
+                    w="95px"
                     justifyContent="start"
                     rightIcon={<Sort />}
                     bg={''}
@@ -144,7 +150,11 @@ function Inventories() {
                 borderTopColor={{ base: '$Cloud', sm: '$Cloud', md: '$White' }}
             >
                 {inventories.map(item => {
-                    return <Inventory key={item.id} info={item} />;
+                    return isTablet ? (
+                        <Inventory key={item.id} info={item} />
+                    ) : (
+                        <InventoryMobile key={item.id} info={item} />
+                    );
                 })}
             </Flex>
         </Flex>

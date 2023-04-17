@@ -23,7 +23,7 @@ function App() {
                     <Route path="/warehouses/new" element={<WarehousesForm />}></Route>
                     <Route path="/warehouses/edit/:wid" element={<WarehousesForm />}></Route>
                     <Route path="/inventories" element={<Inventories />}></Route>
-                    <Route path="/inventories/:iid/:wid" element={<Item />}></Route>
+                    <Route path="/inventories/:iid" element={<Item />}></Route>
                     <Route path="/inventories/new" element={<ItemForm />}></Route>
                     <Route path="/inventories/edit/:iid" element={<ItemForm />}></Route>
                     <Route path="/*" element={<Error />}></Route>
