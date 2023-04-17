@@ -5,7 +5,7 @@ export const themes = extendTheme({
         sm: '320px',
         md: '768px',
         lg: '960px',
-        xl: '1200px',
+        xl: '1280px',
     },
     colors: {
         $InstockBlack: '#13182C',
@@ -21,8 +21,8 @@ export const themes = extendTheme({
         $LightGrey: '#f7f8f9',
 
         //Supporting Colors:
-        $Green: '158463',
-        $Red: 'C94515',
+        $Green: '#158463',
+        $Red: '#C94515',
     },
 
     fonts: {
@@ -84,5 +84,12 @@ export const themes = extendTheme({
         mp1BodyLarge: '1.625rem',
         mp2bodyMedium: '1.25rem',
         mp3bodySmall: '0.688rem',
+    },
+    components: {
+        Heading: {
+            baseStyle: {
+                color: '$InstockBlack',
+            },
+        },
     }
 });
