@@ -1,5 +1,29 @@
 import { createIcon } from '@chakra-ui/icons'
 
+export const ArrowBlack = createIcon({
+  displayName: 'Add_black',
+  viewBox: '0 0 24 24',
+  // path can also be an array of elements, if you have multiple paths, lines, shapes, etc.
+  path: (
+    <path
+      fill='black'
+      d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'
+    />
+  ),
+})
+
+export const AddWhite = createIcon({
+  displayName: 'Add_white',
+  viewBox: '0 0 24 24',
+  // path can also be an array of elements, if you have multiple paths, lines, shapes, etc.
+  path: (
+    <path
+      fill='currentColor'
+      d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'
+    />
+  ),
+})
+
 export const ArrowBack = createIcon({
   displayName: 'Arrow_back',
   viewBox: '0 0 24 24',

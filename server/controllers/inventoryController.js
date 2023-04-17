@@ -55,7 +55,7 @@ const updateInventory = (req, res) => {
         return res.status(400).send('Please enter valid fields');
     }
 
-    // Check if warehouse_id is a valid foreign key value in the warehouses table
+    // if time, we can re-factor this to be a join on the warehouse_id field
     knex('warehouses')
         .where({ id: req.body.warehouse_id })
         .select('id')
@@ -67,8 +67,16 @@ const updateInventory = (req, res) => {
             return knex('inventories')
                 .update(req.body)
                 .where({ id: req.params.id })
-                .then(() => {
-                    res.status(200).send(`Inventory with id: ${req.params.id} has been updated`);
+                .then((data) => {
+                    if (data === 0) {
+                        res.status(400).send(`Inventory item with id ${req.params.id} not found`);
+                    } else {
+                        const updatedItem = {
+                            id: req.params.id,
+                            ... req.body
+                        };
+                        res.status(200).send(updatedItem);
+                    }
                 })
                 .catch((err) =>
                     res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`)
@@ -79,4 +87,57 @@ const updateInventory = (req, res) => {
         );
 };
 
-module.exports = { index, singleInventory, updateInventory };
+
+const deleteInventory = (req, res) => {
+
+    knex('inventories')
+        .delete()
+        .where('id', '=', req.params.id)
+        .then((data) => {
+            if (data === 0) {
+                res.status(404).send(`Inventory item with id: ${req.params.id} not found`);
+            } else{
+                res.status(200).send(`Inventory item with id: ${req.params.id} has been deleted`);
+            }
+        })
+        .catch((err) =>
+            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+        );
+};
+
+
+const addInventory = (req, res) => {
+    console.log(req.body);
+    if (
+        !validation.nonEmptyValidate(req.body.warehouse_id) ||
+        !validation.nonEmptyValidate(req.body.item_name) ||
+        !validation.nonEmptyValidate(req.body.description) ||
+        !validation.nonEmptyValidate(req.body.category) ||
+        !validation.nonEmptyValidate(req.body.status) ||
+        !validation.quantityValidate(req.body.quantity)
+    ) {
+        return res.status(400).send('Please enter valid fields');
+    }
+    knex('warehouses')
+        .where({ id: req.body.warehouse_id })
+        .select('id')
+        .then((rows) => {
+            if (!rows.length) {
+                return res.status(400).send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
+            }
+            else{
+                const newInventory = {id: uuid(), ...req.body};
+                return knex('inventories')
+                    .insert(newInventory)
+                    .then(data => {
+                        res.status(201).send(newInventory);
+                    })
+            }
+        })
+        .catch((err) =>
+            res.status(400).send(`Error creating inventory ${req.params.id} ${err}`)
+        );
+    
+};
+
+module.exports = { index, singleInventory, updateInventory, deleteInventory, addInventory };
