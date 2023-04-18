@@ -1,8 +1,24 @@
 import React from 'react';
-import { Flex, Box, Button, Center, Link } from '@chakra-ui/react';
+import {
+    Flex,
+    Box,
+    Button,
+    Center,
+    Link,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { Delete, Edit, ChevronRight } from '../../assets/modifiedIcons';
 
 function Inventory(props) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     return (
         <Flex
             justifyContent="space-between"
@@ -54,7 +70,7 @@ function Inventory(props) {
                                     color="$Red"
                                     bg="rgba(201, 69, 21, 0.07)"
                                     borderRadius="20px"
-                                    fontSize='mp3bodySmall'
+                                    fontSize="mp3bodySmall"
                                 >
                                     {props.info.status}
                                 </Center>
@@ -67,7 +83,7 @@ function Inventory(props) {
                                     color="$Green"
                                     bg="rgba(21, 132, 99, 0.07)"
                                     borderRadius="20px"
-                                    fontSize='mp3bodySmall'
+                                    fontSize="mp3bodySmall"
                                 >
                                     {props.info.status}
                                 </Center>
@@ -85,11 +101,39 @@ function Inventory(props) {
                 </Flex>
             </Flex>
             <Flex justifyContent="space-between">
-                <Delete cursor="pointer" boxSize={6} color="$Red" />
+                <Delete cursor="pointer" boxSize={6} color="$Red" onClick={onOpen} />
                 <Link href={`/inventories/edit/${props.info.id}`}>
                     <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" />
                 </Link>
             </Flex>
+            <Modal onClose={onClose} size={'full'} isOpen={isOpen}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Delete {props.info.item_name} inventory item?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        Please confirm that you'd like to delete {props.info.item_name} from the inventory list. You
+                        won't be able to undo this action.
+                    </ModalBody>
+                    <ModalFooter>
+                        <Flex w="100%" gap={8}>
+                            <Button
+                                flex="1"
+                                h="36px"
+                                borderRadius="20px"
+                                onClick={onClose}
+                                variant="outline"
+                                _hover={{ bg: '' }}
+                            >
+                                Close
+                            </Button>
+                            <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }}>
+                                Delete
+                            </Button>
+                        </Flex>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Flex>
     );
 }

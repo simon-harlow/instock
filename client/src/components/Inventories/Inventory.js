@@ -1,8 +1,24 @@
 import React from 'react';
-import { Flex, Box, Button, Center, Link } from '@chakra-ui/react';
+import {
+    Flex,
+    Box,
+    Button,
+    Center,
+    Link,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { Delete, Edit, ChevronRight } from '../../assets/modifiedIcons';
 
 function Inventory(props) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     return (
         <Flex
             justifyContent="space-between"
@@ -63,11 +79,38 @@ function Inventory(props) {
             <Box w="40px">{props.info.quantity}</Box>
             <Box w="85px">{props.info.warehouse_name}</Box>
             <Flex w="75px" gap={6} justifyContent="end">
-                <Delete cursor="pointer" boxSize={6} color="$Red" />
+                <Delete cursor="pointer" boxSize={6} color="$Red" onClick={onOpen} />
                 <Link href={`/inventories/edit/${props.info.id}`}>
                     <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" />
                 </Link>
             </Flex>
+            <Modal onClose={onClose} size={'md'} isOpen={isOpen}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Delete {props.info.item_name} inventory item?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        Please confirm that you'd like to delete {props.info.item_name} from the inventory list. You won't be able to undo this action.
+                    </ModalBody>
+                    <ModalFooter>
+                    <Flex gap={4}>
+                            <Button
+                            flex='1'
+                                h="36px"
+                                borderRadius="20px"
+                                onClick={onClose}
+                                variant="outline"
+                                _hover={{ bg: '' }}
+                            >
+                                Close
+                            </Button>
+                            <Button flex='1' h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }}>
+                                Delete
+                            </Button>
+                        </Flex>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Flex>
     );
 }

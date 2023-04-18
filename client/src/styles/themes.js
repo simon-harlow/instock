@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react';
+import { modalTheme } from './modal';
 
 export const themes = extendTheme({
     breakpoints: {
@@ -112,5 +113,6 @@ export const themes = extendTheme({
                 },
             },
         },
+        Modal: modalTheme,
     },
 });
