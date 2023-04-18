@@ -8,15 +8,15 @@ function Header() {
             bg ="$Graphite"
             width ="100%"
             height={{sm: "20vh", md: "20vh"}}
-            pb={{sm: "20%", md: "100px"}}
+            pb={{sm: "20%", md: "100px", lg: "120px"}}
             align="center"
-            px={{sm: null, md: "5"}}
+            px={{sm: null, md: "5", lg: "90px" }}
             display={{sm: null, md: "flex"}}
-            justifyContent={{sm: "center", md: "space-between"}}
+            justifyContent={{sm: "center", md: "space-between", lg:  "space-between"}}
         >
             <Image 
-            py={{sm: "5%", md:"revert"}}//padding top
-            width={{sm: "100px", md:"125px" }}
+            py={{sm: "5%", md:"revert"}}
+            width={{sm: "100px", md:"125px", lg: "100px"}}
             objectFit="contain"
             src={Logo2} 
             />
@@ -24,11 +24,11 @@ function Header() {
                 spacing ={2}
                 direction = "row"
                 align= {{sm: "center", md: null}}
-                justifyContent={{ sm: "space-evenly",  md: "space-evenly"}}
+                justifyContent={{ sm: "space-evenly",  md: "space-evenly", lg: "space-evenly"}}
             ><Link href={`/warehouses/`}>
                 <Button
-                    h={{sm:"7", md:"9"}}
-                    width= {{sm:"125px", md: "110px"}}
+                    h={{sm:"7", md:"9", lg:"8"}}
+                    width= {{sm:"125px", md: "110px", lg:"80px" }}
                     borderRadius="50"
                     bg="$InstockBlack"
                     color="white"
@@ -42,8 +42,8 @@ function Header() {
             </Link>
             <Link href={`/inventories/`}>
                 <Button
-                    h={{sm:"7", md:"9"}}
-                    width= {{sm:"125px", md: "110px"}}
+                    h={{sm:"7", md:"9",  lg:"8"}}
+                    width= {{sm:"125px", md: "110px", lg: "80px"}}
                     borderRadius="50"
                     bg="$InstockBlack"
                     color="white"
