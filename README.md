@@ -53,7 +53,6 @@ The site is for a company to manage the inventory of stock across multiple wareh
 * [Simon](https://github.com/simon-harlow)
 * [Evan](https://github.com/evan-csj)
 * [Irene](https://github.com/IreneHuynh)
-* [Mahad](https://github.com/Mahad-7)
 
 ## 🎓 Authors
 * [Adam](https://github.com/GInTher)

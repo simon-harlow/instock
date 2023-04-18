@@ -1,12 +1,12 @@
 import React from 'react';
 import { useState, useEffect } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from "axios"
 
 import { API_URL } from "../Utils/const";
 
-import { Box, Flex, Spacer, Heading, Input, InputGroup, InputRightElement, Button, IconButton } from "@chakra-ui/react";
-import { Search, Add_white, Edit, Delete } from '../../assets/modifiedIcons'
+import { Box, Flex, Spacer, Heading, Input, InputGroup, InputRightElement, Button, IconButton, Icon } from "@chakra-ui/react";
+import { Search, Chevron_right, Add_white, Edit, Delete } from '../../assets/modifiedIcons'
 
 function Warehouses() {
 
@@ -25,31 +25,34 @@ function Warehouses() {
     console.log(warehouse);
 
     return (
-        <Box maxW="400px" mx="auto" p="2rem">
-            <Flex alignItems="flexstart" direction="column" justify="flex-start" pb="1rem">
-                <Heading size="md" mr="4">Warehouses</Heading>
-                <InputGroup>
+        <Box maxW="400px" mx="auto" boxShadow='base'>
+            <Flex alignItems="flexstart" direction="column" justify="flex-start" p="2rem">
+                <Heading as="h1" size="lg" pb="1rem">Warehouses</Heading>
+                <InputGroup pb="1rem">
                     <InputRightElement children={<Search />} />
-                    <Input placeholder="Search..." />
+                    <Input placeholder="Search..." borderRadius="50px" />
                 </InputGroup>
-                <Button leftIcon={<Add_white />} bg="blue" color="white" variant='solid'>
+                <Button leftIcon={<Add_white />} bg="blue" color="white" variant='solid' borderRadius="50px">
                     Add New Warehouse
                 </Button>
             </Flex>
             {warehouse.map((warehouse) => (
                 <Flex direction="column" alignItems="flex-start" borderTop="1px solid gray" pt="1rem" borderTopColor="black" key={warehouse.id}>
-                    <Flex justifyContent="space-between" w="100%" direction="row">
-                        <Flex direction="column" mr="2rem">
+                    <Flex justifyContent="space-between" w="100%" direction="row" px="2rem">
+                        <Flex direction="column" w="50%">
                             <Box mb={4}>
                                 <Heading as="h4" size="sm" mb={2}>Warehouse</Heading>
-                                <NavLink to={`/warehouses/${warehouse.id}`}>{warehouse.warehouse_name}</NavLink>
+                                <NavLink to={`/warehouses/${warehouse.id}`}>
+                                    {warehouse.warehouse_name}
+                                    <Chevron_right />
+                                </NavLink>
                             </Box>
                             <Box mb={4}>
                                 <Heading as="h4" size="sm" mb={2}>Address</Heading>
                                 <p>{warehouse.address}, {warehouse.city}, {warehouse.country}</p>
                             </Box>
                         </Flex>
-                        <Flex direction="column">
+                        <Flex direction="column" w="50%">
                             <Box mb={4}>
                                 <Heading as="h4" size="sm" mb={2}>Contact Name</Heading>
                                 <p>{warehouse.contact_name}</p>
@@ -61,10 +64,10 @@ function Warehouses() {
                             </Box>
                         </Flex>
                     </Flex>
-                    <Flex alignItems="center" justifyContent="space-between">
-                        <IconButton aria-label="Delete" icon={<Delete />} variant="outline" colorScheme="red" mr={2} border="none" />
+                    <Flex alignItems="center" justifyContent="space-between" px="2rem" w="100%">
+                        <IconButton aria-label="Delete" icon={<Delete />} variant="outline" border="none"/>
                         <NavLink to={`/warehouses/${warehouse.id}/edit`}>
-                            <IconButton aria-label="Edit" icon={<Edit />} variant="outline" colorScheme="blue" border="none" />
+                            <IconButton aria-label="Edit" icon={<Edit />} variant="outline" border="none"/>
                         </NavLink>
                     </Flex>
                 </Flex>
