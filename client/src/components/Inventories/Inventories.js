@@ -63,84 +63,25 @@ function Inventories() {
                 justifyContent="space-between"
                 px={{ base: '6', sm: '6', md: '8', xl: '10' }}
                 py={{ base: '4', sm: '4', md: '18px' }}
-                fontSize={'h4TableHeader'}
-                lineHeight={'h4TableHeader'}
                 bg="$LightGrey"
-                color="$Slate"
-                fontWeight="bold"
-                textTransform="uppercase"
                 display={{ base: 'none', sm: 'none', md: 'flex' }}
             >
-                <Button
-                    w="150px"
-                    justifyContent="start"
-                    rightIcon={<Sort />}
-                    bg={''}
-                    h={''}
-                    p={0}
-                    _hover={{ bg: '' }}
-                    _active={{ bg: '' }}
-                >
+                <Button w="150px" rightIcon={<Sort />} variant="tab">
                     Inventory Item
                 </Button>
-                <Button
-                    w="90px"
-                    justifyContent="start"
-                    rightIcon={<Sort />}
-                    bg={''}
-                    h={''}
-                    p={0}
-                    _hover={{ bg: '' }}
-                    _active={{ bg: '' }}
-                >
+                <Button w="90px" rightIcon={<Sort />} variant="tab">
                     Category
                 </Button>
-                <Button
-                    w="95px"
-                    justifyContent="start"
-                    rightIcon={<Sort />}
-                    bg={''}
-                    h={''}
-                    p={0}
-                    _hover={{ bg: '' }}
-                    _active={{ bg: '' }}
-                >
+                <Button w="95px" rightIcon={<Sort />} variant="tab">
                     Status
                 </Button>
-                <Button
-                    w="40px"
-                    justifyContent="start"
-                    rightIcon={<Sort />}
-                    bg={''}
-                    h={''}
-                    p={0}
-                    _hover={{ bg: '' }}
-                    _active={{ bg: '' }}
-                >
+                <Button w="40px" rightIcon={<Sort />} variant="tab">
                     QTY
                 </Button>
-                <Button
-                    w="85px"
-                    justifyContent="start"
-                    rightIcon={<Sort />}
-                    bg={''}
-                    h={''}
-                    p={0}
-                    _hover={{ bg: '' }}
-                    _active={{ bg: '' }}
-                >
+                <Button w="85px" rightIcon={<Sort />} variant="tab">
                     Warehouse
                 </Button>
-                <Button
-                    w="75px"
-                    justifyContent="start"
-                    rightIcon={<Sort />}
-                    bg={''}
-                    h={''}
-                    p={0}
-                    _hover={{ bg: '' }}
-                    _active={{ bg: '' }}
-                >
+                <Button w="75px" justifyContent="end" rightIcon={<Sort />} variant="tab">
                     Actions
                 </Button>
             </Flex>

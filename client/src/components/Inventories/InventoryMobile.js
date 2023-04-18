@@ -47,25 +47,27 @@ function Inventory(props) {
                         <Box>
                             {props.info.quantity === 0 ? (
                                 <Center
-                                    alignItems="center"
                                     w="fit-content"
                                     h="24px"
                                     px={2}
+                                    textTransform="uppercase"
                                     color="$Red"
                                     bg="rgba(201, 69, 21, 0.07)"
                                     borderRadius="20px"
+                                    fontSize='mp3bodySmall'
                                 >
                                     {props.info.status}
                                 </Center>
                             ) : (
                                 <Center
-                                    alignItems="center"
                                     w="fit-content"
                                     h="24px"
                                     px={2}
+                                    textTransform="uppercase"
                                     color="$Green"
                                     bg="rgba(21, 132, 99, 0.07)"
                                     borderRadius="20px"
+                                    fontSize='mp3bodySmall'
                                 >
                                     {props.info.status}
                                 </Center>

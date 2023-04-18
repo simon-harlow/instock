@@ -34,34 +34,35 @@ function Inventory(props) {
             <Box w="95px">
                 {props.info.quantity === 0 ? (
                     <Center
-                        alignItems="center"
                         w="fit-content"
                         h="26px"
                         px={2}
+                        textTransform="uppercase"
                         color="$Red"
                         bg="rgba(201, 69, 21, 0.07)"
                         borderRadius="20px"
+                        fontSize="p3bodySmall"
                     >
                         {props.info.status}
                     </Center>
                 ) : (
                     <Center
-                        alignItems="center"
                         w="fit-content"
                         h="26px"
                         px={2}
+                        textTransform="uppercase"
                         color="$Green"
                         bg="rgba(21, 132, 99, 0.07)"
                         borderRadius="20px"
+                        fontSize="p3bodySmall"
                     >
                         {props.info.status}
                     </Center>
                 )}
             </Box>
-
             <Box w="40px">{props.info.quantity}</Box>
             <Box w="85px">{props.info.warehouse_name}</Box>
-            <Flex w="75px" gap={6}>
+            <Flex w="75px" gap={6} justifyContent="end">
                 <Delete cursor="pointer" boxSize={6} color="$Red" />
                 <Link href={`/inventories/edit/${props.info.id}`}>
                     <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" />
