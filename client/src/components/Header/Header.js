@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Image, Stack, Button } from '@chakra-ui/react';
+import { Box, Image, Stack, Button, Link} from '@chakra-ui/react';
 import Logo2 from '../../assets/Logo/InStock-Logo_2x.png';
 
 function Header() {
@@ -7,51 +7,54 @@ function Header() {
         <Box
             bg ="$Graphite"
             width ="100%"
-            height={{sm: "26vh"}}
-            pb="20%"
-            align= "center"
-            display={{ sm: null, md: "flex", lg:"flex"}}
-            justifyContent={{sm: "center", md: "center", lg: "space-between"}}
-            px={{lg: "5%"}}
+            height={{sm: "20vh", md: "20vh"}}
+            pb={{sm: "20%", md: "100px"}}
+            align="center"
+            px={{sm: null, md: "5"}}
+            display={{sm: null, md: "flex"}}
+            justifyContent={{sm: "center", md: "space-between"}}
         >
             <Image 
-            py={{sm: "5%", md: "5%"}}
-            width ={{sm:"30%", md:"10%"}}
+            py={{sm: "5%", md:"revert"}}//padding top
+            width={{sm: "100px", md:"125px" }}
+            objectFit="contain"
             src={Logo2} 
             />
-
             <Stack
                 spacing ={2}
                 direction = "row"
-                align= {{sm: "center"}}
-                justifyContent={{ sm: "space-evenly"}}
-            >
+                align= {{sm: "center", md: null}}
+                justifyContent={{ sm: "space-evenly",  md: "space-evenly"}}
+            ><Link href={`/warehouses/`}>
                 <Button
-                    size ="sm"
-                    width= "40%"
+                    h={{sm:"7", md:"9"}}
+                    width= {{sm:"125px", md: "110px"}}
                     borderRadius="50"
                     bg="$InstockBlack"
                     color="white"
-                    fontSize="mp3bodySmall"
-                    lineHeight="mp3bodySmall"
+                    fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
+                    lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
                     fontWeight="400"
                     fontFamily="Titillium Web"
                 >
-                    Warehouse
+                    Warehouses
                 </Button>
+            </Link>
+            <Link href={`/inventories/`}>
                 <Button
-                    size ="sm"
-                    width= "40%"
+                    h={{sm:"7", md:"9"}}
+                    width= {{sm:"125px", md: "110px"}}
                     borderRadius="50"
                     bg="$InstockBlack"
                     color="white"
-                    fontSize="mp3bodySmall"
-                    lineHeight="mp3bodySmall"
+                    fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
+                    lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
                     fontWeight="400"
                     fontFamily="Titillium Web"
                 >
                     Inventory
                 </Button>
+                </Link>
             </Stack>
         </Box>
     );
