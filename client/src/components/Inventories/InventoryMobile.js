@@ -127,7 +127,19 @@ function Inventory(props) {
                             >
                                 Close
                             </Button>
-                            <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }}>
+                            <Button
+                                flex="1"
+                                h="36px"
+                                borderRadius="20px"
+                                color="White"
+                                bg="$Red"
+                                _hover={{ bg: '' }}
+                                _active={{ bg: '' }}
+                                onClick={() => {
+                                    props.delete(props.info.id);
+                                    onClose();
+                                }}
+                            >
                                 Delete
                             </Button>
                         </Flex>
