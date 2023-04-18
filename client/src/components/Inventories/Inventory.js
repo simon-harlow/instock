@@ -84,18 +84,19 @@ function Inventory(props) {
                     <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" />
                 </Link>
             </Flex>
-            <Modal onClose={onClose} size={'md'} isOpen={isOpen}>
-                <ModalOverlay />
+            <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
+                <ModalOverlay bg="rgba(35, 41, 64, 0.8)" />
                 <ModalContent>
                     <ModalHeader>Delete {props.info.item_name} inventory item?</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        Please confirm that you'd like to delete {props.info.item_name} from the inventory list. You won't be able to undo this action.
+                        Please confirm that you'd like to delete {props.info.item_name} from the inventory list. You
+                        won't be able to undo this action.
                     </ModalBody>
                     <ModalFooter>
-                    <Flex gap={4}>
+                        <Flex gap={4}>
                             <Button
-                            flex='1'
+                                flex="1"
                                 h="36px"
                                 borderRadius="20px"
                                 onClick={onClose}
@@ -104,7 +105,7 @@ function Inventory(props) {
                             >
                                 Close
                             </Button>
-                            <Button flex='1' h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }}>
+                            <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }}>
                                 Delete
                             </Button>
                         </Flex>
