@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Flex, Heading, Input, Button, Link, Box, InputGroup, InputRightElement } from '@chakra-ui/react';
-import { getInventories, deleteInventory } from '../axios';
+import { getInventories, deleteInventory, getWarehouseInventories } from '../axios';
 import Inventory from './Inventory';
 import { Sort, Search } from '../../assets/modifiedIcons';
 
 function Inventories() {
+    const { warehouseId } = useParams();
     const [inventories, setInventories] = useState([]);
 
     useEffect(() => {
-        getInventories().then(response => {
-            setInventories(response.data);
-        });
+        if (warehouseId === undefined) {
+            getInventories().then(response => {
+                setInventories(response.data);
+            });
+        } else {
+            getWarehouseInventories(warehouseId)
+                .then(response => {
+                    setInventories(response.data);
+                })
+                .catch(_err => {});
+        }
     }, []);
 
     const deleteListItem = id => {

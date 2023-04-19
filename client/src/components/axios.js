@@ -15,6 +15,13 @@ const getInventories = async () => {
     } catch (err) {}
 };
 
+const getWarehouseInventories = async id => {
+    try {
+        const inventories = await axios.get(`${API_ADDRESS}/api/warehouses/${id}/inventories`);
+        return inventories;
+    } catch (err) {}
+};
+
 const deleteInventory = async id => {
     try {
         const inventory = await axios.delete(`${API_ADDRESS}/api/inventories/${id}`);
@@ -22,4 +29,4 @@ const deleteInventory = async id => {
     } catch (err) {}
 };
 
-export { getInventories, deleteInventory };
+export { getInventories, deleteInventory, getWarehouseInventories };

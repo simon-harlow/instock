@@ -17,16 +17,16 @@ function App() {
             <BrowserRouter>
                 <Header />
                 <Routes>
-                    <Route path="/" element={<Warehouses />}></Route>
-                    <Route path="/warehouses" element={<Warehouses />}></Route>
-                    <Route path="/warehouses/:wid" element={<WarehouseDetail />}></Route>
-                    <Route path="/warehouses/new" element={<WarehousesForm />}></Route>
-                    <Route path="/warehouses/edit/:wid" element={<WarehousesForm />}></Route>
-                    <Route path="/inventories" element={<Inventories />}></Route>
-                    <Route path="/inventories/:iid" element={<Item />}></Route>
-                    <Route path="/inventories/new" element={<ItemForm />}></Route>
-                    <Route path="/inventories/edit/:iid" element={<ItemForm />}></Route>
-                    <Route path="/*" element={<Error />}></Route>
+                    <Route path="/" element={<Warehouses />} />
+                    <Route path="/warehouses" element={<Warehouses />} />
+                    <Route path="/warehouses/:warehouseId/inventories" element={<Inventories />} />
+                    <Route path="/warehouses/new" element={<WarehousesForm />} />
+                    <Route path="/warehouses/edit/:warehouseId" element={<WarehousesForm />} />
+                    <Route path="/inventories" element={<Inventories />} />
+                    <Route path="/inventories/:inventoryId" element={<Item />} />
+                    <Route path="/inventories/new" element={<ItemForm />} />
+                    <Route path="/inventories/edit/:inventoryId" element={<ItemForm />} />
+                    <Route path="/*" element={<Error />} />
                 </Routes>
                 <Footer />
             </BrowserRouter>
