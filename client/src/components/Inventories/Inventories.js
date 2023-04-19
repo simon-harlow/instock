@@ -31,6 +31,8 @@ function Inventories() {
             rounded="md"
             bg="white"
             flexDirection={'column'}
+            // pos='absolute'
+            top={{base: '64px', md: '94px'}}
         >
             <Flex
                 w="100%"

@@ -22,12 +22,12 @@ function Inventory(props) {
     return (
         <Flex
             justifyContent="space-between"
-            px={{ base: '6', sm: '6', md: '8', xl: '10' }}
-            py={{ base: '4', sm: '4', md: '18px' }}
+            px={{ base: '6', md: '8', xl: '10' }}
+            py={{ base: '4', md: '18px' }}
             color="$Slate"
             fontWeight="bold"
-            fontSize={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-            lineHeight={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }}
+            fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
+            lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
             borderBottom="1px"
             borderBottomColor="$Cloud"
             flexWrap="wrap"
@@ -123,7 +123,7 @@ function Inventory(props) {
                 </Link>
             </Flex>
 
-            <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
+            <Modal onClose={onClose} size={{ base: 'full', md: 'xl' }} isOpen={isOpen}>
                 <ModalOverlay bg="rgba(35, 41, 64, 0.8)" />
                 <ModalContent>
                     <ModalHeader>Delete {props.info.item_name} inventory item?</ModalHeader>
