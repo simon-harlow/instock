@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react';
+import { modalTheme } from './modal';
 
 export const themes = extendTheme({
     breakpoints: {
@@ -91,5 +92,27 @@ export const themes = extendTheme({
                 color: '$InstockBlack',
             },
         },
-    }
+        Button: {
+            variants: {
+                tab: {
+                    justifyContent: 'start',
+                    textTransform: 'uppercase',
+                    color: '$Slate',
+                    fontWeight: 'bold',
+                    fontSize: 'h4TableHeader',
+                    lineHeight: 'h4TableHeader',
+                    bg: '',
+                    h: '',
+                    p: '0',
+                    _hover: {
+                        bg: '',
+                    },
+                    _active: {
+                        bg: '',
+                    },
+                },
+            },
+        },
+        Modal: modalTheme,
+    },
 });
