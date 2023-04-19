@@ -28,8 +28,8 @@ function Inventory(props) {
             fontWeight="bold"
             fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
             lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-            borderBottom="1px"
-            borderBottomColor="$Cloud"
+            borderTop={props.index !== 0 ? '1px' : '0'}
+            borderTopColor="$Cloud"
             flexWrap="wrap"
             rowGap={{ base: '5', md: '0' }}
         >
