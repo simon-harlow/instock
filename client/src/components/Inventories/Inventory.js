@@ -19,6 +19,26 @@ import { Delete, Edit, ChevronRight } from '../../assets/modifiedIcons';
 function Inventory(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    // const editListItem = id => {
+    //     let post = {
+  
+    //         warehouse_id: "89898957-04ba-4bd0-9f5c-a7aea7447963",
+    //         item_name: "Television OLED",
+    //         description: "This 50\", 4K LED TV provides a crystal-clear picture and vivid colors.",
+    //         category: "Electronics",
+    //         status: "In Stock",
+    //         quantity: 500
+    //       }
+    //     axios
+    //             .post(`http://localhost:8080/inventories/${id}`, post)
+    //             .then(response =>{       
+    //                 }).catch(error =>{
+    //                     console.log(error);
+    //                 });
+
+
+    // }
+
     return (
         <Flex
             justifyContent="space-between"
