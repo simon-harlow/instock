@@ -13,7 +13,7 @@ const sizes = {
         header: { fontSize: '32px', lineHeight: '40px', pt: '40px', px: '64px', pb: '0' },
         body: { fontSize: '16px', lineHeight: '28px', pt: '16px', px: '64px', pb: '0' },
         footer: { pt: '32px', pb: '40px' },
-        dialog: { w: '672px' },
+        dialog: { maxWidth: '672px' },
     }),
 };
 
