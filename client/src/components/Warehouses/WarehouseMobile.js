@@ -15,7 +15,7 @@ function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
             deleteWarehouse(warehouseId);
         }
 
-    const handleClickWarehouseName = () => navigate(`/warehouses/${warehouse.id}`);
+    const handleClickWarehouseName = () => navigate(`/warehouses/${warehouse.id}/inventories`);
     const handleClickEditWarehouse = () => navigate(`/warehouses/edit/${warehouse.id}`)
 
     return (
