@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Flex, Heading, Input, Button, Link, Box, InputGroup, InputRightElement } from '@chakra-ui/react';
-import { getInventories, deleteInventory, getWarehouseInventories } from '../axios';
+import { Flex, Button } from '@chakra-ui/react';
+import { getWarehouse, getInventories, deleteInventory, getWarehouseInventories } from '../axios';
 import Inventory from './Inventory';
-import { Sort, Search } from '../../assets/modifiedIcons';
+import InventoryHeader from './InventoryHeader';
+import WarehouseDetail from './WarehouseDetail';
+import { Sort } from '../../assets/modifiedIcons';
 
 function Inventories() {
     const { warehouseId } = useParams();
     const [inventories, setInventories] = useState([]);
+    const warehouseInfo = useRef();
 
     useEffect(() => {
         if (warehouseId === undefined) {
@@ -20,8 +23,13 @@ function Inventories() {
                     setInventories(response.data);
                 })
                 .catch(_err => {});
+            getWarehouse(warehouseId)
+                .then(response => {
+                    warehouseInfo.current = response.data;
+                })
+                .catch(_err => {});
         }
-    }, []);
+    }, [warehouseId]);
 
     const deleteListItem = id => {
         deleteInventory(id).then(response => {
@@ -33,89 +41,85 @@ function Inventories() {
     };
 
     return (
-        <Box pos="relative">
-            <Flex pos="absolute" w="100%" zIndex={1} top={{ base: '-64px', md: '-92px' }}>
-                <Box bg="rgba(255,255,255,0)" w={{ base: '16px', md: '32px', xl: 'auto' }} flex={{ xl: 1 }}></Box>
+        <Flex
+            w={{ xl: '1020px' }}
+            mx={{ xl: 'auto' }}
+            boxShadow="base"
+            bg="$White"
+            position="absolute"
+            top={{ base: '136px', md: '92px' }}
+            left={{ base: '4', md: '8' }}
+            right={{ base: '4', md: '8' }}
+            zIndex="1"
+            borderRadius="5px"
+        >
+            <Flex
+                w={{ base: '100%', xl: '1020px' }}
+                borderRadius={'3px'}
+                boxShadow="md"
+                rounded="md"
+                bg="white"
+                flexDirection={'column'}
+            >
+                {warehouseId === undefined ? (
+                    <InventoryHeader />
+                ) : warehouseInfo.current ? (
+                    <WarehouseDetail warehouse={warehouseInfo.current} />
+                ) : (
+                    <></>
+                )}
+
                 <Flex
-                    w={{ base: '100%', xl: '1020px' }}
-                    borderRadius={'3px'}
-                    boxShadow="md"
-                    rounded="md"
-                    bg="white"
-                    flexDirection={'column'}
+                    justifyContent="space-between"
+                    px={{ base: '6', md: '8', xl: '10' }}
+                    py={{ base: '4', md: '18px' }}
+                    bg="$LightGrey"
+                    display={{ base: 'none', md: 'flex' }}
                 >
-                    <Flex
-                        w="100%"
-                        px={{ base: '6', md: '8' }}
-                        py={8}
-                        flexDirection={{ base: 'column', md: 'row' }}
-                        gap={3}
-                    >
-                        <Heading
-                            flex={1}
-                            fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
-                            lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
-                        >
-                            Inventory
-                        </Heading>
+                    <Button w="150px" rightIcon={<Sort />} variant="tab">
+                        Inventory Item
+                    </Button>
+                    <Button w="90px" rightIcon={<Sort />} variant="tab">
+                        Category
+                    </Button>
+                    <Button w="95px" rightIcon={<Sort />} variant="tab">
+                        Status
+                    </Button>
+                    <Button w="40px" rightIcon={<Sort />} variant="tab">
+                        QTY
+                    </Button>
 
-                        <InputGroup w={{ base: '100%', md: '185px', xl: '274px' }}>
-                            <Input placeholder="Search..." borderRadius={20} h={10} />
-                            <InputRightElement children={<Search />} />
-                        </InputGroup>
-
-                        <Link href={'/inventories/new'}>
-                            <Button
-                                bg={'$InstockIndigo'}
-                                color={'white'}
-                                borderRadius={20}
-                                h={10}
-                                w={{ base: '100%', md: '128px' }}
-                                _hover={{ bg: '$Graphite' }}
-                            >
-                                + Add New Item
-                            </Button>
-                        </Link>
-                    </Flex>
-                    <Flex
-                        justifyContent="space-between"
-                        px={{ base: '6', md: '8', xl: '10' }}
-                        py={{ base: '4', md: '18px' }}
-                        bg="$LightGrey"
-                        display={{ base: 'none', md: 'flex' }}
-                    >
-                        <Button w="150px" rightIcon={<Sort />} variant="tab">
-                            Inventory Item
-                        </Button>
-                        <Button w="90px" rightIcon={<Sort />} variant="tab">
-                            Category
-                        </Button>
-                        <Button w="95px" rightIcon={<Sort />} variant="tab">
-                            Status
-                        </Button>
-                        <Button w="40px" rightIcon={<Sort />} variant="tab">
-                            QTY
-                        </Button>
+                    {warehouseId === undefined ? (
                         <Button w="85px" rightIcon={<Sort />} variant="tab">
                             Warehouse
                         </Button>
-                        <Button w="75px" justifyContent="end" variant="tab">
-                            Actions
-                        </Button>
-                    </Flex>
-                    <Flex
-                        flexDirection="column"
-                        borderTop="1px"
-                        borderTopColor={{ base: '$Cloud', sm: '$Cloud', md: '$White' }}
-                    >
-                        {inventories.map((item, index) => {
-                            return <Inventory key={item.id} index={index} info={item} delete={deleteListItem} />;
-                        })}
-                    </Flex>
+                    ) : (
+                        <></>
+                    )}
+
+                    <Button w="75px" justifyContent="end" variant="tab">
+                        Actions
+                    </Button>
                 </Flex>
-                <Box bg="rgba(255,255,255,0)" w={{ base: '16px', md: '32px', xl: 'auto' }} flex={{ xl: 1 }}></Box>
+                <Flex
+                    flexDirection="column"
+                    borderTop="1px"
+                    borderTopColor={{ base: '$Cloud', sm: '$Cloud', md: '$White' }}
+                >
+                    {inventories.map((item, index) => {
+                        return (
+                            <Inventory
+                                key={item.id}
+                                index={index}
+                                warehouseId={warehouseId}
+                                info={item}
+                                delete={deleteListItem}
+                            />
+                        );
+                    })}
+                </Flex>
             </Flex>
-        </Box>
+        </Flex>
     );
 }
 

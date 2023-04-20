@@ -8,6 +8,13 @@ const newHeader = {
     },
 };
 
+const getWarehouse = async id => {
+    try {
+        const warehouse = await axios.get(`${API_ADDRESS}/api/warehouses/${id}`);
+        return warehouse;
+    } catch (err) {}
+};
+
 const getInventories = async () => {
     try {
         const inventories = await axios.get(`${API_ADDRESS}/api/inventories`);
@@ -29,4 +36,4 @@ const deleteInventory = async id => {
     } catch (err) {}
 };
 
-export { getInventories, deleteInventory, getWarehouseInventories };
+export { getWarehouse, getInventories, deleteInventory, getWarehouseInventories };

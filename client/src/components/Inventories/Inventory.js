@@ -104,12 +104,16 @@ function Inventory(props) {
                 <Box>{props.info.quantity}</Box>
             </Flex>
 
-            <Flex flexDirection="column" gap={1} order={6} w={{ base: '50%', md: '85px' }}>
-                <Box textTransform="uppercase" display={{ base: 'block', md: 'none' }}>
-                    Warehouse
-                </Box>
-                <Box>{props.info.warehouse_name}</Box>
-            </Flex>
+            {props.warehouseId === undefined ? (
+                <Flex flexDirection="column" gap={1} order={6} w={{ base: '50%', md: '85px' }}>
+                    <Box textTransform="uppercase" display={{ base: 'block', md: 'none' }}>
+                        Warehouse
+                    </Box>
+                    <Box>{props.info.warehouse_name}</Box>
+                </Flex>
+            ) : (
+                <></>
+            )}
 
             <Flex
                 w={{ base: '100%', md: '75px' }}
