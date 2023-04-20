@@ -3,14 +3,19 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios"
 
-import { API_URL } from "../Utils/const";
+import { API_URL, deleteWarehouseData } from "../Utils/const";
+import WarehouseMobile from './WarehouseMobile';
+import WarehouseTabDesk from './WarehouseTabDesk';
+import { Search, AddWhite } from '../../assets/modifiedIcons'
 
-import { Box, Flex, Text, Heading, Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, } from "@chakra-ui/react";
-import { Search, ChevronRight, AddWhite, Edit, Delete } from '../../assets/modifiedIcons'
+import { useMediaQuery } from '@chakra-ui/media-query';
+import { Box, Flex, Heading, Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
+
 
 function Warehouses() {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const [isTablet] = useMediaQuery('(min-width: 768px)');
+
     const [warehouseData, setWarehouseData] = useState([]);
 
     useEffect(() => {
@@ -22,98 +27,38 @@ function Warehouses() {
             .catch((error) => console.log(error));
     }, [])
 
-    const warehouse = warehouseData;
+    const deleteWarehouse = (warehouseId) => {
+        deleteWarehouseData(warehouseId)
+            .then(result => {
+                const filteredWarehouses = warehouseData.filter((warehouse) => {
+					return warehouse.id !== result.id
+				})
+                setWarehouseData([...filteredWarehouses]);
+            })
+            .catch((error) => console.log(error));
+        };
 
     return (
-        <Box maxW="769px" mx="auto" boxShadow='base' bg="$White" position="absolute" top="7rem" left="1rem" right="1rem" zIndex="2" borderRadius="5px">
-            <Flex alignItems="flexstart" direction="column" justify="flex-start" p="2rem">
+        <Box  w={{ xl: '1280px' }} mx={{ base: '4', sm: '4', md: '8', xl: 'auto' }} boxShadow='base' bg="$White" position="absolute" top="7rem" left="1rem" right="1rem" zIndex="2" borderRadius="5px">
+            <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'flex-start' }} justify={{ base: 'flex-start', md: 'space-between' }} px={{ base: '2rem', md: '1rem' }} pt="2rem" pb="1rem">
                 <Heading as="h1" size="lg" pb="1rem" fontSize={{ base: 'mh1PageHeader', sm: 'mh1PageHeader', md: 'h1PageHeader' }} lineHeight={{ base: 'mh1PageHeader', sm: 'mh1PageHeader', md: 'h1PageHeader' }}>
                     Warehouses
                 </Heading>
-                <InputGroup pb="1rem">
-                    <InputRightElement children={<Search />} />
-                    <Input placeholder="Search..." borderRadius="50px" />
-                </InputGroup>
-                <NavLink to={`/warehouses/new`}>
-                    <Button leftIcon={<AddWhite />} bg="$InstockIndigo" color="$White" variant='solid' borderRadius="50px" w="100%">
-                        Add New Warehouse
+                    <InputGroup pb="1rem" w={{ base: '100%', md: '200px', xl: '274px' }} ml={{ base: '0', md: 'auto' }} mr={{ base: '0', md: '1rem' }}>
+                        <InputRightElement children={<Search />} />
+                        <Input placeholder="Search..." borderRadius="20px" />
+                    </InputGroup>
+                <NavLink to={`/warehouses/new`} >
+                    <Button leftIcon={<AddWhite />} bg="$InstockIndigo" color="$White" variant='solid' borderRadius="20px" w={{ base: '100%', md: '200px' }} _hover={{ bg: '$Graphite' }}>
+                    Add New Warehouse
                     </Button>
                 </NavLink>
             </Flex>
-            {warehouse.map((warehouse) => (
-                <Flex direction="column" alignItems="flex-start" borderTop="1px solid gray" pt="1rem" borderTopColor="$Cloud" key={warehouse.id}>
-                    <Flex justifyContent="space-between" w="100%" direction="row" px="2rem">
-                        <Flex direction="column" w="50%" mr="1rem">
-                            <Box mb={4}>
-                                <Heading color="$Slate" fontSize={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} lineHeight={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} as="h4" size="sm" mb={2} >
-                                    WAREHOUSE
-                                </Heading>
-                                <NavLink to={`/warehouses/${warehouse.id}`}>
-                                    <Button color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} hover={{ bg: '$InstockBlack', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }}>
-                                        {warehouse.warehouse_name}
-                                    </Button>
-                                </NavLink>
-                            </Box>
-                            <Box mb={4}>
-                                <Heading color="$Slate" fontSize={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} lineHeight={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} as="h4" size="sm" mb={2}>
-                                    ADDRESS
-                                </Heading>
-                                <Text color="$InstockBlack" fontSize={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }}>
-                                    {warehouse.address}, {warehouse.city}, {warehouse.country}
-                                </Text>
-                            </Box>
-                        </Flex>
-                        <Flex direction="column" w="50%">
-                            <Box mb={4}>
-                                <Heading color="$Slate" fontSize={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} lineHeight={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} as="h4" size="sm" mb={2}>
-                                    CONTACT NAME
-                                </Heading>
-                                <Text color="$InstockBlack" fontSize={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }}>
-                                    {warehouse.contact_name}
-                                </Text>
-                            </Box>
-                            <Box mb={4}>
-                                <Heading color="$Slate" fontSize={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} lineHeight={{ base: 'mh4TableHeader', sm: 'mh4TableHeader', md: 'h4TableHeader' }} as="h4" size="sm" mb={2}>
-                                    CONTACT INFORMATION
-                                </Heading>
-                                <Text color="$InstockBlack" fontSize={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }}>
-                                    {warehouse.contact_phone}
-                                </Text>
-                                <Text color="$InstockBlack" fontSize={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', sm: 'mp2bodyMedium', md: 'p2bodyMedium' }}>
-                                    {warehouse.contact_email}
-                                </Text>
-                            </Box>
-                        </Flex>
-                    </Flex>
-                    <Flex alignItems="center" justifyContent="space-between" px="2rem" pb="1rem" w="100%">
-                        <Delete cursor="pointer" boxSize={6} color="$Red" onClick={onOpen}/>
-                        <Modal closeOnOverlayClick={false} onClose={onClose} size={'full'} isOpen={isOpen}>
-                            <ModalOverlay />
-                            <ModalContent>
-                            <ModalHeader>Delete {warehouse.warehouse_name} warehouse?</ModalHeader>
-                            <ModalCloseButton />
-                            <ModalBody pb={6}>
-                                Please confirm that you'd like to delete {warehouse.warehouse_name} from the list of warehouses. You
-                            won't be able to undo this action.
-                            </ModalBody>
-                            <ModalFooter>
-                                <Flex w="100%" gap={8}>
-                                <Button flex="1" h="36px" borderRadius="20px" onClick={onClose} variant="outline" _hover={{ bg: '' }}>
-                                    Close
-                                </Button>
-                                <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }} _active={{ bg: '' }}>
-                                    Delete
-                                </Button>
-                                </Flex>
-                            </ModalFooter>
-                            </ModalContent>
-                        </Modal>
-                        <NavLink href={`/warehouses/${warehouse.id}/edit`}>
-                            <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" />
-                        </NavLink>
-                    </Flex>
-                </Flex>
-            ))}
+            {isTablet ?
+            <WarehouseTabDesk warehouseData={warehouseData} deleteWarehouse={deleteWarehouse}/>
+            :
+            <WarehouseMobile warehouseData={warehouseData} deleteWarehouse={deleteWarehouse}/>
+            }
         </Box>
     );
 }
