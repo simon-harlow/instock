@@ -1,33 +1,34 @@
 import React from 'react'
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Box, Flex, Text, Heading, Button } from "@chakra-ui/react";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useDisclosure, } from "@chakra-ui/react";
 import { ChevronRight, Edit, Delete } from '../../assets/modifiedIcons'
 
-function WarehouseMobile( {warehouseData, deleteWarehouse} ) {
+function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const navigate = useNavigate();
+    const warehouse = warehouseData
 
     const handleDelete = (warehouseId) => {
             deleteWarehouse(warehouseId);
         }
 
+    const handleClickWarehouseName = () => navigate(`/warehouses/${warehouse.id}`);
+    const handleClickEditWarehouse = () => navigate(`/warehouses/edit/${warehouse.id}`)
+
     return (
-    <>
-        {warehouseData.map((warehouse) => (
-        <Flex direction="column" alignItems="flex-start" borderTop="1px solid gray" pt="1rem" borderTopColor="$Cloud" key={warehouse.id}>
+        <Flex key={id} direction="column" alignItems="flex-start" borderTop="1px solid gray" pt="1rem" borderTopColor="$Cloud">
             <Flex justifyContent="space-between" w="100%" direction="row" px="2rem">
                 <Flex direction="column" w="50%" mr="1rem">
                     <Box mb={4}>
                         <Heading color="$Slate" fontSize="mh4TableHeader" lineHeight="mh4TableHeader" as="h4" size="sm" mb={2} >
                             WAREHOUSE
                         </Heading>
-                        <NavLink to={`/warehouses/${warehouse.id}`}>
-                            <Button color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} hover={{ bg: '$InstockBlack', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="mp2bodyMedium" lineHeight="mp2bodyMedium">
-                                {warehouse.warehouse_name}
-                            </Button>
-                        </NavLink>
+                        <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} hover={{ bg: '$InstockBlack', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="mp2bodyMedium" lineHeight="mp2bodyMedium">
+                            {warehouse.warehouse_name}
+                        </Button>
                     </Box>
                     <Box mb={4}>
                         <Heading color="$Slate" fontSize="mh4TableHeader" lineHeight="mh4TableHeader" as="h4" size="sm" mb={2}>
@@ -77,22 +78,18 @@ function WarehouseMobile( {warehouseData, deleteWarehouse} ) {
                             Close
                         </Button>
                         <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }} _active={{ bg: '' }} onClick={() => {
-                                    handleDelete(warehouse.id);
-                                    onClose();
-                                }}>
+                            handleDelete(warehouse.id);
+                            onClose();
+                        }}>
                             Delete
                         </Button>
                         </Flex>
                     </ModalFooter>
                     </ModalContent>
                 </Modal>
-                <NavLink to={`/warehouses/edit/${warehouse.id}`}>
-                    <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" />
-                </NavLink>
+                <Edit onClick={handleClickEditWarehouse} cursor="pointer" boxSize={6} color="$InstockIndigo" />
             </Flex>
-        </Flex>
-        ))}
-    </>    
+        </Flex> 
     )
 }
 
