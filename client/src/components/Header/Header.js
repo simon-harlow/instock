@@ -7,7 +7,7 @@ function Header() {
         <Box
             bg ="$Graphite"
             width ="100%"
-            height={{sm: "20vh", md: "20vh"}}
+            height={{sm: "200", md: "20vh"}}
             pb={{sm: "20%", md: "100px", lg: "120px"}}
             align="center"
             px={{sm: null, md: "5", lg: "90px" }}
