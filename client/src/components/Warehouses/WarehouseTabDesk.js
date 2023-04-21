@@ -38,7 +38,7 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
                 <Flex gap={2}>
                     <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen(); console.log(warehouse.id);}}/>
                     <Modal onClose={onClose} isOpen={isOpen}>
-                        <ModalOverlay backdropBlur='2px' bg='none' />
+                        <ModalOverlay bg="rgba(35, 41, 64, 0.5)" />
                         <ModalContent>
                             <ModalHeader>Delete {warehouse.warehouse_name} inventory item?</ModalHeader>
                             <ModalCloseButton />
