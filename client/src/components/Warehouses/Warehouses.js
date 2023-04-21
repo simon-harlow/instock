@@ -43,7 +43,7 @@ function Warehouses() {
     const handleClickNewWarehouse = () => navigate(`/warehouses/new`)
 
     return (
-        <Box maxW={{ xl: '1280px' }} mx={{ base: '4', sm: '4', md: '8', xl: 'auto' }} boxShadow='base' bg="$White" position="absolute" top="7rem" left="1rem" right="1rem" zIndex="2" borderRadius="5px">
+        <Box maxW="1020px" mx={{ base: '0', xl: 'auto' }} boxShadow='base' bg="$White" position="absolute" top="7rem" left={{ base: '4', sm: '4', md: '8', xl: '0' }} right={{ base: '4', sm: '4', md: '8', xl: '0' }} zIndex="2" borderRadius="5px">
             <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'flex-start' }} justify={{ base: 'flex-start', md: 'space-between' }} px={{ base: '2rem', md: '1rem' }} pt="2rem" pb="1rem">
                 <Heading as="h1" size="lg" pb="1rem" fontSize={{ base: 'mh1PageHeader', sm: 'mh1PageHeader', md: 'h1PageHeader' }} lineHeight={{ base: 'mh1PageHeader', sm: 'mh1PageHeader', md: 'h1PageHeader' }}>
                     Warehouses
