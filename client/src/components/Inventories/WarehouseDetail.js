@@ -16,16 +16,19 @@ function WarehouseDetail(props) {
                 borderBottom="1px"
                 borderBottomColor="$Cloud"
             >
-                <Flex
-                    alignItems="center"
-                    fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
-                    lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
-                    fontWeight="bold"
-                    gap={2}
-                >
-                    <ArrowBack color="$InstockIndigo" />
-                    {props.warehouse.warehouse_name}
-                </Flex>
+                <Link href="/warehouses">
+                    <Flex
+                        alignItems="center"
+                        fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
+                        lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
+                        fontWeight="bold"
+                        gap={2}
+                    >
+                        <ArrowBack color="$InstockIndigo" />
+                        {props.warehouse.warehouse_name}
+                    </Flex>
+                </Link>
+
                 <Link href={`/warehouses/edit/${props.warehouse.id}`}>
                     {tablet ? (
                         <Button
@@ -63,14 +66,16 @@ function WarehouseDetail(props) {
                         {props.warehouse.country}
                     </Box>
                 </Flex>
-                <Flex flex={{ md: '55%' }} pl={{ md: '10' }} borderLeft="1px" borderLeftColor="$Cloud">
+                <Flex flex={{ md: '55%' }} pl={{ md: '10' }} borderLeft={{ md: '1px' }} borderLeftColor="$Cloud">
                     <Flex flexDirection="column" flex={1}>
                         <Box textTransform="uppercase">Contact Name:</Box>
                         <Box color="$InstockBlack">{props.warehouse.contact_name}</Box>
                         <Box color="$InstockBlack">{props.warehouse.contact_position}</Box>
                     </Flex>
                     <Flex flexDirection="column" flex={1}>
-                        <Box textTransform="uppercase">Contact Information:</Box>
+                        <Box textTransform="uppercase" whiteSpace="nowrap">
+                            Contact Information:
+                        </Box>
                         <Box color="$InstockBlack">{props.warehouse.contact_phone}</Box>
                         <Box color="$InstockBlack">{props.warehouse.contact_email}</Box>
                     </Flex>

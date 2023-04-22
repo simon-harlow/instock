@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Flex, Button } from '@chakra-ui/react';
 import { getWarehouse, getInventories, deleteInventory, getWarehouseInventories } from '../axios';
@@ -10,7 +10,7 @@ import { Sort } from '../../assets/modifiedIcons';
 function Inventories() {
     const { warehouseId } = useParams();
     const [inventories, setInventories] = useState([]);
-    const warehouseInfo = useRef();
+    const [warehouseInfo, setwarehouseInfo] = useState();
 
     useEffect(() => {
         if (warehouseId === undefined) {
@@ -20,12 +20,30 @@ function Inventories() {
         } else {
             getWarehouseInventories(warehouseId)
                 .then(response => {
-                    setInventories(response.data);
+                    if (response !== undefined) {
+                        setInventories(response.data);
+                    } else {
+                        setInventories([]);
+                    }
                 })
                 .catch(_err => {});
             getWarehouse(warehouseId)
                 .then(response => {
-                    warehouseInfo.current = response.data;
+                    if (response !== undefined) {
+                        setwarehouseInfo(response.data);
+                    } else {
+                        setwarehouseInfo({
+                            id: '',
+                            warehouse_name: 'N/A',
+                            address: 'N/A',
+                            city: 'N/A',
+                            country: 'N/A',
+                            contact_name: 'N/A',
+                            contact_position: 'N/A',
+                            contact_phone: 'N/A',
+                            contact_email: 'N/A',
+                        });
+                    }
                 })
                 .catch(_err => {});
         }
@@ -33,7 +51,7 @@ function Inventories() {
 
     const deleteListItem = id => {
         deleteInventory(id).then(response => {
-            if (response.status === 200) {
+            if (response !== undefined) {
                 const newInventories = inventories.filter(item => item.id !== id);
                 setInventories(newInventories);
             }
@@ -63,8 +81,8 @@ function Inventories() {
             >
                 {warehouseId === undefined ? (
                     <InventoryHeader />
-                ) : warehouseInfo.current ? (
-                    <WarehouseDetail warehouse={warehouseInfo.current} />
+                ) : warehouseInfo ? (
+                    <WarehouseDetail warehouse={warehouseInfo} />
                 ) : (
                     <></>
                 )}
