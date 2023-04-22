@@ -74,10 +74,10 @@ function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
                     </ModalBody>
                     <ModalFooter>
                         <Flex w="100%" gap={8}>
-                        <Button flex="1" h="36px" borderRadius="20px" onClick={onClose} variant="outline" _hover={{ bg: '' }}>
+                        <Button flex="1" h="36px" borderRadius="20px" onClick={onClose} variant="outline" _hover={{ color: '$InstockIndigo', borderColor: '$InstockIndigo' }}>
                             Close
                         </Button>
-                        <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }} _active={{ bg: '' }} onClick={() => {
+                        <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '$InstockBlack' }} _active={{ bg: '' }} onClick={() => {
                             handleDelete(warehouse.id);
                             onClose();
                         }}>

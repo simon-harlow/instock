@@ -50,7 +50,7 @@ function Warehouses() {
                 </Heading>
                 <InputGroup pb="1rem" w={{ base: '100%', md: '200px', xl: '274px' }} ml={{ base: '0', md: 'auto' }} mr={{ base: '0', md: '1rem' }}>
                     <InputRightElement children={<Search />} />
-                    <Input placeholder="Search..." borderRadius="20px" />
+                    <Input placeholder="Search..." borderRadius="20px" focusBorderColor='$InstockIndigo' />
                 </InputGroup>
                 <Button onClick={handleClickNewWarehouse} leftIcon={<AddWhite />} bg="$InstockIndigo" color="$White" variant='solid' borderRadius="20px" _hover={{ bg: '$Graphite' }} w={{ base: '100%', md: '200px' }}>
                 Add New Warehouse
