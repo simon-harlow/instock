@@ -19,7 +19,7 @@ function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
     const handleClickEditWarehouse = () => navigate(`/warehouses/edit/${warehouse.id}`)
 
     return (
-        <Flex key={id} direction="column" alignItems="flex-start" borderTop="1px solid gray" pt="1rem" borderTopColor="$Cloud">
+        <Flex key={id} direction="column" alignItems="flex-start" borderTop="1px solid" pt="1rem" borderTopColor="$Cloud">
             <Flex justifyContent="space-between" w="100%" direction="row" px="2rem">
                 <Flex direction="column" w="50%" mr="1rem">
                     <Box mb={4}>
