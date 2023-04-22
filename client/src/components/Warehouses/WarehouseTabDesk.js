@@ -40,7 +40,7 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
                     <Modal onClose={onClose} isOpen={isOpen}>
                         <ModalOverlay bg="rgba(35, 41, 64, 0.5)" />
                         <ModalContent>
-                            <ModalHeader>Delete {warehouse.warehouse_name} inventory item?</ModalHeader>
+                            <ModalHeader>Delete {warehouse.warehouse_name} warehouse?</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
                                 Please confirm that you'd like to delete {warehouse.warehouse_name} from the list of warehouses. You
@@ -48,10 +48,10 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
                             </ModalBody>
                             <ModalFooter>
                                 <Flex gap={4}>
-                                    <Button flex="1" h="36px" borderRadius="20px" onClick={onClose} variant="outline" _hover={{ bg: '' }}>
+                                    <Button flex="1" h="36px" borderRadius="20px" onClick={onClose} variant="outline" _hover={{ color: '$InstockIndigo', borderColor: '$InstockIndigo' }}>
                                         Close
                                     </Button>
-                                    <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }} _active={{ bg: '' }} onClick={() => {
+                                    <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '$InstockBlack' }} _active={{ bg: '' }} onClick={() => {
                                     handleDelete(warehouse.id);
                                     onClose();
                                     }}>
