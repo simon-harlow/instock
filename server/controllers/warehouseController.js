@@ -16,7 +16,6 @@ const index = (_req, res) => {
         });
 };
 
-
 const singleWarehouse = (req, res) => {
     knex('warehouses')
         .where({ id: req.params.id })
@@ -132,4 +131,31 @@ const getInventories = (req, res) => {
         );
 };
 
-module.exports = { index, singleWarehouse, addWarehouse, deleteWarehouse, editWarehouse, getInventories };
+const warehousesSorted = (_req, res) => {
+    let { sort_by: columns, order_by: order } = _req.query;
+    columns = columns.split(',');
+    const validColumns = ['warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_phone', 'contact_email'];
+    const invalidColumns = columns.filter(column => !validColumns.includes(column));
+    if (invalidColumns.length > 0) {
+        return res.status(400).send(`Invalid column(s): ${invalidColumns.join(', ')}. Valid columns: ${validColumns.join(', ')}`);
+    }
+    const validOrders = ['asc', 'desc'];
+    if (!validOrders.includes(order)) {
+        return res.status(400).send(`Invalid order. Valid orders: ${validOrders.join(', ')}`);
+    }
+    knex('warehouses')
+        .select('*')
+        .orderBy(columns.map(column => ({ column: column, order: order })))
+        .then(data => {
+            data.map(warehouse => {
+                delete warehouse.created_at;
+                delete warehouse.updated_at;
+            });
+            res.status(200).json(data);
+        })
+        .catch(err => {
+            res.status(400).send(`Error retrieving Warehouses: ${err}`);
+        });
+};
+
+module.exports = { index, singleWarehouse, addWarehouse, deleteWarehouse, editWarehouse, getInventories, warehousesSorted };
