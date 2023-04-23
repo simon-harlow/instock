@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import { useNavigate, useParams, useNavigation } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../Utils/const";
-import { Flex, Text, Input, Button, FormLabel, Select, Box, Stack, Radio, RadioGroup, Textarea, useMediaQuery} from '@chakra-ui/react';
+import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl} from '@chakra-ui/react';
 import { AddWhite, ArrowBack } from '../../assets/modifiedIcons';
 
 function ItemForm() {
@@ -17,6 +17,7 @@ function ItemForm() {
     const [status , setStatus] = useState("");
     const [quantity , setQuantity] = useState("");
     const [warehouse_name , setWarehouse] = useState("");
+
     const [tablet] = useMediaQuery('(min-width: 768px)');
 
     const warehouseNameToId ={
@@ -35,7 +36,6 @@ function ItemForm() {
         if(isEdit){
             axios.get(API_URL+`/inventories/${inventoryId}`)
             .then(response => {
-                console.log(response);
                 setItemName(response.data.item_name);
                 setDescription(response.data.description);
                 setCategory(response.data.category);
@@ -97,7 +97,7 @@ function ItemForm() {
         const warehouse_id = warehouseNameToId[warehouse_name];
         const stringToInt = parseInt(quantity);
 
-        if (isFormValid) {
+        if (isFormValid()) {
             const newInventory = { 
                 warehouse_name,
                 item_name,
@@ -135,7 +135,7 @@ function ItemForm() {
                 });
                 goBack();
         } else {
-            alert("Failed to sign up, you have errors in your form");
+            alert("please fill in the missing fields");
         }
     };
     
@@ -184,21 +184,34 @@ function ItemForm() {
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     fontWeight="600"
                                     mb={{md:"8"}}>Item Details</Text>
-                        <FormLabel 
-                            fontSize={{sm:"mh3PageHeader", md:"h3PageHeader"}}
-                            lineHeight={{sm:"mh3PageHeader", md:"h3PageHeader"}}
-                        >Item Name</FormLabel>
-                        <Input borderRadius="20"  borderColor="$Cloud"  type="text" onChange={handleInventoryItemName} value={item_name}/>
-                        <FormLabel htmlFor='name' mt={{md:"4"}}>Description</FormLabel>
-                        <Textarea  size='sm' borderRadius="20" type="text" borderColor="$Cloud" onChange={handleInventoryDescription} value={description} height={{sm:"120px"}}/>
-                        <FormLabel mt={{md:"4"}}>Category</FormLabel>
-                        <Select  borderRadius="20"  onChange={handleInventoryCategory} value={category}>
+
+                        <FormControl>
+                            <FormLabel 
+                                fontSize={{sm:"mh3PageHeader", md:"h3PageHeader"}}
+                                lineHeight={{sm:"mh3PageHeader", md:"h3PageHeader"}}
+                            >Item Name</FormLabel>
+                            <Input borderRadius="20"  borderColor="$Cloud"  type="text" onChange={handleInventoryItemName} value={item_name}/>
+                            <FormErrorMessage>
+                                Email is required.
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl>
+                            <FormLabel htmlFor='name' mt={{md:"4"}}>Description</FormLabel>
+                            <Textarea  size='sm' borderRadius="20" type="text" borderColor="$Cloud" onChange={handleInventoryDescription} resize="none" value={description} height={{sm:"120px"}}/>
+                        </FormControl>
+
+                        <FormControl>
+                            <FormLabel mt={{md:"4"}}>Category</FormLabel>
+                            <Select  borderRadius="20"  onChange={handleInventoryCategory} value={category}>
+                            <option selected hidden disabled value="">Please select</option>    
                             <option value='Accessories'>Accessories</option>
                             <option value='Apparel'>Apparel</option>
                             <option value='Electronics'>Electronics</option>
                             <option value='Gear'>Gear</option>
                             <option value='Health'>Health</option>
-                        </Select>
+                            </Select>
+                        </FormControl>
                     </Flex>
                     ):(
                     <Flex display="flex" flexDirection="column"  bg="$White" borderBottom="1px" borderBottomColor="$Cloud"  width={{sm: null, md:"50%"}} pb="24px" px={{ base: '6', md: '8' }} py={{ base: '4', md: '8' }}>
@@ -206,23 +219,32 @@ function ItemForm() {
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     fontWeight="600"
                                     pb={{sm:"4"}}>Item Details</Text>
-                        <FormLabel  fontSize={{sm:"mh3PageHeader", md:"h2PageHeader"}}
+                        <FormControl>
+                            <FormLabel  fontSize={{sm:"mh3PageHeader", md:"h2PageHeader"}}
                                     lineHeight={{sm:"mh3PageHeader", md:"h2PageHeader"}}
                                     fontWeight="400">Item Name</FormLabel>
-                        <Input size="sm" borderRadius="20"  borderColor="$Cloud" placeholder="Item Name" onChange={handleInventoryItemName} value={item_name}></Input>
-                        <FormLabel pt={{sm:"4"}} htmlFor='name'>Description</FormLabel>
-                        <Textarea  size='sm' borderRadius="20" borderColor="$Cloud" resize="none" rows="5" 
-                            placeholder="Please enter a brief item description"
-                            onChange={handleInventoryDescription}
-                            value={description}/>
-                        <FormLabel pt={{sm:"4"}} >Category</FormLabel>
-                        <Select size="sm"borderRadius="20" onChange={handleInventoryCategory} value={category}>
-                            <option value='Accessories'>Accessories</option>
-                            <option value='Apparel'>Apparel</option>
-                            <option value='Electronics'>Electronics</option>
-                            <option value='Gear'>Gear</option>
-                            <option value='Health'>Health</option>
-                        </Select>
+                            <Input size="sm" borderRadius="20"  borderColor="$Cloud" placeholder="Item Name" onChange={handleInventoryItemName} value={item_name}></Input>
+                        </FormControl>
+
+                        <FormControl>
+                            <FormLabel pt={{sm:"4"}} htmlFor='name'>Description</FormLabel>
+                            <Textarea  size='sm' borderRadius="20" borderColor="$Cloud" resize="none" rows="5" 
+                                placeholder="Please enter a brief item description"
+                                onChange={handleInventoryDescription}
+                                value={description}/>
+                        </FormControl>
+
+                        <FormControl>
+                            <FormLabel pt={{sm:"4"}} >Category</FormLabel>
+                            <Select size="sm"borderRadius="20" onChange={handleInventoryCategory} value={category}>
+                                <option selected hidden disabled value="">Please select</option>
+                                <option value='Accessories'>Accessories</option>
+                                <option value='Apparel'>Apparel</option>
+                                <option value='Electronics'>Electronics</option>
+                                <option value='Gear'>Gear</option>
+                                <option value='Health'>Health</option>
+                            </Select>
+                        </FormControl>
                     </Flex>
                     
                     )}
@@ -233,6 +255,7 @@ function ItemForm() {
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     fontWeight="600"
                                     mb={{sm:"4", md:"8"}}>Item Availability</Text>
+                        <FormControl>
                         <FormLabel htmlFor='name'>Status</FormLabel>
                         <RadioGroup onChange={handleInventoryStatus} value={status}>
                             <Stack direction='row'>
@@ -240,14 +263,16 @@ function ItemForm() {
                                 <Radio value='Out of Stock'>Out of stock</Radio>
                             </Stack>
                         </RadioGroup>
+                        </FormControl>
                         
-                        {inStock()? <><FormLabel mt={{sm:"4", md:"6"}} htmlFor='name'>Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
-                            value={quantity}/></> : <><FormLabel pt={{sm:"4"}} htmlFor='name' display="none">Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
-                            value={quantity}  display="none"/></>
+                        {inStock()? <FormControl><FormLabel mt={{sm:"4", md:"6"}} htmlFor='name'>Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
+                            value={quantity}/></FormControl> : <FormControl><FormLabel pt={{sm:"4"}} htmlFor='name' display="none">Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
+                            value={quantity}  display="none"/></FormControl>
                         }
-                        
+                        <FormControl>
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
                         <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_name}>
+                            <option selected hidden disabled value="">Please select</option>
                             <option value='Boston'>Boston</option>
                             <option value='Seattle'>Seattle</option>
                             <option value='Miami'>Miami</option>
@@ -257,6 +282,7 @@ function ItemForm() {
                             <option value='Washington'>Washington</option>
                             <option value='Manhattan'>Manhattan</option>
                         </Select>
+                        </FormControl>
                     </Flex>                   
                 </Flex>
                 <Stack spacing={2} direction='row' align='center' justifyContent={{sm: "space-around", md:"flex-end"}} py={{sm:"4"}} px={{sm:"6"}} bg="$LightGrey">
