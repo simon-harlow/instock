@@ -11,6 +11,7 @@ function ItemForm() {
 
     const {inventoryId} = useParams();
     const isEdit = !!inventoryId;
+    
 
     const [item_name, setItemName] = useState("");
     const [description, setDescription] = useState("");
@@ -30,6 +31,8 @@ function ItemForm() {
         "Manhattan": "2922c286-16cd-4d43-ab98-c79f698aeab0"                  
                             
     }
+
+    const disableQuantity = true;
 
     useEffect(() => {
         if(isEdit){
@@ -92,6 +95,13 @@ function ItemForm() {
         console.log("true");
         return true;
     };
+
+    const inStock = () =>{
+        if(status === "In Stock") return true;
+        else{
+            return false;
+        }
+    }
 
 
     const handleFormSubmit = (event) => {
@@ -235,9 +245,10 @@ function ItemForm() {
                                 <Radio value='Out of Stock'>Out of stock</Radio>
                             </Stack>
                         </RadioGroup>
-                        <FormLabel pt={{sm:"4"}} htmlFor='name'>Quantity</FormLabel>
-                        <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
-                            placeholder="0" value={quantity}/>
+                        
+                        {inStock()? <><FormLabel pt={{sm:"4"}} htmlFor='name'>Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
+                            placeholder="0" value={quantity}/></> : <></>
+                            }
                         
                 
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
