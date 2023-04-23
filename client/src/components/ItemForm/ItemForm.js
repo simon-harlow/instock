@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../Utils/const";
 import { Flex, Text, Input, Button, FormLabel, Select, Box, Stack, Radio, RadioGroup, Textarea, useMediaQuery} from '@chakra-ui/react';
@@ -7,13 +8,46 @@ import { getInventory, getInventories } from '../axios';
 
 
 function ItemForm() {
+
+    const {inventoryId} = useParams();
+    const isEdit = !!inventoryId;
+
     const [item_name, setItemName] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [status , setStatus] = useState("");
     const [quantity , setQuantity] = useState("");
-    const [warehouse_id , setWarehouse] = useState("");
+    const [warehouse_name , setWarehouse] = useState("");
     const [tablet] = useMediaQuery('(min-width: 768px)');
+    const warehouseNameToId ={
+        "Seattle": "ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7",
+        "Boston": "150a36cf-f38e-4f59-8e31-39974207372d",
+        "Miami": "bb1491eb-30e6-4728-a5fa-72f89feaf622",
+        "Santa Monica": "89898957-04ba-4bd0-9f5c-a7aea7447963",
+        "SF": "bfc9bea7-66f1-44e9-879b-4d363a888eb4",
+        "Jersey": "90ac3319-70d1-4a51-b91d-ba6c2464408c",                   
+        "Washington": "5bf7bd6c-2b16-4129-bddc-9d37ff8539e9",                   
+        "Manhattan": "2922c286-16cd-4d43-ab98-c79f698aeab0"                  
+                            
+    }
+
+    useEffect(() => {
+        if(isEdit){
+            axios.get(API_URL+`/inventories/${inventoryId}`)
+            .then(response => {
+                console.log(response);
+                setItemName(response.data.item_name);
+                setDescription(response.data.description);
+                setCategory(response.data.category);
+                setStatus(response.data.status);
+                setWarehouse(response.data.warehouse_name);
+                setQuantity(response.data.quantity);
+            })
+            .catch(_err => {});
+        }
+    }, [isEdit, inventoryId]);
+    
+
 
     const handleInventoryItemName = (event) => {
         console.log(event.target.value);
@@ -45,14 +79,13 @@ function ItemForm() {
     };
 
     const handleInventoryWarehouse = (event) => {
-        console.log(event.target.value);
         setWarehouse(event.target.value);
     
     };
 
 
     const isFormValid = () => {
-        if ( !item_name || !description || !category || !status || !quantity || !warehouse_id) {
+        if ( !item_name || !description || !category || !status || !quantity || !warehouse_name) {
             console.log("false");
             return false;
         }
@@ -63,25 +96,40 @@ function ItemForm() {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
+        const warehouse_id = warehouseNameToId[warehouse_name];
         if (isFormValid) {
-            const newInventor ={ 
-                warehouse_id,
+            const newInventor =
+            { 
+                warehouse_name,
                 item_name,
                 description,
                 category,
                 status,
-                quantity}
+                quantity
+            }
+
+            const editInventor = {
+                    warehouse_id: warehouse_id,
+                    item_name,
+                    description,
+                    category,
+                    status,
+                    quantity
+
+
+            }
             console.log(newInventor);
-            axios.post(
-                `${API_URL}/inventories`, newInventor
-            )
+            const method = isEdit ? 'put' : 'post';
+            const url = isEdit ? `${API_URL}/inventories/${inventoryId}` : `${API_URL}/inventories`;
+            const post = isEdit ? editInventor: newInventor;
+            axios[method](url, post)
             .then(() => {
-                setItemName("");
-                setDescription("");
-                setCategory("");
-                setStatus("");
-                setQuantity("0");
-                setWarehouse("");
+                setItemName('');
+                setDescription('');
+                setCategory('');
+                setStatus('');
+                setQuantity('');
+                setWarehouse('');
                 
             })
             .catch((error) => {
@@ -135,11 +183,11 @@ function ItemForm() {
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     fontWeight="600">Item Details</Text>
                         <FormLabel >Item Name</FormLabel>
-                        <Input borderRadius="20"  borderColor="$Cloud"  type="text" onChange={handleInventoryItemName}/>
+                        <Input borderRadius="20"  borderColor="$Cloud"  type="text" onChange={handleInventoryItemName} value={item_name}/>
                         <FormLabel htmlFor='name'>Description</FormLabel>
-                        <Textarea  size='sm' borderRadius="20" type="text" borderColor="$Cloud" onChange={handleInventoryDescription}/>
+                        <Textarea  size='sm' borderRadius="20" type="text" borderColor="$Cloud" onChange={handleInventoryDescription} value={description}/>
                         <FormLabel >Category</FormLabel>
-                        <Select  borderRadius="20"  onChange={handleInventoryCategory}>
+                        <Select  borderRadius="20"  onChange={handleInventoryCategory} value={category}>
                             <option value='Accessories'>Accessories</option>
                             <option value='Apparel'>Apparel</option>
                             <option value='Electronics'>Electronics</option>
@@ -156,13 +204,14 @@ function ItemForm() {
                         <FormLabel  fontSize={{sm:"mh3PageHeader", md:"h2PageHeader"}}
                                     lineHeight={{sm:"mh3PageHeader", md:"h2PageHeader"}}
                                     fontWeight="400">Item Name</FormLabel>
-                        <Input size="sm" borderRadius="20"  borderColor="$Cloud" placeholder="Item Name" onChange={handleInventoryItemName}></Input>
+                        <Input size="sm" borderRadius="20"  borderColor="$Cloud" placeholder="Item Name" onChange={handleInventoryItemName} value={item_name}></Input>
                         <FormLabel pt={{sm:"4"}} htmlFor='name'>Description</FormLabel>
                         <Textarea  size='sm' borderRadius="20" borderColor="$Cloud" resize="none" rows="5" 
                             placeholder="Please enter a brief item description"
-                            onChange={handleInventoryDescription}/>
+                            onChange={handleInventoryDescription}
+                            value={description}/>
                         <FormLabel pt={{sm:"4"}} >Category</FormLabel>
-                        <Select size="sm"borderRadius="20" onChange={handleInventoryCategory}>
+                        <Select size="sm"borderRadius="20" onChange={handleInventoryCategory} value={category}>
                             <option value='Accessories'>Accessories</option>
                             <option value='Apparel'>Apparel</option>
                             <option value='Electronics'>Electronics</option>
@@ -188,19 +237,19 @@ function ItemForm() {
                         </RadioGroup>
                         <FormLabel pt={{sm:"4"}} htmlFor='name'>Quantity</FormLabel>
                         <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
-                            placeholder="0"/>
+                            placeholder="0" value={quantity}/>
                         
                 
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
-                        <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_id}>
-                            <option value='150a36cf-f38e-4f59-8e31-39974207372d'>Boston</option>
-                            <option value='ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7'>Seattle</option>
-                            <option value='bb1491eb-30e6-4728-a5fa-72f89feaf622'>Miami</option>
-                            <option value='89898957-04ba-4bd0-9f5c-a7aea7447963'>Santa Monica</option>
-                            <option value='bfc9bea7-66f1-44e9-879b-4d363a888eb4'>SF</option>
-                            <option value='90ac3319-70d1-4a51-b91d-ba6c2464408c'>Jersey</option>
-                            <option value='5bf7bd6c-2b16-4129-bddc-9d37ff8539e9'>Washington</option>
-                            <option value='2922c286-16cd-4d43-ab98-c79f698aeab0'>Manhattan</option>
+                        <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_name}>
+                            <option value='Boston'>Boston</option>
+                            <option value='Seattle'>Seattle</option>
+                            <option value='Miami'>Miami</option>
+                            <option value='Santa Monica'>Santa Monica</option>
+                            <option value='SF'>SF</option>
+                            <option value='Jersey'>Jersey</option>
+                            <option value='Washington'>Washington</option>
+                            <option value='Manhattan'>Manhattan</option>
                         </Select>
                     </Flex>                   
                 </Flex>
