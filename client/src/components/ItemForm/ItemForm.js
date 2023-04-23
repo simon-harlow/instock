@@ -1,17 +1,15 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useNavigation } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../Utils/const";
 import { Flex, Text, Input, Button, FormLabel, Select, Box, Stack, Radio, RadioGroup, Textarea, useMediaQuery} from '@chakra-ui/react';
-import { ArrowBack } from '../../assets/modifiedIcons';
-import { getInventory, getInventories } from '../axios';
-
+import { AddWhite, ArrowBack } from '../../assets/modifiedIcons';
 
 function ItemForm() {
 
     const {inventoryId} = useParams();
+    const navigate = useNavigate();
     const isEdit = !!inventoryId;
-    
 
     const [item_name, setItemName] = useState("");
     const [description, setDescription] = useState("");
@@ -20,6 +18,7 @@ function ItemForm() {
     const [quantity , setQuantity] = useState("");
     const [warehouse_name , setWarehouse] = useState("");
     const [tablet] = useMediaQuery('(min-width: 768px)');
+
     const warehouseNameToId ={
         "Seattle": "ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7",
         "Boston": "150a36cf-f38e-4f59-8e31-39974207372d",
@@ -31,8 +30,6 @@ function ItemForm() {
         "Manhattan": "2922c286-16cd-4d43-ab98-c79f698aeab0"                  
                             
     }
-
-    const disableQuantity = true;
 
     useEffect(() => {
         if(isEdit){
@@ -53,46 +50,37 @@ function ItemForm() {
 
 
     const handleInventoryItemName = (event) => {
-        console.log(event.target.value);
         setItemName(event.target.value);
     };
 
     const handleInventoryDescription = (event) => {
-        console.log(event.target.value);
         setDescription(event.target.value);
-        
     };
 
     const handleInventoryCategory = (event) =>{
-        console.log(event.target.value);
         setCategory(event.target.value);
-    }
+    };
 
     const handleInventoryStatus = (event) => {
-        console.log(event);
         setStatus(event);
-        
     };
 
     const handleInventoryQuantity = (event) => {
-        let val = event.target.value;
-        let stringToInt = parseInt(val);
-        setQuantity(stringToInt);
-    
+        setQuantity(event.target.value);
     };
 
     const handleInventoryWarehouse = (event) => {
         setWarehouse(event.target.value);
-    
     };
 
+    const goBack = () =>{
+        navigate('/inventories/');
+    }
 
     const isFormValid = () => {
         if ( !item_name || !description || !category || !status || !quantity || !warehouse_name) {
-            console.log("false");
             return false;
         }
-        console.log("true");
         return true;
     };
 
@@ -107,60 +95,63 @@ function ItemForm() {
     const handleFormSubmit = (event) => {
         event.preventDefault();
         const warehouse_id = warehouseNameToId[warehouse_name];
+        const stringToInt = parseInt(quantity);
+
         if (isFormValid) {
-            const newInventor =
-            { 
+            const newInventory = { 
                 warehouse_name,
                 item_name,
                 description,
                 category,
                 status,
-                quantity
+                quantity: stringToInt
             }
-
-            const editInventor = {
+            const editInventory = {
                     warehouse_id: warehouse_id,
                     item_name,
                     description,
                     category,
                     status,
-                    quantity
-
-
+                    quantity: stringToInt
             }
-            console.log(newInventor);
+
             const method = isEdit ? 'put' : 'post';
             const url = isEdit ? `${API_URL}/inventories/${inventoryId}` : `${API_URL}/inventories`;
-            const post = isEdit ? editInventor: newInventor;
+            const post = isEdit ? editInventory: newInventory;
+
             axios[method](url, post)
-            .then(() => {
-                setItemName('');
-                setDescription('');
-                setCategory('');
-                setStatus('');
-                setQuantity('');
-                setWarehouse('');
-                
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+                .then(() => {
+                    setItemName('');
+                    setDescription('');
+                    setCategory('');
+                    setStatus('');
+                    setQuantity('');
+                    setWarehouse('');
+                    
+                })
+                .catch((error) => {
+                    console.error(error);
+
+                });
+                goBack();
         } else {
             alert("Failed to sign up, you have errors in your form");
         }
     };
     
     return (
-        <Flex w={{ xl: '1020px' }}
-        mx={{ xl: 'auto' }}
-        boxShadow="base"
-        bg="$White"
-        position="absolute"
-        top={{ base: '136px', md: '92px' }}
-        left={{ base: '4', md: '8' }}
-        right={{ base: '4', md: '8' }}
-        zIndex="1"
-        borderRadius="5px">
+        <Flex 
+            w={{ xl: '1020px' }}
+            mx={{ xl: 'auto' }}
+            boxShadow="base"
+            bg="$White"
+            position="absolute"
+            top={{ base: '136px', md: '92px' }}
+            left={{ base: '4', md: '8' }}
+            right={{ base: '4', md: '8' }}
+            zIndex="1"
+            borderRadius="5px"
+        >
             <Flex
                 w={{ base: '100%', xl: '1020px' }}
                 borderRadius={'3px'}
@@ -173,30 +164,34 @@ function ItemForm() {
                 <Flex 
                     fontSize={{ base: "mh1PageHeader", md: 'h1PageHeader' }}
                     lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
-                    fontWeight="bold" px={{sm:"28px"}} py={{sm:"32px"}}
+                    fontWeight="bold" pl={{sm:"28px"}} pr={{sm:"6"}} pt={{sm:"8"}} pb={{sm:"6"}}
                     borderBottom= '1px'
                     borderColor="$Cloud"
                     
                     >
-                    <ArrowBack paddingRight={{sm:"12px"}} color="$InstockIndigo"/>
+                    <ArrowBack paddingRight={{sm:"12px"}} color="$InstockIndigo" onClick={goBack}/>
                     <Text fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                     lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
-                            fontWeight="600">Add New Inventory Item
+                            fontWeight="600">{isEdit? "Edit Inventory Item": "Add New Inventory Item"}
                     </Text>
                 </Flex>
                 <form onSubmit={handleFormSubmit} >
-                <Flex display="flex" flexDirection={{sm:"column", md:"row"}}  >
+                <Flex display="flex" flexDirection={{sm:"column", md:"row"}} >
                    
                     { tablet ? (
-                    <Flex display="flex" flexDirection="column"  bg="$White" borderRight="1px" borderRightColor="$Cloud"  width={{sm: null, md:"50%"}} pb="24px" px={{ base: '6', md: '8' }} py={{ base: '4', md: '8' }} >
+                    <Flex display="flex" flexDirection="column"  bg="$White" borderRight="1px" borderRightColor="$Cloud"  width={{sm: null, md:"50%"}}  px={{ base: '6', md: '8' }} my={{ base: '4', md: '6' }} >
                         <Text fontSize={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
-                                    fontWeight="600">Item Details</Text>
-                        <FormLabel >Item Name</FormLabel>
+                                    fontWeight="600"
+                                    mb={{md:"8"}}>Item Details</Text>
+                        <FormLabel 
+                            fontSize={{sm:"mh3PageHeader", md:"h3PageHeader"}}
+                            lineHeight={{sm:"mh3PageHeader", md:"h3PageHeader"}}
+                        >Item Name</FormLabel>
                         <Input borderRadius="20"  borderColor="$Cloud"  type="text" onChange={handleInventoryItemName} value={item_name}/>
-                        <FormLabel htmlFor='name'>Description</FormLabel>
-                        <Textarea  size='sm' borderRadius="20" type="text" borderColor="$Cloud" onChange={handleInventoryDescription} value={description}/>
-                        <FormLabel >Category</FormLabel>
+                        <FormLabel htmlFor='name' mt={{md:"4"}}>Description</FormLabel>
+                        <Textarea  size='sm' borderRadius="20" type="text" borderColor="$Cloud" onChange={handleInventoryDescription} value={description} height={{sm:"120px"}}/>
+                        <FormLabel mt={{md:"4"}}>Category</FormLabel>
                         <Select  borderRadius="20"  onChange={handleInventoryCategory} value={category}>
                             <option value='Accessories'>Accessories</option>
                             <option value='Apparel'>Apparel</option>
@@ -233,11 +228,11 @@ function ItemForm() {
                     )}
 
                     <Flex display="flex" flexDirection="column" width={{sm: null, md:"50%"}}  px={{ base: '6', md: '8' }} 
-                    pt={{ base: '4', md: '8' }}>
+                    mt={{ base: '4', md: '6' }} mb={{sm:"4"}}>
                         <Text fontSize={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     fontWeight="600"
-                                    pb={{sm:"4"}}>Item Availability</Text>
+                                    mb={{sm:"4", md:"8"}}>Item Availability</Text>
                         <FormLabel htmlFor='name'>Status</FormLabel>
                         <RadioGroup onChange={handleInventoryStatus} value={status}>
                             <Stack direction='row'>
@@ -246,11 +241,11 @@ function ItemForm() {
                             </Stack>
                         </RadioGroup>
                         
-                        {inStock()? <><FormLabel pt={{sm:"4"}} htmlFor='name'>Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
-                            placeholder="0" value={quantity}/></> : <></>
-                            }
+                        {inStock()? <><FormLabel mt={{sm:"4", md:"6"}} htmlFor='name'>Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
+                            value={quantity}/></> : <><FormLabel pt={{sm:"4"}} htmlFor='name' display="none">Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
+                            value={quantity}  display="none"/></>
+                        }
                         
-                
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
                         <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_name}>
                             <option value='Boston'>Boston</option>
@@ -264,9 +259,9 @@ function ItemForm() {
                         </Select>
                     </Flex>                   
                 </Flex>
-                <Stack spacing={2} direction='row' align='center' justifyContent="space-evenly" mt={{sm:"40px"}} px={{sm:"6"}}>
+                <Stack spacing={2} direction='row' align='center' justifyContent={{sm: "space-around", md:"flex-end"}} py={{sm:"4"}} px={{sm:"6"}} bg="$LightGrey">
                     <Button h={{sm:"6", md:"9", lg:"8"}}
-                    width= {{sm:"125px", md: "110px", lg:"80px" }}
+                    width= {{sm:"125px", md: "72px", lg:"72px" }}
                     borderRadius="50"
                     color="$Slate"
                     bg="white"
@@ -274,22 +269,41 @@ function ItemForm() {
                     fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
                     lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
                     fontWeight="400"
-                    fontFamily="Titillium Web">
+                    fontFamily="Titillium Web"
+                    onClick={goBack}>
                         Cancel
                     </Button>
-                    <Button 
-                    type="submit"
-                    h={{sm:"6", md:"9", lg:"8"}}
-                    width= {{sm:"125px", md: "110px", lg:"80px" }}
-                    borderRadius="50"
-                    bg="$InstockIndigo"
-                    color="white"
-                    fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    fontWeight="400"
-                    fontFamily="Titillium Web">
-                        Save
-                    </Button>
+                   
+                   {isEdit? 
+                        <Button 
+                            type="submit"
+                            h={{sm:"6", md:"9", lg:"8"}}
+                            width= {{sm:"125px", md: "98px", lg:"98px" }}
+                            borderRadius="50"
+                            bg="$InstockIndigo"
+                            color="white"
+                            fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
+                            lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
+                            fontWeight="400"
+                            fontFamily="Titillium Web"
+                        >
+                            Save
+                        </Button> :
+                        <Button 
+                            type="submit"
+                            h={{sm:"6", md:"9", lg:"8"}}
+                            width= {{sm:"125px", md: "98px", lg:"98px" }}
+                            borderRadius="50"
+                            bg="$InstockIndigo"
+                            color="white"
+                            fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
+                            lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
+                            fontWeight="400"
+                            fontFamily="Titillium Web"
+                        >
+                            <AddWhite/> Add Item
+                        </Button>
+                    }
                 </Stack>
                 </form>
             </Flex>
