@@ -2,33 +2,6 @@ const { v4: uuid } = require('uuid');
 const validation = require('./validation');
 const knex = require('knex')(require('../knexfile'));
 
-const selectInventory = keyWord =>
-    keyWord === undefined
-        ? knex('inventories').select(
-              'id',
-              'warehouse_id',
-              'item_name',
-              'description',
-              'category',
-              'status',
-              'quantity'
-          )
-        : knex('inventories')
-              .select(
-                  'id',
-                  'warehouse_id',
-                  'item_name',
-                  'description',
-                  'category',
-                  'status',
-                  'quantity'
-              )
-              .where(function () {
-                  this.where('item_name', keyWord)
-                      .orWhere('description', keyWord)
-                      .orWhere('category', keyWord);
-              });
-
 const selectWarehouse = keyWord =>
     keyWord === undefined
         ? knex('warehouses').select(
@@ -181,14 +154,16 @@ const deleteWarehouse = (req, res) => {
 };
 
 const getInventories = (req, res) => {
-    selectInventory(req.query.s)
-        .andWhere('warehouse_id', req.params.id)
+    knex('inventories')
+        .where({ warehouse_id: req.params.id })
+        .select('id', 'item_name', 'category', 'status', 'quantity')
         .then(data => {
             if (data.length === 0) {
-                res.status(404).send(
-                    `Record with id: ${req.params.id} is not found`
-                );
-            } else {
+                res
+                    .status(404)
+                    .send(`Record with id: ${req.params.id} is not found`);
+            }
+            else{
                 res.status(200).send(data);
             }
         })
