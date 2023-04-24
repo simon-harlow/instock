@@ -21,7 +21,7 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
     return (
         <Tr key={id} bg="$White" _hover={{ bg: "$LightGrey"}}>
             <Td px="1rem">
-            <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} hover={{ bg: '$InstockBlack', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
+            <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
                 {warehouse.warehouse_name}
             </Button>   
             </Td>
@@ -36,7 +36,7 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
             </Td>
             <Td px="1rem">
                 <Flex gap={2}>
-                    <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen(); console.log(warehouse.id);}}/>
+                    <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen()}}/>
                     <Modal onClose={onClose} isOpen={isOpen}>
                         <ModalOverlay bg="rgba(35, 41, 64, 0.5)" />
                         <ModalContent>
