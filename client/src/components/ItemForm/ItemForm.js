@@ -15,20 +15,22 @@ function ItemForm() {
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [status , setStatus] = useState("");
-    const [quantity , setQuantity] = useState("");
-    const [warehouse_name , setWarehouse] = useState("");
+    const [quantity , setQuantity] = useState("Accessories");
+    const [warehouse_id , setWarehouse] = useState("");
+
+    const [formErrors, setFormErrors] = useState();
 
     const [tablet] = useMediaQuery('(min-width: 768px)');
 
     const warehouseNameToId ={
-        "Seattle": "ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7",
-        "Boston": "150a36cf-f38e-4f59-8e31-39974207372d",
-        "Miami": "bb1491eb-30e6-4728-a5fa-72f89feaf622",
-        "Santa Monica": "89898957-04ba-4bd0-9f5c-a7aea7447963",
-        "SF": "bfc9bea7-66f1-44e9-879b-4d363a888eb4",
-        "Jersey": "90ac3319-70d1-4a51-b91d-ba6c2464408c",                   
-        "Washington": "5bf7bd6c-2b16-4129-bddc-9d37ff8539e9",                   
-        "Manhattan": "2922c286-16cd-4d43-ab98-c79f698aeab0"                  
+        Seattle: "ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7",
+        Boston: "150a36cf-f38e-4f59-8e31-39974207372d",
+        Miami: "bb1491eb-30e6-4728-a5fa-72f89feaf622",
+        SantaMonica: "89898957-04ba-4bd0-9f5c-a7aea7447963",
+        SF: "bfc9bea7-66f1-44e9-879b-4d363a888eb4",
+        Jersey: "90ac3319-70d1-4a51-b91d-ba6c2464408c",                   
+        Washington: "5bf7bd6c-2b16-4129-bddc-9d37ff8539e9",                   
+        Manhatta: "2922c286-16cd-4d43-ab98-c79f698aeab0"                  
                             
     }
 
@@ -36,14 +38,17 @@ function ItemForm() {
         if(isEdit){
             axios.get(API_URL+`/inventories/${inventoryId}`)
             .then(response => {
+                const fetchedWarehouseID = warehouseNameToId[response.data.warehouse_name.trim()];
                 setItemName(response.data.item_name);
                 setDescription(response.data.description);
                 setCategory(response.data.category);
                 setStatus(response.data.status);
-                setWarehouse(response.data.warehouse_name);
+                setWarehouse(fetchedWarehouseID);
                 setQuantity(response.data.quantity);
             })
-            .catch(_err => {});
+            .catch((error) => {
+                console.error("Error fetching warehouse data:", error);
+            });
         }
     }, [isEdit, inventoryId]);
     
@@ -78,10 +83,29 @@ function ItemForm() {
     }
 
     const isFormValid = () => {
-        if ( !item_name || !description || !category || !status || !quantity || !warehouse_name) {
-            return false;
+        const errors = [];
+
+        if (!warehouse_id) {
+            errors.push("Warehouse name is required");
         }
-        return true;
+        if (!description) {
+            errors.push("Description is required");
+        }
+        if (!category) {
+            errors.push("Category is required");
+        }
+        if (!status) {
+            errors.push("Status is required");
+        }
+        if (!item_name) {
+            errors.push("Item name is required");
+        }
+        if(status ==="In Stock"){
+            if(!quantity){
+                errors.push("Quanity is required");
+            }
+        }
+        return errors;
     };
 
     const inStock = () =>{
@@ -94,48 +118,53 @@ function ItemForm() {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        const warehouse_id = warehouseNameToId[warehouse_name];
-        const stringToInt = parseInt(quantity);
+        const errors = isFormValid();
+        if(status == "Out of Stock"){
+            setQuantity(0);
+        }
 
-        if (isFormValid()) {
+        const parsed = parseInt(quantity);
+
+        if (errors.length === 0) {
             const newInventory = { 
-                warehouse_name,
+                warehouse_id: warehouse_id,
                 item_name,
                 description,
                 category,
                 status,
-                quantity: stringToInt
-            }
+                quantity: parsed
+            };
             const editInventory = {
-                    warehouse_id: warehouse_id,
+                    warehouse_id,
                     item_name,
                     description,
                     category,
                     status,
-                    quantity: stringToInt
-            }
+                    quantity: parsed
+            };
 
             const method = isEdit ? 'put' : 'post';
             const url = isEdit ? `${API_URL}/inventories/${inventoryId}` : `${API_URL}/inventories`;
             const post = isEdit ? editInventory: newInventory;
+            
 
             axios[method](url, post)
                 .then(() => {
-                    setItemName('');
-                    setDescription('');
-                    setCategory('');
-                    setStatus('');
-                    setQuantity('');
-                    setWarehouse('');
-                    
+                    setFormErrors(null);
+                    setItemName("");
+                    setDescription("");
+                    setCategory("Accessories");
+                    setStatus("");
+                    setQuantity("");
+                    setWarehouse("");
+                    goBack();
                 })
                 .catch((error) => {
                     console.error(error);
-
                 });
-                goBack();
+                
         } else {
-            alert("please fill in the missing fields");
+            setFormErrors(errors);
         }
     };
     
@@ -169,7 +198,7 @@ function ItemForm() {
                     borderColor="$Cloud"
                     
                     >
-                    <ArrowBack paddingRight={{sm:"12px"}} color="$InstockIndigo" onClick={goBack}/>
+                    <ArrowBack paddingRight={{sm:"12px"}} color="$InstockIndigo" onClick={goBack} cursor="pointer"/>
                     <Text fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                     lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                             fontWeight="600">{isEdit? "Edit Inventory Item": "Add New Inventory Item"}
@@ -185,32 +214,37 @@ function ItemForm() {
                                     fontWeight="600"
                                     mb={{md:"8"}}>Item Details</Text>
 
-                        <FormControl>
+                        <FormControl isInvalid={formErrors && formErrors.includes("Item name is required")}  errorBorderColor='$Red' name="item_name">
                             <FormLabel 
                                 fontSize={{sm:"mh3PageHeader", md:"h3PageHeader"}}
                                 lineHeight={{sm:"mh3PageHeader", md:"h3PageHeader"}}
                             >Item Name</FormLabel>
-                            <Input borderRadius="20"  borderColor="$Cloud"  type="text" onChange={handleInventoryItemName} value={item_name}/>
+                            <Input borderRadius="20"  borderColor="$Cloud" maxLength={50} type="text"  onChange={handleInventoryItemName} value={item_name}/>
                             <FormErrorMessage>
-                                Email is required.
+                                {formErrors && formErrors.includes("Item Name is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl>
-                            <FormLabel htmlFor='name' mt={{md:"4"}}>Description</FormLabel>
-                            <Textarea  size='sm' borderRadius="20" type="text" borderColor="$Cloud" onChange={handleInventoryDescription} resize="none" value={description} height={{sm:"120px"}}/>
+                        <FormControl isInvalid={formErrors && formErrors.includes("Description is required")}  errorBorderColor='$Red' name="description" >
+                            <FormLabel htmlFor='name' mt={{md:"4"}} >Description</FormLabel>
+                            <Textarea  size='sm' borderRadius="20" type="text" maxLength={100} borderColor="$Cloud" onChange={handleInventoryDescription} resize="none" value={description} height={{sm:"120px"}}/>
+                            <FormErrorMessage>
+                                {formErrors && formErrors.includes("Description is required") && "This field is required"}
+                            </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl>
+                        <FormControl isInvalid={formErrors && formErrors.includes("Category is required")}  errorBorderColor='$Red' name="category">
                             <FormLabel mt={{md:"4"}}>Category</FormLabel>
-                            <Select  borderRadius="20"  onChange={handleInventoryCategory} value={category}>
-                            <option selected hidden disabled value="">Please select</option>    
+                            <Select  borderRadius="20"  onChange={handleInventoryCategory} value={category} placeholder='Please select' >
                             <option value='Accessories'>Accessories</option>
                             <option value='Apparel'>Apparel</option>
                             <option value='Electronics'>Electronics</option>
                             <option value='Gear'>Gear</option>
                             <option value='Health'>Health</option>
                             </Select>
+                            <FormErrorMessage>
+                                {formErrors && formErrors.includes("Category is required") && "This field is required"}
+                            </FormErrorMessage>
                         </FormControl>
                     </Flex>
                     ):(
@@ -219,31 +253,39 @@ function ItemForm() {
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     fontWeight="600"
                                     pb={{sm:"4"}}>Item Details</Text>
-                        <FormControl>
+                        <FormControl isInvalid={formErrors && formErrors.includes("Item name is required")} maxLength={50} type="text" errorBorderColor='$Red' name="item_name">
                             <FormLabel  fontSize={{sm:"mh3PageHeader", md:"h2PageHeader"}}
                                     lineHeight={{sm:"mh3PageHeader", md:"h2PageHeader"}}
                                     fontWeight="400">Item Name</FormLabel>
                             <Input size="sm" borderRadius="20"  borderColor="$Cloud" placeholder="Item Name" onChange={handleInventoryItemName} value={item_name}></Input>
+                            <FormErrorMessage>
+                                {formErrors && formErrors.includes("Item name is required") && "This field is required"}
+                            </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl>
+                        <FormControl isInvalid={formErrors && formErrors.includes("Description is required")}  errorBorderColor='$Red' name="description">
                             <FormLabel pt={{sm:"4"}} htmlFor='name'>Description</FormLabel>
-                            <Textarea  size='sm' borderRadius="20" borderColor="$Cloud" resize="none" rows="5" 
+                            <Textarea  size='sm' borderRadius="20" borderColor="$Cloud" maxLength={50} type="text" resize="none" rows="5" 
                                 placeholder="Please enter a brief item description"
                                 onChange={handleInventoryDescription}
                                 value={description}/>
+                                <FormErrorMessage>
+                                {formErrors && formErrors.includes("Description is required") && "This field is required"}
+                            </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl>
+                        <FormControl isInvalid={formErrors && formErrors.includes("Category is required")}  errorBorderColor='$Red' name="category">
                             <FormLabel pt={{sm:"4"}} >Category</FormLabel>
-                            <Select size="sm"borderRadius="20" onChange={handleInventoryCategory} value={category}>
-                                <option selected hidden disabled value="">Please select</option>
-                                <option value='Accessories'>Accessories</option>
-                                <option value='Apparel'>Apparel</option>
-                                <option value='Electronics'>Electronics</option>
-                                <option value='Gear'>Gear</option>
-                                <option value='Health'>Health</option>
+                            <Select size="sm"borderRadius="20" onChange={handleInventoryCategory} value={category} placeholder='Please select' >
+                                <option value="Accessories">Accessories</option>
+                                <option value="Apparel">Apparel</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Gear">Gear</option>
+                                <option value="Health">Health</option>
                             </Select>
+                            <FormErrorMessage>
+                                {formErrors && formErrors.includes("Category is required") && "This field is required"}
+                            </FormErrorMessage>
                         </FormControl>
                     </Flex>
                     
@@ -255,33 +297,41 @@ function ItemForm() {
                                     lineHeight={{sm:"mh2PageHeader", md:"h2PageHeader"}}
                                     fontWeight="600"
                                     mb={{sm:"4", md:"8"}}>Item Availability</Text>
-                        <FormControl>
-                        <FormLabel htmlFor='name'>Status</FormLabel>
-                        <RadioGroup onChange={handleInventoryStatus} value={status}>
-                            <Stack direction='row'>
-                                <Radio value='In Stock'>In stock</Radio>
-                                <Radio value='Out of Stock'>Out of stock</Radio>
-                            </Stack>
-                        </RadioGroup>
+                        <FormControl  isInvalid={formErrors && formErrors.includes("Status is required")}  errorBorderColor='$Red' name="status">
+                            <FormLabel htmlFor='name'>Status</FormLabel>
+                            <RadioGroup onChange={handleInventoryStatus} value={status}>
+                                <Stack direction='row'>
+                                    <Radio value='In Stock'>In stock</Radio>
+                                    <Radio value='Out of Stock'>Out of stock</Radio>
+                                </Stack>
+                            </RadioGroup>
+                            <FormErrorMessage>
+                                {formErrors && formErrors.includes("Status is required") && "This field is required"}
+                            </FormErrorMessage>
                         </FormControl>
                         
-                        {inStock()? <FormControl><FormLabel mt={{sm:"4", md:"6"}} htmlFor='name'>Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
-                            value={quantity}/></FormControl> : <FormControl><FormLabel pt={{sm:"4"}} htmlFor='name' display="none">Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
+                        {inStock()? <FormControl isInvalid={formErrors && formErrors.includes("Quantity is required")}  errorBorderColor='$Red' name="quantity">
+                                <FormLabel mt={{sm:"4", md:"6"}} htmlFor='name'>Quantity</FormLabel> 
+                                <Input size='sm' min="1" max="65535" borderRadius="20" borderColor="$Cloud" type="number" onChange={handleInventoryQuantity}
+                                    value={quantity}/></FormControl> 
+                            : <FormControl><FormLabel pt={{sm:"4"}} htmlFor='name' display="none">Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
                             value={quantity}  display="none"/></FormControl>
                         }
-                        <FormControl>
+                        <FormControl  isInvalid={formErrors && formErrors.includes("Warehouse name is required")}  errorBorderColor='$Red' name="warehouse_id">
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
-                        <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_name}>
-                            <option selected hidden disabled value="">Please select</option>
-                            <option value='Boston'>Boston</option>
-                            <option value='Seattle'>Seattle</option>
-                            <option value='Miami'>Miami</option>
-                            <option value='Santa Monica'>Santa Monica</option>
-                            <option value='SF'>SF</option>
-                            <option value='Jersey'>Jersey</option>
-                            <option value='Washington'>Washington</option>
-                            <option value='Manhattan'>Manhattan</option>
+                        <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_id} placeholder='Please select' >
+                            <option value='150a36cf-f38e-4f59-8e31-39974207372d'>Boston</option>
+                            <option value='ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7'>Seattle</option>
+                            <option value='bb1491eb-30e6-4728-a5fa-72f89feaf622'>Miami</option>
+                            <option value='89898957-04ba-4bd0-9f5c-a7aea7447963'>Santa Monica</option>
+                            <option value='bfc9bea7-66f1-44e9-879b-4d363a888eb4'>SF</option>
+                            <option value='90ac3319-70d1-4a51-b91d-ba6c2464408c'>Jersey</option>
+                            <option value='5bf7bd6c-2b16-4129-bddc-9d37ff8539e9'>Washington</option>
+                            <option value='2922c286-16cd-4d43-ab98-c79f698aeab0'>Manhattan</option>
                         </Select>
+                        <FormErrorMessage>
+                                {formErrors && formErrors.includes("Warehouse name is required") && "This field is required"}
+                            </FormErrorMessage>
                         </FormControl>
                     </Flex>                   
                 </Flex>
