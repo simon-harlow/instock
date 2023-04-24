@@ -17,6 +17,7 @@ import { searchWarehouse } from '../axios';
 function Warehouses() {
     const [isTablet] = useMediaQuery('(min-width: 768px)');
     const [warehouseData, setWarehouseData] = useState([]);
+    const [sortOrder, setSortOrder] = useState({});
     const navigate = useNavigate();
     const searchKeyWord = useRef('');
     const handleEnter = event => {
@@ -31,8 +32,10 @@ function Warehouses() {
             .then(response => {
                 setWarehouseData(response.data);
             })
-            .catch(error => console.log(error));
-    }, []);
+            .catch((error) => {
+                console.log(error)
+            });
+    }, [])
 
     const deleteWarehouse = warehouseId => {
         deleteWarehouseData(warehouseId)
@@ -55,7 +58,35 @@ function Warehouses() {
         });
     };
 
-    const handleClickNewWarehouse = () => navigate(`/warehouses/new`);
+    const handleClickNewWarehouse = () => navigate(`/warehouses/new`)
+
+    const getSortedData = (sortBy, orderBy) => {
+        axios
+            .get(`${API_URL}/warehouses?sort_by=${sortBy}&order_by=${orderBy}`)
+            .then((response) => {
+                setWarehouseData(response.data)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    const handleSortClick = (column) => {
+        let newSortOrder = { ...sortOrder };
+        let newOrderBy;
+    
+        if (sortOrder[column] === "asc") {
+            newOrderBy = "desc";
+            newSortOrder[column] = "desc";
+        } else {
+            newOrderBy = "asc";
+            newSortOrder[column] = "asc";
+        }
+        // Call the API with new sorting order
+        getSortedData(column, newOrderBy);
+    
+        setSortOrder(newSortOrder);
+    }
 
     return (
         <Box
@@ -119,36 +150,33 @@ function Warehouses() {
                 </Button>
             </Flex>
             {isTablet ? (
-                <Table variant="simple">
-                    <Thead>
-                        <Tr bg="$LightGrey">
-                            <Th color="$Slate" px="1rem">
-                                WAREHOUSE <Sort color="$Cloud" />
-                            </Th>
-                            <Th color="$Slate" px="1rem">
-                                ADDRESS <Sort color="$Cloud" />
-                            </Th>
-                            <Th color="$Slate" px="1rem">
-                                CONTACT NAME <Sort color="$Cloud" />
-                            </Th>
-                            <Th color="$Slate" px="1rem">
-                                CONTACT INFORMATION <Sort color="$Cloud" />
-                            </Th>
-                            <Th color="$Slate" px="1rem">
-                                ACTIONS <Sort color="$Cloud" />
-                            </Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {warehouseData.map(warehouse => (
-                            <WarehouseTabDesk
-                                key={warehouse.id}
-                                warehouseData={warehouse}
-                                deleteWarehouse={deleteWarehouse}
-                            />
-                        ))}
-                    </Tbody>
-                </Table>
+            <Table variant="simple">
+                <Thead>
+                <Tr bg="$LightGrey">
+                    <Th color="$Slate" px="1rem">
+                        <Button onClick={() => handleSortClick("warehouse_name")} rightIcon={<Sort />} variant="tab">WAREHOUSE</Button>
+                    </Th>
+                    <Th color="$Slate" px="1rem">
+                        <Button onClick={() => handleSortClick("address,city,country")}rightIcon={<Sort />} variant="tab">ADDRESS</Button>
+                    </Th>
+                    <Th color="$Slate" px="1rem">
+                        <Button onClick={() => handleSortClick("contact_name")} rightIcon={<Sort />} variant="tab">CONTACT NAME</Button>
+                    </Th>
+                    <Th color="$Slate" px="1rem">
+                        <Button onClick={() => handleSortClick("contact_phone,contact_email")} rightIcon={<Sort />} variant="tab">CONTACT INFORMATION</Button>
+                    </Th>
+                    <Th color="$Slate" px="1rem">ACTIONS</Th>
+                </Tr>
+                </Thead>
+                <Tbody>
+                {warehouseData.map(warehouse => (
+                    <WarehouseTabDesk
+                    key={warehouse.id}
+                    warehouseData={warehouse}
+                    deleteWarehouse={deleteWarehouse} />
+                ))}
+                </Tbody>
+            </Table>
             ) : (
                 <>
                     {warehouseData.map(warehouse => (

@@ -6,11 +6,14 @@ import Inventory from './Inventory';
 import InventoryHeader from './InventoryHeader';
 import WarehouseDetail from './WarehouseDetail';
 import { Sort } from '../../assets/modifiedIcons';
+import { API_URL } from '../Utils/const';
+import axios from 'axios';
 
 function Inventories() {
     const { warehouseId } = useParams();
     const [inventories, setInventories] = useState([]);
     const [warehouseInfo, setwarehouseInfo] = useState();
+    const [sortOrder, setSortOrder] = useState({});
 
     useEffect(() => {
         if (warehouseId === undefined) {
@@ -66,6 +69,34 @@ function Inventories() {
         })
     }
 
+    const getSortedData = (sortBy, orderBy) => {
+        axios
+            .get(`${API_URL}/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
+            .then((response) => {
+                setInventories(response.data)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    const handleSortClick = (column) => {
+        let newSortOrder = { ...sortOrder };
+        let newOrderBy;
+    
+        if (sortOrder[column] === "asc") {
+            newOrderBy = "desc";
+            newSortOrder[column] = "desc";
+        } else {
+            newOrderBy = "asc";
+            newSortOrder[column] = "asc";
+        }
+        // Call the API with new sorting order
+        getSortedData(column, newOrderBy);
+    
+        setSortOrder(newSortOrder);
+    }
+
     return (
         <Flex
             w={{ xl: '1020px' }}
@@ -102,21 +133,21 @@ function Inventories() {
                     bg="$LightGrey"
                     display={{ base: 'none', md: 'flex' }}
                 >
-                    <Button w="150px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick("item_name")} w="150px" rightIcon={<Sort />} variant="tab">
                         Inventory Item
                     </Button>
-                    <Button w="90px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick("category")} w="90px" rightIcon={<Sort />} variant="tab">
                         Category
                     </Button>
-                    <Button w="95px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick("status")} w="95px" rightIcon={<Sort />} variant="tab">
                         Status
                     </Button>
-                    <Button w="40px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick("quantity")} w="40px" rightIcon={<Sort />} variant="tab">
                         QTY
                     </Button>
 
                     {warehouseId === undefined ? (
-                        <Button w="85px" rightIcon={<Sort />} variant="tab">
+                        <Button onClick={() => handleSortClick("warehouse_id")} w="85px" rightIcon={<Sort />} variant="tab">
                             Warehouse
                         </Button>
                     ) : (

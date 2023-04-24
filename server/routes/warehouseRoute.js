@@ -3,7 +3,13 @@ const warehouseController = require('../controllers/warehouseController');
 
 router
     .route('/')
-    .get(warehouseController.index)
+    .get((req, res) => {
+        if (req.query.sort_by) {
+            warehouseController.warehousesSorted(req, res);
+        } else {
+            warehouseController.index(req, res);
+        }
+    })
     .post(warehouseController.addWarehouse);
 
 router
@@ -14,6 +20,6 @@ router
     
 router
     .route('/:id/inventories')
-    .get(warehouseController.getInventories);    
+    .get(warehouseController.getInventories);
 
 module.exports = router;
