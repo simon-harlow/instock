@@ -3,39 +3,13 @@ const validation = require('./validation');
 const knex = require('knex')(require('../knexfile'));
 
 const selectInventory = keyWord =>
-    (keyWord === undefined || keyWord === '')
+    keyWord === undefined || keyWord === ''
         ? knex('inventories')
-              .join(
-                  'warehouses',
-                  'inventories.warehouse_id',
-                  '=',
-                  'warehouses.id'
-              )
-              .select(
-                  'inventories.id',
-                  'warehouse_name',
-                  'item_name',
-                  'description',
-                  'category',
-                  'status',
-                  'quantity'
-              )
+              .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
+              .select('inventories.id', 'warehouse_name', 'item_name', 'description', 'category', 'status', 'quantity')
         : knex('inventories')
-              .join(
-                  'warehouses',
-                  'inventories.warehouse_id',
-                  '=',
-                  'warehouses.id'
-              )
-              .select(
-                  'inventories.id',
-                  'warehouse_name',
-                  'item_name',
-                  'description',
-                  'category',
-                  'status',
-                  'quantity'
-              )
+              .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
+              .select('inventories.id', 'warehouse_name', 'item_name', 'description', 'category', 'status', 'quantity')
               .where('warehouse_name', keyWord)
               .orWhere('item_name', keyWord)
               .orWhere('description', keyWord)
@@ -56,17 +30,11 @@ const singleInventory = (req, res) => {
         .where('inventories.id', req.params.id)
         .then(data => {
             if (data.length === 0) {
-                return res
-                    .status(404)
-                    .send(`Record with id: ${req.params.id} is not found`);
+                return res.status(404).send(`Record with id: ${req.params.id} is not found`);
             }
             res.status(200).json(data[0]);
         })
-        .catch(err =>
-            res
-                .status(400)
-                .send(`Error retrieving warehouse ${req.params.id} ${err}`)
-        );
+        .catch(err => res.status(400).send(`Error retrieving warehouse ${req.params.id} ${err}`));
 };
 
 const updateInventory = (req, res) => {
@@ -89,9 +57,7 @@ const updateInventory = (req, res) => {
             if (!rows.length) {
                 return res
                     .status(400)
-                    .send(
-                        `warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`
-                    );
+                    .send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
             }
 
             return knex('inventories')
@@ -99,9 +65,7 @@ const updateInventory = (req, res) => {
                 .where({ id: req.params.id })
                 .then(data => {
                     if (data === 0) {
-                        res.status(400).send(
-                            `Inventory item with id ${req.params.id} not found`
-                        );
+                        res.status(400).send(`Inventory item with id ${req.params.id} not found`);
                     } else {
                         const updatedItem = {
                             id: req.params.id,
@@ -110,19 +74,9 @@ const updateInventory = (req, res) => {
                         res.status(200).send(updatedItem);
                     }
                 })
-                .catch(err =>
-                    res
-                        .status(400)
-                        .send(
-                            `Error updating Inventory ${req.params.id} ${err}`
-                        )
-                );
+                .catch(err => res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`));
         })
-        .catch(err =>
-            res
-                .status(400)
-                .send(`Error retrieving Inventory ${req.params.id} ${err}`)
-        );
+        .catch(err => res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`));
 };
 
 const deleteInventory = (req, res) => {
@@ -131,20 +85,12 @@ const deleteInventory = (req, res) => {
         .where('id', '=', req.params.id)
         .then(data => {
             if (data === 0) {
-                res.status(404).send(
-                    `Inventory item with id: ${req.params.id} not found`
-                );
+                res.status(404).send(`Inventory item with id: ${req.params.id} not found`);
             } else {
-                res.status(200).send(
-                    `Inventory item with id: ${req.params.id} has been deleted`
-                );
+                res.status(200).send(`Inventory item with id: ${req.params.id} has been deleted`);
             }
         })
-        .catch(err =>
-            res
-                .status(400)
-                .send(`Error retrieving Inventory ${req.params.id} ${err}`)
-        );
+        .catch(err => res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`));
 };
 
 const addInventory = (req, res) => {
@@ -166,9 +112,7 @@ const addInventory = (req, res) => {
             if (!rows.length) {
                 return res
                     .status(400)
-                    .send(
-                        `warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`
-                    );
+                    .send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
             } else {
                 const newInventory = { id: uuid(), ...req.body };
                 return knex('inventories')
@@ -178,11 +122,44 @@ const addInventory = (req, res) => {
                     });
             }
         })
-        .catch(err =>
-            res
-                .status(400)
-                .send(`Error creating inventory ${req.params.id} ${err}`)
-        );
+        .catch(err => res.status(400).send(`Error creating inventory ${req.params.id} ${err}`));
+};
+
+const inventoriesSorted = (_req, res) => {
+    let { sort_by: columns, order_by: order } = _req.query;
+    columns = columns.split(',');
+    const validColumns = ['item_name', 'category', 'status', 'quantity', 'warehouse_id'];
+    const invalidColumns = columns.filter(column => !validColumns.includes(column));
+    if (invalidColumns.length > 0) {
+        return res
+            .status(400)
+            .send(`Invalid column(s): ${invalidColumns.join(', ')}. Valid columns: ${validColumns.join(', ')}`);
+    }
+    const validOrders = ['asc', 'desc'];
+    if (!validOrders.includes(order)) {
+        return res.status(400).send(`Invalid order. Valid orders: ${validOrders.join(', ')}`);
+    }
+    knex('inventories')
+        .select('inventories.*', 'warehouses.warehouse_name')
+        .leftJoin('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+        .orderBy(
+            columns.map(column => {
+                if (column === 'warehouse_id') {
+                    return { column: 'warehouses.warehouse_name', order: order };
+                }
+                return { column: column, order: order };
+            })
+        )
+        .then(data => {
+            data.map(inventory => {
+                delete inventory.created_at;
+                delete inventory.updated_at;
+            });
+            res.status(200).json(data);
+        })
+        .catch(err => {
+            res.status(400).send(`Error retrieving Inventories: ${err}`);
+        });
 };
 
 module.exports = {
@@ -191,5 +168,5 @@ module.exports = {
     updateInventory,
     deleteInventory,
     addInventory,
+    inventoriesSorted,
 };
-
