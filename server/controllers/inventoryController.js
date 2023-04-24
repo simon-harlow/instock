@@ -140,4 +140,37 @@ const addInventory = (req, res) => {
     
 };
 
-module.exports = { index, singleInventory, updateInventory, deleteInventory, addInventory };
+const inventoriesSorted = (_req, res) => {
+    let { sort_by: columns, order_by: order } = _req.query;
+    columns = columns.split(',');
+    const validColumns = [ 'item_name', 'category', 'status', 'quantity', 'warehouse_id'];
+    const invalidColumns = columns.filter(column => !validColumns.includes(column));
+    if (invalidColumns.length > 0) {
+        return res.status(400).send(`Invalid column(s): ${invalidColumns.join(', ')}. Valid columns: ${validColumns.join(', ')}`);
+    }
+    const validOrders = ['asc', 'desc'];
+    if (!validOrders.includes(order)) {
+        return res.status(400).send(`Invalid order. Valid orders: ${validOrders.join(', ')}`);
+    }
+    knex('inventories')
+        .select('inventories.*', 'warehouses.warehouse_name')
+        .leftJoin('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+        .orderBy(columns.map(column => {
+            if (column === 'warehouse_id') {
+                return { column: 'warehouses.warehouse_name', order: order };
+            }
+            return { column: column, order: order };
+        }))
+        .then(data => {
+            data.map(inventory => {
+                delete inventory.created_at;
+                delete inventory.updated_at;
+            });
+            res.status(200).json(data);
+        })
+        .catch(err => {
+            res.status(400).send(`Error retrieving Inventories: ${err}`);
+        });
+};
+
+module.exports = { index, singleInventory, updateInventory, deleteInventory, addInventory, inventoriesSorted };

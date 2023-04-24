@@ -3,7 +3,13 @@ const inventoryController = require('../controllers/inventoryController');
 
 router
     .route('/')
-    .get(inventoryController.index)
+    .get((req, res) => {
+        if (req.query.sort_by) {
+            inventoryController.inventoriesSorted(req, res);
+        } else {
+            inventoryController.index(req, res);
+        }
+    })
     .post(inventoryController.addInventory);
 
 router
