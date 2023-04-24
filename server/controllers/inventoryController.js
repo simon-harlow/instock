@@ -153,12 +153,18 @@ const inventoriesSorted = (_req, res) => {
         return res.status(400).send(`Invalid order. Valid orders: ${validOrders.join(', ')}`);
     }
     knex('inventories')
-        .select('*')
-        .orderBy(columns.map(column => ({ column: column, order: order })))
+        .select('inventories.*', 'warehouses.warehouse_name')
+        .leftJoin('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+        .orderBy(columns.map(column => {
+            if (column === 'warehouse_id') {
+                return { column: 'warehouses.warehouse_name', order: order };
+            }
+            return { column: column, order: order };
+        }))
         .then(data => {
-            data.map(inventories => {
-                delete inventories.created_at;
-                delete inventories.updated_at;
+            data.map(inventory => {
+                delete inventory.created_at;
+                delete inventory.updated_at;
             });
             res.status(200).json(data);
         })
