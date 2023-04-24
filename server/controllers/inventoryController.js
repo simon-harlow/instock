@@ -2,21 +2,47 @@ const { v4: uuid } = require('uuid');
 const validation = require('./validation');
 const knex = require('knex')(require('../knexfile'));
 
-const selectInventory = () =>
-    knex('inventories')
-        .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
-        .select(
-            'inventories.id',
-            'warehouse_name',
-            'item_name',
-            'description',
-            'category',
-            'status',
-            'quantity'
-        );
+const selectInventory = keyWord =>
+    keyWord === undefined
+        ? knex('inventories')
+              .join(
+                  'warehouses',
+                  'inventories.warehouse_id',
+                  '=',
+                  'warehouses.id'
+              )
+              .select(
+                  'inventories.id',
+                  'warehouse_name',
+                  'item_name',
+                  'description',
+                  'category',
+                  'status',
+                  'quantity'
+              )
+        : knex('inventories')
+              .join(
+                  'warehouses',
+                  'inventories.warehouse_id',
+                  '=',
+                  'warehouses.id'
+              )
+              .select(
+                  'inventories.id',
+                  'warehouse_name',
+                  'item_name',
+                  'description',
+                  'category',
+                  'status',
+                  'quantity'
+              )
+              .where('warehouse_name', keyWord)
+              .orWhere('item_name', keyWord)
+              .orWhere('description', keyWord)
+              .orWhere('category', keyWord);
 
-const index = (_req, res) => {
-    selectInventory()
+const index = (req, res) => {
+    selectInventory(req.query.s)
         .then(data => {
             res.status(200).json(data);
         })
@@ -26,7 +52,7 @@ const index = (_req, res) => {
 };
 
 const singleInventory = (req, res) => {
-    selectInventory()
+    selectInventory(undefined)
         .where('inventories.id', req.params.id)
         .then(data => {
             if (data.length === 0) {
@@ -59,52 +85,67 @@ const updateInventory = (req, res) => {
     knex('warehouses')
         .where({ id: req.body.warehouse_id })
         .select('id')
-        .then((rows) => {
+        .then(rows => {
             if (!rows.length) {
-                return res.status(400).send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
+                return res
+                    .status(400)
+                    .send(
+                        `warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`
+                    );
             }
 
             return knex('inventories')
                 .update(req.body)
                 .where({ id: req.params.id })
-                .then((data) => {
+                .then(data => {
                     if (data === 0) {
-                        res.status(400).send(`Inventory item with id ${req.params.id} not found`);
+                        res.status(400).send(
+                            `Inventory item with id ${req.params.id} not found`
+                        );
                     } else {
                         const updatedItem = {
                             id: req.params.id,
-                            ... req.body
+                            ...req.body,
                         };
                         res.status(200).send(updatedItem);
                     }
                 })
-                .catch((err) =>
-                    res.status(400).send(`Error updating Inventory ${req.params.id} ${err}`)
+                .catch(err =>
+                    res
+                        .status(400)
+                        .send(
+                            `Error updating Inventory ${req.params.id} ${err}`
+                        )
                 );
         })
-        .catch((err) =>
-            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+        .catch(err =>
+            res
+                .status(400)
+                .send(`Error retrieving Inventory ${req.params.id} ${err}`)
         );
 };
 
-
 const deleteInventory = (req, res) => {
-
     knex('inventories')
         .delete()
         .where('id', '=', req.params.id)
-        .then((data) => {
+        .then(data => {
             if (data === 0) {
-                res.status(404).send(`Inventory item with id: ${req.params.id} not found`);
-            } else{
-                res.status(200).send(`Inventory item with id: ${req.params.id} has been deleted`);
+                res.status(404).send(
+                    `Inventory item with id: ${req.params.id} not found`
+                );
+            } else {
+                res.status(200).send(
+                    `Inventory item with id: ${req.params.id} has been deleted`
+                );
             }
         })
-        .catch((err) =>
-            res.status(400).send(`Error retrieving Inventory ${req.params.id} ${err}`)
+        .catch(err =>
+            res
+                .status(400)
+                .send(`Error retrieving Inventory ${req.params.id} ${err}`)
         );
 };
-
 
 const addInventory = (req, res) => {
     console.log(req.body);
@@ -121,23 +162,33 @@ const addInventory = (req, res) => {
     knex('warehouses')
         .where({ id: req.body.warehouse_id })
         .select('id')
-        .then((rows) => {
+        .then(rows => {
             if (!rows.length) {
-                return res.status(400).send(`warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`);
-            }
-            else{
-                const newInventory = {id: uuid(), ...req.body};
+                return res
+                    .status(400)
+                    .send(
+                        `warehouse_id: ${req.body.warehouse_id} does not exist in the warehouses table`
+                    );
+            } else {
+                const newInventory = { id: uuid(), ...req.body };
                 return knex('inventories')
                     .insert(newInventory)
                     .then(data => {
                         res.status(201).send(newInventory);
-                    })
+                    });
             }
         })
-        .catch((err) =>
-            res.status(400).send(`Error creating inventory ${req.params.id} ${err}`)
+        .catch(err =>
+            res
+                .status(400)
+                .send(`Error creating inventory ${req.params.id} ${err}`)
         );
-    
 };
 
-module.exports = { index, singleInventory, updateInventory, deleteInventory, addInventory };
+module.exports = {
+    index,
+    singleInventory,
+    updateInventory,
+    deleteInventory,
+    addInventory,
+};

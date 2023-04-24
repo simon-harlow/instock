@@ -2,20 +2,80 @@ const { v4: uuid } = require('uuid');
 const validation = require('./validation');
 const knex = require('knex')(require('../knexfile'));
 
-const index = (_req, res) => {
-    knex('warehouses')
+const selectInventory = keyWord =>
+    keyWord === undefined
+        ? knex('inventories').select(
+              'id',
+              'warehouse_id',
+              'item_name',
+              'description',
+              'category',
+              'status',
+              'quantity'
+          )
+        : knex('inventories')
+              .select(
+                  'id',
+                  'warehouse_id',
+                  'item_name',
+                  'description',
+                  'category',
+                  'status',
+                  'quantity'
+              )
+              .where(function () {
+                  this.where('item_name', keyWord)
+                      .orWhere('description', keyWord)
+                      .orWhere('category', keyWord);
+              });
+
+const selectWarehouse = keyWord =>
+    keyWord === undefined
+        ? knex('warehouses').select(
+              'id',
+              'warehouse_name',
+              'address',
+              'city',
+              'country',
+              'contact_name',
+              'contact_position',
+              'contact_phone',
+              'contact_email'
+          )
+        : knex('warehouses')
+              .select(
+                  'id',
+                  'warehouse_name',
+                  'address',
+                  'city',
+                  'country',
+                  'contact_name',
+                  'contact_position',
+                  'contact_phone',
+                  'contact_email'
+              )
+              .where('warehouse_name', keyWord)
+              .orWhere('address', keyWord)
+              .orWhere('city', keyWord)
+              .orWhere('country', keyWord)
+              .orWhere('contact_name', keyWord)
+              .orWhere('contact_position', keyWord)
+              .orWhere('contact_phone', keyWord)
+              .orWhere('contact_email', keyWord);
+
+const index = (req, res) => {
+    selectWarehouse(req.query.s)
         .then(data => {
-            data.map(warehouse => {
-                delete warehouse.created_at;
-                delete warehouse.updated_at;
-            });
-            res.status(200).json(data);
+            if (data.length === 0) {
+                return res.status(404).json('No record is found');
+            } else {
+                return res.status(200).json(data);
+            }
         })
         .catch(err => {
             res.status(400).send(`Error retrieving Warehouses: ${err}`);
         });
 };
-
 
 const singleWarehouse = (req, res) => {
     knex('warehouses')
@@ -77,21 +137,24 @@ const editWarehouse = (req, res) => {
     ) {
         return res.status(400).send('Please enter valid fields');
     }
-    const updatedWarehouse = {id: req.params.id , ...req.body };
+    const updatedWarehouse = { id: req.params.id, ...req.body };
     console.log(updatedWarehouse);
     knex('warehouses')
-        .update(  updatedWarehouse)
+        .update(updatedWarehouse)
         .where({ id: req.params.id })
-        .then(data =>{
-            if(data === 0 ){
-                res.status(404).send(`Error warehouse with id: ${req.params.id} is not defined`);
-            }
-            else{
+        .then(data => {
+            if (data === 0) {
+                res.status(404).send(
+                    `Error warehouse with id: ${req.params.id} is not defined`
+                );
+            } else {
                 res.status(200).send(updatedWarehouse);
             }
         })
-        .catch(err =>{
-            res.status(400).send(`Error warehouse with id: ${req.params.id} err ${err}`);
+        .catch(err => {
+            res.status(400).send(
+                `Error warehouse with id: ${req.params.id} err ${err}`
+            );
         });
 };
 
@@ -99,29 +162,33 @@ const deleteWarehouse = (req, res) => {
     knex('warehouses')
         .delete()
         .where({ id: req.params.id })
-        .then((data) => {
+        .then(data => {
             if (data === 0) {
-                res.status(400).send(`Warehouse with id: ${req.params.id} does not exist`);
+                res.status(400).send(
+                    `Warehouse with id: ${req.params.id} does not exist`
+                );
             } else {
-                res.status(200).send(`Warehouse with id: ${req.params.id} has been deleted`);
+                res.status(200).send(
+                    `Warehouse with id: ${req.params.id} has been deleted`
+                );
             }
         })
-        .catch((err) =>
-            res.status(400).send(`Error deleting Warehouse ${req.params.id} ${err}`)
+        .catch(err =>
+            res
+                .status(400)
+                .send(`Error deleting Warehouse ${req.params.id} ${err}`)
         );
 };
 
 const getInventories = (req, res) => {
-    knex('inventories')
-        .where({ warehouse_id: req.params.id })
-        .select('id', 'item_name', 'category', 'status', 'quantity')
+    selectInventory(req.query.s)
+        .andWhere('warehouse_id', req.params.id)
         .then(data => {
             if (data.length === 0) {
-                res
-                    .status(404)
-                    .send(`Record with id: ${req.params.id} is not found`);
-            }
-            else{
+                res.status(404).send(
+                    `Record with id: ${req.params.id} is not found`
+                );
+            } else {
                 res.status(200).send(data);
             }
         })
@@ -132,4 +199,11 @@ const getInventories = (req, res) => {
         );
 };
 
-module.exports = { index, singleWarehouse, addWarehouse, deleteWarehouse, editWarehouse, getInventories };
+module.exports = {
+    index,
+    singleWarehouse,
+    addWarehouse,
+    deleteWarehouse,
+    editWarehouse,
+    getInventories,
+};
