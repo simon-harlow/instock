@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Flex, Button } from '@chakra-ui/react';
-import { getWarehouse, getInventories, deleteInventory, getWarehouseInventories } from '../axios';
+import { getWarehouse, getInventories, deleteInventory, getWarehouseInventories, searchInventory } from '../axios';
 import Inventory from './Inventory';
 import InventoryHeader from './InventoryHeader';
 import WarehouseDetail from './WarehouseDetail';
@@ -58,6 +58,14 @@ function Inventories() {
         });
     };
 
+    const searchAction = keyWord => {
+        searchInventory(keyWord).then(response => {
+            if (response !== undefined) {
+                setInventories(response.data);
+            }
+        })
+    }
+
     return (
         <Flex
             w={{ xl: '1020px' }}
@@ -80,7 +88,7 @@ function Inventories() {
                 flexDirection={'column'}
             >
                 {warehouseId === undefined ? (
-                    <InventoryHeader />
+                    <InventoryHeader search={searchAction}/>
                 ) : warehouseInfo ? (
                     <WarehouseDetail warehouse={warehouseInfo} />
                 ) : (

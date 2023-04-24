@@ -3,7 +3,7 @@ const validation = require('./validation');
 const knex = require('knex')(require('../knexfile'));
 
 const selectWarehouse = keyWord =>
-    keyWord === undefined
+    (keyWord === undefined || keyWord === '')
         ? knex('warehouses').select(
               'id',
               'warehouse_name',
