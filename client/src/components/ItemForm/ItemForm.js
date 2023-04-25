@@ -3,7 +3,7 @@ import { useNavigate, useParams, useNavigation } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../Utils/const";
 import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl} from '@chakra-ui/react';
-import { AddWhite, ArrowBack } from '../../assets/modifiedIcons';
+import { AddWhite, ArrowBack, Error } from '../../assets/modifiedIcons';
 
 function ItemForm() {
 
@@ -15,7 +15,7 @@ function ItemForm() {
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [status , setStatus] = useState("");
-    const [quantity , setQuantity] = useState("Accessories");
+    const [quantity , setQuantity] = useState(0);
     const [warehouse_id , setWarehouse] = useState("");
 
     const [formErrors, setFormErrors] = useState();
@@ -153,9 +153,9 @@ function ItemForm() {
                     setFormErrors(null);
                     setItemName("");
                     setDescription("");
-                    setCategory("Accessories");
+                    setCategory("");
                     setStatus("");
-                    setQuantity("");
+                    setQuantity(0);
                     setWarehouse("");
                     goBack();
                 })
@@ -221,7 +221,7 @@ function ItemForm() {
                             >Item Name</FormLabel>
                             <Input borderRadius="20"  borderColor="$Cloud" maxLength={50} type="text"  onChange={handleInventoryItemName} value={item_name}/>
                             <FormErrorMessage>
-                                {formErrors && formErrors.includes("Item Name is required") && "This field is required"}
+                                <Error mr="1"/>{formErrors && formErrors.includes("Item name is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
 
@@ -229,7 +229,7 @@ function ItemForm() {
                             <FormLabel htmlFor='name' mt={{md:"4"}} >Description</FormLabel>
                             <Textarea  size='sm' borderRadius="20" type="text" maxLength={100} borderColor="$Cloud" onChange={handleInventoryDescription} resize="none" value={description} height={{sm:"120px"}}/>
                             <FormErrorMessage>
-                                {formErrors && formErrors.includes("Description is required") && "This field is required"}
+                            <Error mr="1"/> {formErrors && formErrors.includes("Description is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
 
@@ -243,7 +243,7 @@ function ItemForm() {
                             <option value='Health'>Health</option>
                             </Select>
                             <FormErrorMessage>
-                                {formErrors && formErrors.includes("Category is required") && "This field is required"}
+                            <Error mr="1"/>{formErrors && formErrors.includes("Category is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
                     </Flex>
@@ -259,7 +259,7 @@ function ItemForm() {
                                     fontWeight="400">Item Name</FormLabel>
                             <Input size="sm" borderRadius="20"  borderColor="$Cloud" placeholder="Item Name" onChange={handleInventoryItemName} value={item_name}></Input>
                             <FormErrorMessage>
-                                {formErrors && formErrors.includes("Item name is required") && "This field is required"}
+                            <Error mr="1"/>{formErrors && formErrors.includes("Item name is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
 
@@ -270,7 +270,7 @@ function ItemForm() {
                                 onChange={handleInventoryDescription}
                                 value={description}/>
                                 <FormErrorMessage>
-                                {formErrors && formErrors.includes("Description is required") && "This field is required"}
+                                <Error mr="1"/>{formErrors && formErrors.includes("Description is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
 
@@ -284,7 +284,7 @@ function ItemForm() {
                                 <option value="Health">Health</option>
                             </Select>
                             <FormErrorMessage>
-                                {formErrors && formErrors.includes("Category is required") && "This field is required"}
+                            <Error mr="1"/>{formErrors && formErrors.includes("Category is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
                     </Flex>
@@ -306,7 +306,7 @@ function ItemForm() {
                                 </Stack>
                             </RadioGroup>
                             <FormErrorMessage>
-                                {formErrors && formErrors.includes("Status is required") && "This field is required"}
+                            <Error mr="1"/> {formErrors && formErrors.includes("Status is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
                         
@@ -315,7 +315,7 @@ function ItemForm() {
                                 <Input size='sm' min="1" max="65535" borderRadius="20" borderColor="$Cloud" type="number" onChange={handleInventoryQuantity}
                                     value={quantity}/></FormControl> 
                             : <FormControl><FormLabel pt={{sm:"4"}} htmlFor='name' display="none">Quantity</FormLabel> <Input size='sm' borderRadius="20" borderColor="$Cloud" onChange={handleInventoryQuantity}
-                            value={quantity}  display="none"/></FormControl>
+                            defaultValue={0} display="none"/></FormControl>
                         }
                         <FormControl  isInvalid={formErrors && formErrors.includes("Warehouse name is required")}  errorBorderColor='$Red' name="warehouse_id">
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
@@ -330,7 +330,7 @@ function ItemForm() {
                             <option value='2922c286-16cd-4d43-ab98-c79f698aeab0'>Manhattan</option>
                         </Select>
                         <FormErrorMessage>
-                                {formErrors && formErrors.includes("Warehouse name is required") && "This field is required"}
+                        <Error mr="1"/>{formErrors && formErrors.includes("Warehouse name is required") && "This field is required"}
                             </FormErrorMessage>
                         </FormControl>
                     </Flex>                   
