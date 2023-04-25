@@ -10,10 +10,10 @@ const selectInventory = keyWord =>
         : knex('inventories')
               .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
               .select('inventories.id', 'warehouse_name', 'item_name', 'description', 'category', 'status', 'quantity')
-              .where('warehouse_name', keyWord)
-              .orWhere('item_name', keyWord)
-              .orWhere('description', keyWord)
-              .orWhere('category', keyWord);
+              .where('warehouse_name',  'like', `%${keyWord}%`)
+              .orWhere('item_name',  'like', `%${keyWord}%`)
+              .orWhere('description',  'like', `%${keyWord}%`)
+              .orWhere('category',  'like', `%${keyWord}%`);
 
 const index = (req, res) => {
     selectInventory(req.query.s)
