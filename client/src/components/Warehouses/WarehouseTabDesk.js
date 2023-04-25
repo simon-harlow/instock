@@ -19,9 +19,9 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
     const handleClickEditWarehouse = () => navigate(`/warehouses/edit/${warehouse.id}`)
 
     return (
-        <Tr key={id} bg="$White" _hover={{ bg: "$LightGrey"}}>
+        <Tr key={id} bg="$White" _hover={{ bg: "#2E66E512"}}>
             <Td px="1rem">
-            <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
+            <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
                 {warehouse.warehouse_name}
             </Button>   
             </Td>

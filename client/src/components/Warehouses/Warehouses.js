@@ -105,7 +105,7 @@ function Warehouses() {
                 direction={{ base: 'column', md: 'row' }}
                 alignItems={{ base: 'flex-start' }}
                 justify={{ base: 'flex-start', md: 'space-between' }}
-                px={{ base: '2rem', md: '1rem' }}
+                px="2rem"
                 pt="2rem"
                 pb="1rem"
             >
@@ -153,7 +153,7 @@ function Warehouses() {
             <Table variant="simple">
                 <Thead>
                 <Tr bg="$LightGrey">
-                    <Th color="$Slate" px="1rem">
+                    <Th color="$Slate" pl="2rem">
                         <Button onClick={() => handleSortClick("warehouse_name")} rightIcon={<Sort />} variant="tab">WAREHOUSE</Button>
                     </Th>
                     <Th color="$Slate" px="1rem">
@@ -165,7 +165,7 @@ function Warehouses() {
                     <Th color="$Slate" px="1rem">
                         <Button onClick={() => handleSortClick("contact_phone,contact_email")} rightIcon={<Sort />} variant="tab">CONTACT INFORMATION</Button>
                     </Th>
-                    <Th color="$Slate" px="1rem">ACTIONS</Th>
+                    <Th color="$Slate" pr="1rem">ACTIONS</Th>
                 </Tr>
                 </Thead>
                 <Tbody>
