@@ -61,21 +61,32 @@ function Inventories() {
         });
     };
 
-    const getSortedData = (sortBy, orderBy) => {
-        axios
-            .get(`${API_URL}/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
-            .then((response) => {
-                setInventories(response.data)
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    const getSortedData = (sortBy, orderBy, warehouseId) => {
+        if (warehouseId) {
+            axios
+                .get(`${API_URL}/warehouses/${warehouseId}/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
+                .then((response) => {
+                    setInventories(response.data)
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            axios
+                .get(`${API_URL}/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
+                .then((response) => {
+                    setInventories(response.data)
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     }
 
     const handleSortClick = (column) => {
         let newSortOrder = { ...sortOrder };
         let newOrderBy;
-    
+
         if (sortOrder[column] === "asc") {
             newOrderBy = "desc";
             newSortOrder[column] = "desc";
@@ -83,11 +94,20 @@ function Inventories() {
             newOrderBy = "asc";
             newSortOrder[column] = "asc";
         }
-        // Call the API with new sorting order
-        getSortedData(column, newOrderBy);
-    
+
+        const path = window.location.pathname;
+        const isWarehouseInventory = path.startsWith("/warehouses/");
+        const warehouseId = isWarehouseInventory ? path.split("/")[2] : null;
+
+        // Call the relevant API with new sorting order
+        if (warehouseId) {
+            getSortedData(column, newOrderBy, warehouseId);
+        } else {
+            getSortedData(column, newOrderBy);
+        }
+
         setSortOrder(newSortOrder);
-    }
+    };
 
     return (
         <Flex

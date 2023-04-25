@@ -140,19 +140,29 @@ const addInventory = (req, res) => {
     
 };
 
-const inventoriesSorted = (_req, res) => {
-    let { sort_by: columns, order_by: order } = _req.query;
+const inventoriesSorted = (req, res) => {
+    let { sort_by: columns, order_by: order } = req.query;
+
     columns = columns.split(',');
-    const validColumns = [ 'item_name', 'category', 'status', 'quantity', 'warehouse_id'];
+
+    const validColumns = ['item_name', 'category', 'status', 'quantity', 'warehouse_id'];
     const invalidColumns = columns.filter(column => !validColumns.includes(column));
+
     if (invalidColumns.length > 0) {
         return res.status(400).send(`Invalid column(s): ${invalidColumns.join(', ')}. Valid columns: ${validColumns.join(', ')}`);
     }
+
     const validOrders = ['asc', 'desc'];
     if (!validOrders.includes(order)) {
         return res.status(400).send(`Invalid order. Valid orders: ${validOrders.join(', ')}`);
     }
-    knex('inventories')
+
+    // use regex to get the warehouseId from the originalUrl
+    const regex = /^\/api\/warehouses\/(.*)\/inventories/;
+    const match = regex.exec(req.originalUrl);
+    const warehouseId = match ? match[1] : null;
+
+    let query = knex('inventories')
         .select('inventories.*', 'warehouses.warehouse_name')
         .leftJoin('warehouses', 'warehouses.id', 'inventories.warehouse_id')
         .orderBy(columns.map(column => {
@@ -160,8 +170,13 @@ const inventoriesSorted = (_req, res) => {
                 return { column: 'warehouses.warehouse_name', order: order };
             }
             return { column: column, order: order };
-        }))
-        .then(data => {
+        }));
+
+    if (warehouseId) {
+        query = query.where('inventories.warehouse_id', warehouseId);
+    }
+
+    query.then(data => {
             data.map(inventory => {
                 delete inventory.created_at;
                 delete inventory.updated_at;

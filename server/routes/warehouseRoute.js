@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const warehouseController = require('../controllers/warehouseController');
+const inventoryController = require('../controllers/inventoryController')
 
 router
     .route('/')
@@ -20,6 +21,12 @@ router
     
 router
     .route('/:id/inventories')
-    .get(warehouseController.getInventories);
+    .get((req, res) => {
+        if (req.query.sort_by) {
+            inventoryController.inventoriesSorted(req, res);
+        } else {
+        warehouseController.getInventories(req, res);
+        }
+    });
 
 module.exports = router;
