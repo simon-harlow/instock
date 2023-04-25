@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Image, Stack, Button, Link} from '@chakra-ui/react';
+import { NavLink } from 'react-router-dom';
 import Logo2 from '../../assets/Logo/InStock-Logo_2x.png';
 
 function Header() {
@@ -7,16 +8,16 @@ function Header() {
         <Box
             bg ="$Graphite"
             width ="100%"
-            height={{sm: "20vh", md: "20vh"}}
-            pb={{sm: "20%", md: "100px", lg: "120px"}}
+            height={{sm: "200px", md: "186px"}}
+            pb={{md: "90px"}}
             align="center"
-            px={{sm: null, md: "5", lg: "90px" }}
+            px={{sm: "4", md: "8", xl: "130px" }}
             display={{sm: null, md: "flex"}}
-            justifyContent={{sm: "center", md: "space-between", lg:  "space-between"}}
+            justifyContent={{sm: "center", md: "space-between"}}
         >
             <Image 
-            py={{sm: "5%", md:"revert"}}
-            width={{sm: "100px", md:"125px", lg: "100px"}}
+            py={{sm: "6%", md:"revert"}}
+            width={{sm: "128px", md:"128px", lg: "128px"}}
             objectFit="contain"
             src={Logo2} 
             />
@@ -25,36 +26,40 @@ function Header() {
                 direction = "row"
                 align= {{sm: "center", md: null}}
                 justifyContent={{ sm: "space-evenly",  md: "space-evenly", lg: "space-evenly"}}
-            ><Link href={`/warehouses/`}>
-                <Button
-                    h={{sm:"7", md:"9", lg:"8"}}
-                    width= {{sm:"125px", md: "110px", lg:"80px" }}
-                    borderRadius="50"
-                    bg="$InstockBlack"
-                    color="white"
-                    fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    fontWeight="400"
-                    fontFamily="Titillium Web"
-                >
-                    Warehouses
-                </Button>
+            >
+            <Link
+                to="/warehouses/"
+                as={NavLink}
+                color="white"
+                size="md"
+                py="2"
+                width={{sm: "164px", md:"107px"}}
+                fontSize={{sm:"h3Labels"}}
+                lineHeight={{sm:"h3Labels"}}
+                borderRadius="20"
+                _activeLink={{
+                        bgColor:"$InstockBlack"
+
+                        }}
+            >
+                Warehouses
             </Link>
-            <Link href={`/inventories/`}>
-                <Button
-                    h={{sm:"7", md:"9",  lg:"8"}}
-                    width= {{sm:"125px", md: "110px", lg: "80px"}}
-                    borderRadius="50"
-                    bg="$InstockBlack"
-                    color="white"
-                    fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    fontWeight="400"
-                    fontFamily="Titillium Web"
-                >
-                    Inventory
-                </Button>
-                </Link>
+            <Link
+                to="/inventories/"
+                as={NavLink}
+                color="white"
+                size="md"
+                py="2"
+                width={{sm: "164px", md:"107px"}}
+                fontSize={{sm:"h3Labels"}}
+                lineHeight={{sm:"h3Labels"}}
+                borderRadius="20"
+                _activeLink={{
+                        bgColor:"$InstockBlack"
+
+                        }}>
+                Inventory
+            </Link>
             </Stack>
         </Box>
     );
