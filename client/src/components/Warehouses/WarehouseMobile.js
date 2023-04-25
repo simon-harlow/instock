@@ -26,7 +26,7 @@ function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
                         <Heading color="$Slate" fontSize="mh4TableHeader" lineHeight="mh4TableHeader" as="h4" size="sm" mb={2} >
                             WAREHOUSE
                         </Heading>
-                        <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} hover={{ bg: '$InstockBlack', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="mp2bodyMedium" lineHeight="mp2bodyMedium">
+                        <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="mp2bodyMedium" lineHeight="mp2bodyMedium">
                             {warehouse.warehouse_name}
                         </Button>
                     </Box>
@@ -62,7 +62,7 @@ function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
                 </Flex>
             </Flex>
             <Flex alignItems="center" justifyContent="space-between" px="2rem" pb="1rem" w="100%">
-                <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen(); console.log(warehouse.id);}}/>
+                <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen()}}/>
                 <Modal closeOnOverlayClick={false} onClose={onClose} size={'full'} isOpen={isOpen}>
                     <ModalOverlay />
                     <ModalContent>
@@ -74,10 +74,10 @@ function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
                     </ModalBody>
                     <ModalFooter>
                         <Flex w="100%" gap={8}>
-                        <Button flex="1" h="36px" borderRadius="20px" onClick={onClose} variant="outline" _hover={{ bg: '' }}>
+                        <Button flex="1" h="36px" borderRadius="20px" onClick={onClose} variant="outline" _hover={{ color: '$InstockIndigo', borderColor: '$InstockIndigo' }}>
                             Close
                         </Button>
-                        <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '' }} _active={{ bg: '' }} onClick={() => {
+                        <Button flex="1" h="36px" borderRadius="20px" color="White" bg="$Red" _hover={{ bg: '$InstockBlack' }} _active={{ bg: '' }} onClick={() => {
                             handleDelete(warehouse.id);
                             onClose();
                         }}>
