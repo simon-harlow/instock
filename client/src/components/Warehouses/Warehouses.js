@@ -90,15 +90,15 @@ function Warehouses() {
 
     return (
         <Box
-            maxW="1020px"
-            mx={{ base: '0', xl: 'auto' }}
+            w={{ xl: '1020px' }}
+            mx={{ xl: 'auto' }}
             boxShadow="base"
             bg="$White"
             position="absolute"
-            top="7rem"
-            left={{ base: '4', sm: '4', md: '8', xl: '0' }}
-            right={{ base: '4', sm: '4', md: '8', xl: '0' }}
-            zIndex="2"
+            top={{ base: '136px', md: '92px' }}
+            left={{ base: '4', md: '8' }}
+            right={{ base: '4', md: '8' }}
+            zIndex="1"
             borderRadius="5px"
         >
             <Flex
@@ -168,7 +168,7 @@ function Warehouses() {
                     <Th color="$Slate" pr="1rem">ACTIONS</Th>
                 </Tr>
                 </Thead>
-                <Tbody>
+                <Tbody >
                 {warehouseData.map(warehouse => (
                     <WarehouseTabDesk
                     key={warehouse.id}

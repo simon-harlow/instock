@@ -36,8 +36,8 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
             </Td>
             <Td px="1rem">
                 <Flex gap={2}>
-                    <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen()}}/>
-                    <Modal onClose={onClose} isOpen={isOpen}>
+                    <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen()}} _hover={{ transform: 'scale(1.2)'}}/>
+                    <Modal onClose={onClose} isOpen={isOpen} size="xl">
                         <ModalOverlay bg="rgba(35, 41, 64, 0.5)" />
                         <ModalContent>
                             <ModalHeader>Delete {warehouse.warehouse_name} warehouse?</ModalHeader>
@@ -61,7 +61,7 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
                             </ModalFooter>
                         </ModalContent>
                     </Modal>
-                    <Edit onClick={handleClickEditWarehouse} cursor="pointer" boxSize={6} color="$InstockIndigo" />
+                    <Edit onClick={handleClickEditWarehouse} cursor="pointer" boxSize={6} color="$InstockIndigo" _hover={{ transform: 'scale(1.2)'}}/>
                 </Flex>
             </Td>
         </Tr>

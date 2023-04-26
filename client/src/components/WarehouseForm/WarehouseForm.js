@@ -129,22 +129,22 @@ function WarehouseForm() {
     const isFormValid = () => {
         const errors = [];
 
-        if (!warehouse_name) {
+        if (!warehouse_name.trim()) {
             errors.push("Warehouse Name is required");
         }
-        if (!address) {
+        if (!address.trim()) {
             errors.push("Street Address is required");
         }
-        if (!city) {
+        if (!city.trim()) {
             errors.push("City is required");
         }
-        if (!country) {
+        if (!country.trim()) {
             errors.push("Country is required");
         }
-        if (!contact_name) {
+        if (!contact_name.trim()) {
             errors.push("Contact Name is required");
         }
-        if (!contact_position) {
+        if (!contact_position.trim()) {
             errors.push("Contact Position is required");
         }
         if (!isValidPhoneNumber(contact_phone)) {
