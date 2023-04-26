@@ -4,6 +4,8 @@ import axios from "axios";
 import { API_URL } from "../Utils/const";
 import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl} from '@chakra-ui/react';
 import { AddWhite, ArrowBack, Error } from '../../assets/modifiedIcons';
+import { getWarehouses } from '../axios';
+
 
 function ItemForm() {
 
@@ -17,6 +19,8 @@ function ItemForm() {
     const [status , setStatus] = useState("");
     const [quantity , setQuantity] = useState(0);
     const [warehouse_id , setWarehouse] = useState("");
+
+    const [warehouseList, setWarehouseList] = useState([]);
 
     const [formErrors, setFormErrors] = useState();
 
@@ -34,7 +38,18 @@ function ItemForm() {
                             
     }
 
+    const fetchedWarehouseList = () =>{
+        axios.get(API_URL+`/warehouses`)
+            .then(res =>{
+                setWarehouseList(res.data);
+                console.log(warehouseList);
+            })
+    }
+
+
+
     useEffect(() => {
+        fetchedWarehouseList();
         if(isEdit){
             axios.get(API_URL+`/inventories/${inventoryId}`)
             .then(response => {
@@ -45,11 +60,13 @@ function ItemForm() {
                 setStatus(response.data.status);
                 setWarehouse(fetchedWarehouseID);
                 setQuantity(response.data.quantity);
+                
             })
             .catch((error) => {
                 console.error("Error fetching warehouse data:", error);
             });
         }
+
     }, [isEdit, inventoryId]);
     
 
@@ -119,7 +136,7 @@ function ItemForm() {
     const handleFormSubmit = (event) => {
         event.preventDefault();
         const errors = isFormValid();
-        if(status == "Out of Stock"){
+        if(status === 'Out of Stock'){
             setQuantity(0);
         }
 
@@ -140,7 +157,7 @@ function ItemForm() {
                     description,
                     category,
                     status,
-                    quantity: parsed
+                    quantity: status === 'Out of Stock'? 0 : parsed,
             };
 
             const method = isEdit ? 'put' : 'post';
@@ -320,14 +337,12 @@ function ItemForm() {
                         <FormControl  isInvalid={formErrors && formErrors.includes("Warehouse name is required")}  errorBorderColor='$Red' name="warehouse_id">
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
                         <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_id} placeholder='Please select' >
-                            <option value='150a36cf-f38e-4f59-8e31-39974207372d'>Boston</option>
-                            <option value='ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7'>Seattle</option>
-                            <option value='bb1491eb-30e6-4728-a5fa-72f89feaf622'>Miami</option>
-                            <option value='89898957-04ba-4bd0-9f5c-a7aea7447963'>Santa Monica</option>
-                            <option value='bfc9bea7-66f1-44e9-879b-4d363a888eb4'>SF</option>
-                            <option value='90ac3319-70d1-4a51-b91d-ba6c2464408c'>Jersey</option>
-                            <option value='5bf7bd6c-2b16-4129-bddc-9d37ff8539e9'>Washington</option>
-                            <option value='2922c286-16cd-4d43-ab98-c79f698aeab0'>Manhattan</option>
+                           
+                            {
+                            warehouseList.map(function(ware, i){
+                                return (<option value={ware.id} key={ware.id}>{ware.warehouse_name}</option>);
+                            })}
+
                         </Select>
                         <FormErrorMessage>
                         <Error mr="1"/>{formErrors && formErrors.includes("Warehouse name is required") && "This field is required"}

@@ -59,6 +59,13 @@ const searchInventory = async keyWord => {
     } catch (err) {}
 };
 
+const getWarehouses = async () => {
+    try {
+        const warehouses = await axios.get(`${API_ADDRESS}/api/warehouses`);
+        return warehouses;
+    } catch (err) {}
+};
+
 export {
     getWarehouse,
     getInventories,
@@ -67,5 +74,6 @@ export {
     getInventory,
     searchWarehouse,
     searchInventory,
+    getWarehouses
 };
 
