@@ -6,7 +6,7 @@ import Inventory from './Inventory';
 import InventoryHeader from './InventoryHeader';
 import WarehouseDetail from './WarehouseDetail';
 import { Sort } from '../../assets/modifiedIcons';
-import { API_URL } from '../Utils/const';
+import { API_ADDRESS } from '../axios';
 import axios from 'axios';
 
 function Inventories() {
@@ -71,7 +71,7 @@ function Inventories() {
 
     const getSortedData = (sortBy, orderBy) => {
         axios
-            .get(`${API_URL}/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
+            .get(`${API_ADDRESS}/api/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
             .then((response) => {
                 setInventories(response.data)
             })
@@ -109,6 +109,7 @@ function Inventories() {
             right={{ base: '4', md: '8' }}
             zIndex="1"
             borderRadius="5px"
+            height="calc(100vh - 136px)"
         >
             <Flex
                 w={{ base: '100%', xl: '1020px' }}
