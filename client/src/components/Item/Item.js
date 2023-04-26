@@ -1,6 +1,6 @@
 import React, {useEffect, useState}from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Flex, Text, Circle, useMediaQuery, Button} from '@chakra-ui/react';
+import { Flex, Text, Circle, useMediaQuery, Button, Center} from '@chakra-ui/react';
 import { getInventories, getInventory } from '../axios';
 import { ArrowBack, Edit } from '../../assets/modifiedIcons';
 
@@ -91,7 +91,7 @@ function Item() {
                         </Button>
                     ) : (
                         <Circle bg={'$InstockIndigo'} color={'white'} size="36px" onClick={goEdit}>
-                            <Edit />
+                            <Edit width={{sm:"15px"}}/>
                         </Circle>
                     )}
                 </Flex>
@@ -105,9 +105,9 @@ function Item() {
                             width={{sm:"100%"}}
                             borderRight={{ base: 'none', md: '1px solid' }} borderColor={{ base: '$Cloud', md: '$Cloud' }}
                             > 
-                            <Text textTransform="uppercase" 
-                                fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-                                lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
+                            <Text 
+                                textTransform="uppercase" 
+                                fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}
                                 color="$Slate">
                                 Item description:
                             </Text>
@@ -120,8 +120,7 @@ function Item() {
                             </Text>
                             <Text
                                 textTransform="uppercase" 
-                                fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-                                lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
+                                fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}
                                 color="$Slate">
                                 Category:
                             </Text>
@@ -142,27 +141,48 @@ function Item() {
                                     >
                                     <Text 
                                         textTransform="uppercase" 
-                                        fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-                                        lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
+                                        fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}
                                         color="$Slate"
                                     >
                                         Status:
                                     </Text>
-                                    <Text 
-                                        pb={{sm: "4", md:"8"}}
-                                        fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-                                        lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-                                    >
-                                        {inventory.status}
-                                    </Text>
+                                    {inventory.quantity === 0 ? (
+                                            <Center
+                                                w="fit-content"
+                                                h="26px"
+                                                px={2}
+                                                textTransform="uppercase"
+                                                color="$Red"
+                                                bg="rgba(201, 69, 21, 0.07)"
+                                                borderRadius="20px"
+                                                fontSize="p3bodySmall"
+                                                mb={{sm: "4", md:"0"}}
+                                            >
+                                                {inventory.status}
+                                            </Center>
+                                        ) : (
+                                            <Center
+                                                w="fit-content"
+                                                h="26px"
+                                                px={2}
+                                                textTransform="uppercase"
+                                                color="$Green"
+                                                bg="rgba(21, 132, 99, 0.07)"
+                                                borderRadius="20px"
+                                                fontSize="p3bodySmall"
+                                                mb={{sm: "4", md:"0"}}
+                                            >
+                                                {inventory.status}
+                                            </Center>
+                                        )}
                                 </Flex>
                                 <Flex 
                                     flexDirection="column" 
                                     width="50%"
                                 >
                                     <Text 
-                                        fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-                                        lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
+                                        textTransform="uppercase" 
+                                        fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}
                                         color="$Slate"
                                     >
                                         Quantity:
@@ -179,8 +199,9 @@ function Item() {
                                 
                                 flexDirection="column">
                                 <Text 
-                                    textTransform="uppercase" fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
-                                    lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
+                                    textTransform="uppercase" 
+                                    fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}
+                                    color="$Slate"
                                 >
                                     Warehouse:
                                 </Text>
