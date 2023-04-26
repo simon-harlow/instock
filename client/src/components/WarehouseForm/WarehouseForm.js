@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios"
 import { InputMask }  from "react-input-mask";
 
@@ -12,6 +12,11 @@ import { useToast } from "@chakra-ui/react";
 
 function WarehouseForm() {
 
+    // check for existence of warehouseId, if true then render edit warehouse and not add new warehouse
+    const { warehouseId } = useParams();
+    const isEdit = !!warehouseId;
+
+    // state for input fields
     const [warehouse_name, setWarehouseName] = useState("");
     const [address, setAddress] = useState("");
     const [city, setCity] = useState("");
@@ -25,11 +30,38 @@ function WarehouseForm() {
     const [formattedPhoneNumber, setFormattedPhoneNumber] = useState("");
     const [formErrors, setFormErrors] = useState();
 
+    // navigation handlers
     const navigate = useNavigate();
     const formRedirect = () => navigate(`/warehouses`)
     const backPage = () => navigate(-1);
+    // toast for successful post or put request - helpful for user to know its worked
     const toast = useToast();
 
+    useEffect(() => {
+        // Only get data if isEdit is true
+        if (isEdit) {
+        axios
+            .get(`${API_URL}/warehouses/${warehouseId}`)
+            .then((response) => {
+                const data = response.data;
+                console.log(data);
+                setWarehouseName(data.warehouse_name);
+                setAddress(data.address);
+                setCity(data.city);
+                setCountry(data.country);
+                setContactName(data.contact_name);
+                setContactPosition(data.contact_position);
+                setContactPhoneNumber(data.contact_phone);
+                setFormattedPhoneNumber(data.contact_phone);
+                setContactEmail(data.contact_email);
+            })
+            .catch((error) => {
+                console.error("Error fetching warehouse data:", error);
+            });
+        }
+    }, [isEdit, warehouseId]);
+
+    // input handlers
     const handleWarehouseNameChange = (event) => {
         setWarehouseName(event.target.value);
     };
@@ -73,6 +105,7 @@ function WarehouseForm() {
         setPhoneNumberInputActive(false);
     };
 
+    // phone number format checker
     const formatPhoneNumber = (phoneNumber) => {
         const cleaned = phoneNumber.replace(/\D/g, "");
         const match = cleaned.match(/^(\d{1})(\d{0,3})(\d{0,3})(\d{0,4})$/);
@@ -82,13 +115,14 @@ function WarehouseForm() {
         return "";
     };
 
+    // validators
     const isValidPhoneNumber = (phoneNumber) => {
         const phoneFormat = /^\+\d\s\(\d{3}\)\s\d{3}\-\d{4}$/;
         return phoneFormat.test(phoneNumber);
     };
 
     const isValidEmail = (email) => {
-        const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailFormat = /^[a-zA-Z0-9]+([\.\-\_]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\.\-]?[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]{2,3})$/;
         return emailFormat.test(email);
     };
 
@@ -122,46 +156,64 @@ function WarehouseForm() {
         return errors;
     };
 
+    // handler for adding new warehouse
     const handleFormSubmit = (event) => {
         event.preventDefault();
         const errors = isFormValid();
+    
         if (errors.length === 0) {
-            // form is valid, submit it
-            axios
-                .post(`${API_URL}/warehouses`, {
-                    warehouse_name,
-                    address,
-                    city,
-                    country,
-                    contact_name,
-                    contact_position,
-                    contact_phone,
-                    contact_email,
-                })
+            const data = {
+                warehouse_name,
+                address,
+                city,
+                country,
+                contact_name,
+                contact_position,
+                contact_phone,
+                contact_email,
+            };
+    
+            const method = isEdit ? 'put' : 'post';
+            const url = isEdit ? `${API_URL}/warehouses/${warehouseId}` : `${API_URL}/warehouses`;
+    
+            axios[method](url, data)
                 .then(() => {
                     setFormErrors(null);
-                    setWarehouseName("");
-                    setAddress("");
-                    setCity("");
-                    setCountry("");
-                    setContactName("");
-                    setContactPosition("");
-                    setContactPhoneNumber("");
-                    setContactEmail("");
+                    setWarehouseName('');
+                    setAddress('');
+                    setCity('');
+                    setCountry('');
+                    setContactName('');
+                    setContactPosition('');
+                    setContactPhoneNumber('');
+                    setContactEmail('');
                     formRedirect();
-                    toast({
-                        title: "Warehouse Added!",
-                        description: "Warehouse has been added successfully submitted.",
-                        status: "success",
-                        duration: 5000,
-                        isClosable: true,
-                    });
+                    if (isEdit) {
+                        toast({
+                            title: 'Warehouse Updated!',
+                            description: 'Warehouse has been successfully updated.',
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                            bg: "$Green",
+                            color: "$White"
+                        });
+                    } else {
+                        toast({
+                            title: 'Warehouse Added!',
+                            description: 'Warehouse has been successfully added.',
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                            bg: "$Green",
+                            color: "$White"
+                        });
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
                 });
         } else {
-            // form has errors, show error messages and turn input fields red
             setFormErrors(errors);
         }
     };
@@ -171,7 +223,7 @@ function WarehouseForm() {
             <Flex direction="row" alignItems={{ base: 'baseline' }} justify={{ base: 'flex-start', md: 'flex-start' }} px={{ base: '1rem', md: '2rem' }} py="1rem" borderBottom="1px solid" borderBottomColor="$Cloud">
                 <ArrowBack onClick={backPage} cursor="pointer" boxSize={6} color="$InstockIndigo"/>
                 <Heading as="h1" size="lg" pl="0.5rem" py="1rem" fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }} lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}>
-                    Add New Warehouse
+                {isEdit ? "Edit Warehouse" : "Add New Warehouse"}
                 </Heading>
             </Flex>
             <form onSubmit={handleFormSubmit}>
@@ -184,7 +236,7 @@ function WarehouseForm() {
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 Warehouse Name
                             </FormLabel>
-                            <Input onChange={handleWarehouseNameChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Warehouse Name'/>
+                            <Input onChange={handleWarehouseNameChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Warehouse Name' value={warehouse_name}/>
                             <FormErrorMessage>
                                 <Error mr="1"/> {formErrors && formErrors.includes("Warehouse Name is required") && "This field is required"}
                             </FormErrorMessage>
@@ -194,7 +246,7 @@ function WarehouseForm() {
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 Street Address
                             </FormLabel>
-                            <Input onChange={handleAddressChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Street Address'/>
+                            <Input onChange={handleAddressChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Street Address' value={address}/>
                             <FormErrorMessage>
                                 <Error mr="1"/> {formErrors && formErrors.includes("Street Address is required") && "This field is required"}
                             </FormErrorMessage>
@@ -204,7 +256,7 @@ function WarehouseForm() {
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 City
                             </FormLabel>
-                            <Input onChange={handleCityChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='City'/>
+                            <Input onChange={handleCityChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='City' value={city}/>
                             <FormErrorMessage>
                                 <Error mr="1"/> {formErrors && formErrors.includes("City is required") && "This field is required"}
                             </FormErrorMessage>
@@ -214,7 +266,7 @@ function WarehouseForm() {
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 Country
                             </FormLabel>
-                            <Input onChange={handleCountryChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Country'/>
+                            <Input onChange={handleCountryChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Country' value={country}/>
                             <FormErrorMessage>
                                 <Error mr="1"/> {formErrors && formErrors.includes("Country is required") && "This field is required"}
                             </FormErrorMessage>
@@ -228,7 +280,7 @@ function WarehouseForm() {
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 Contact Name
                             </FormLabel>
-                            <Input onChange={handleContactNameChange} maxLength={50} name="contact_name" id="contact_name" type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Contact Name'/>
+                            <Input onChange={handleContactNameChange} maxLength={50} name="contact_name" id="contact_name" type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Contact Name' value={contact_name}/>
                             <FormErrorMessage>
                                 <Error mr="1"/> {formErrors && formErrors.includes("Contact Name is required") && "This field is required"}
                             </FormErrorMessage>
@@ -238,7 +290,7 @@ function WarehouseForm() {
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 Position
                             </FormLabel>
-                            <Input onChange={handleContactPositionChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Position'/>
+                            <Input onChange={handleContactPositionChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Position' value={contact_position}/>
                             <FormErrorMessage>
                                 <Error mr="1"/> {formErrors && formErrors.includes("Contact Position is required") && "This field is required"}
                             </FormErrorMessage>
@@ -248,7 +300,7 @@ function WarehouseForm() {
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 Phone Number
                             </FormLabel>
-                            <Input onChange={handleContactPhoneNumberChange} onFocus={handlePhoneNumberInputFocus} onBlur={handlePhoneNumberInputBlur} as={InputMask} maskChar={null} value={formattedPhoneNumber} maxLength={17} borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Phone Number'/>
+                            <Input onChange={handleContactPhoneNumberChange} onFocus={handlePhoneNumberInputFocus} onBlur={handlePhoneNumberInputBlur} as={InputMask} maxLength={17} borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Phone Number' value={formattedPhoneNumber}/>
                             {phoneNumberInputActive && (
                             <FormHelperText>
                                 <Edit mr="1" /> must be in format +1 (123) 123-1234
@@ -259,11 +311,11 @@ function WarehouseForm() {
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl isInvalid={formErrors && formErrors.includes("Invalid email address")} name="contact_email" mt={4}>
+                        <FormControl isInvalid={formErrors && formErrors.includes("Invalid email address")} name="contact_email" id="contact_email" mt={4}>
                             <FormLabel as="h3" fontSize={{ base: 'mh3Labels', md: 'h3Labels' }} lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}>
                                 Email
                             </FormLabel>
-                            <Input onChange={handleContactEmailChange} maxLength={50} type="email" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Email'/>
+                            <Input onChange={handleContactEmailChange} maxLength={50} type="text" borderRadius="20px" focusBorderColor='$InstockIndigo' errorBorderColor='$Red' fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }} placeholder='Email' value={contact_email}/>
                             <FormErrorMessage>
                                 <Error mr="1"/> {formErrors && formErrors.includes("Invalid email address") && "Invalid email address"}
                             </FormErrorMessage>
@@ -273,9 +325,15 @@ function WarehouseForm() {
                         <Button onClick={backPage} flex={{ base: '1', md: 'none' }} h={{ base: '36px', md: '38px' }} borderRadius="20px" variant="outline" bg="$White" _hover={{ color: '$InstockIndigo', borderColor: '$InstockIndigo' }}>
                             Cancel
                         </Button>
+                        {isEdit ? (
+                        <Button type="submit" flex={{ base: '1', md: 'none' }} h={{ base: '36px', md: '38px' }} borderRadius="20px" variant="outline" bg="$InstockIndigo" color="$White" _hover={{ bg: '$InstockBlack' }}>
+                            Save
+                        </Button>
+                        ) : (
                         <Button leftIcon={<AddWhite />} type="submit" flex={{ base: '1', md: 'none' }} h={{ base: '36px', md: '38px' }} borderRadius="20px" variant="outline" bg="$InstockIndigo" color="$White" _hover={{ bg: '$InstockBlack' }}>
                             Add Warehouse
                         </Button>
+                        )}
                     </Flex>
                 </Flex>
             </form>

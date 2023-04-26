@@ -36,12 +36,14 @@ const deleteInventory = async id => {
     } catch (err) {}
 };
 
+
 const getInventory = async id => {
     try {
         const inventories = await axios.get(`${API_ADDRESS}/api/inventories/${id}`);
         return inventories;
     } catch (err) {}
 };
+
 
 const searchWarehouse = async keyWord => {
     try {
@@ -66,3 +68,4 @@ export {
     searchWarehouse,
     searchInventory,
 };
+
