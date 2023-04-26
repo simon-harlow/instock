@@ -109,7 +109,6 @@ function Inventories() {
             right={{ base: '4', md: '8' }}
             zIndex="1"
             borderRadius="5px"
-            height="calc(100vh - 136px)"
         >
             <Flex
                 w={{ base: '100%', xl: '1020px' }}
