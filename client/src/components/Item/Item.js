@@ -1,5 +1,5 @@
 import React, {useEffect, useState}from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Flex, Text, Circle, useMediaQuery, Button} from '@chakra-ui/react';
 import { getInventories, getInventory } from '../axios';
 import { ArrowBack, Edit } from '../../assets/modifiedIcons';
@@ -9,6 +9,15 @@ function Item() {
     const { inventoryId } = useParams();
     const [inventory, setInventory] = useState([]);
     const [tablet] = useMediaQuery('(min-width: 768px)');
+    const navigate = useNavigate();
+
+    const goBack = () =>{
+        navigate('/inventories/');
+    }
+
+    const goEdit = () =>{
+        navigate(`/inventories/edit/${inventoryId}`);
+    }
 
     useEffect(() => {
         if (inventoryId === undefined) {
@@ -57,7 +66,7 @@ function Item() {
                     borderBottomColor="$Cloud"
                 > 
                     <Flex alignItems="center">
-                        <ArrowBack color="$InstockIndigo"  />
+                        <ArrowBack color="$InstockIndigo"  onClick={goBack}/>
                         <Text 
                             fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                             lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
@@ -68,6 +77,7 @@ function Item() {
                     
                     {tablet ? (
                         <Button
+                            onClick={goEdit}
                             bg={'$InstockIndigo'}
                             color={'white'}
                             leftIcon={<Edit />}
@@ -80,7 +90,7 @@ function Item() {
                             Edit
                         </Button>
                     ) : (
-                        <Circle bg={'$InstockIndigo'} color={'white'} size="36px">
+                        <Circle bg={'$InstockIndigo'} color={'white'} size="36px" onClick={goEdit}>
                             <Edit />
                         </Circle>
                     )}
@@ -93,7 +103,7 @@ function Item() {
                         <Flex px={{ base: '6', md: '8', xl: '10' }}
                             flexDirection="column"
                             width={{sm:"100%"}}
-                            
+                            borderRight={{ base: 'none', md: '1px solid' }} borderColor={{ base: '$Cloud', md: '$Cloud' }}
                             > 
                             <Text textTransform="uppercase" 
                                 fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
@@ -124,7 +134,7 @@ function Item() {
                             </Text>
                         </Flex>
 
-                        <Flex flexDirection="column" width={{sm:"100%"}}  px={{ base: '6', md: '8', xl: '10' }} borderLeft={{ md: '1px' }} borderLeftColor="$Cloud">
+                        <Flex flexDirection="column" width={{sm:"100%"}}  px={{ base: '6', md: '8', xl: '10' }} >
                             <Flex
                                 width="100%">
                                 <Flex flexDirection="column"
