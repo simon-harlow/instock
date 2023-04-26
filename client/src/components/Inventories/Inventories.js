@@ -162,6 +162,8 @@ function Inventories() {
                     flexDirection="column"
                     borderTop="1px"
                     borderTopColor={{ base: '$Cloud', sm: '$Cloud', md: '$White' }}
+                    maxH='878px'
+                    overflowY="auto"
                 >
                     {inventories.map((item, index) => {
                         return (

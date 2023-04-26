@@ -66,7 +66,7 @@ function WarehouseDetail(props) {
                         {props.warehouse.country}
                     </Box>
                 </Flex>
-                <Flex flex={{ md: '55%' }} pl={{ md: '10' }} borderLeft={{ md: '1px' }} borderLeftColor="$Cloud">
+                <Flex flex={{ md: '55%' }} pl={{ md: '10' }} borderLeft={{ md: '1px' }} borderLeftColor={{md: "$Cloud"}}>
                     <Flex flexDirection="column" flex={1}>
                         <Box textTransform="uppercase">Contact Name:</Box>
                         <Box color="$InstockBlack">{props.warehouse.contact_name}</Box>
