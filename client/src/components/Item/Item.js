@@ -66,7 +66,7 @@ function Item() {
                     borderBottomColor="$Cloud"
                 > 
                     <Flex alignItems="center">
-                        <ArrowBack color="$InstockIndigo"  onClick={goBack}/>
+                        <ArrowBack color="$InstockIndigo" cursor="pointer" onClick={goBack}/>
                         <Text 
                             fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                             lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
