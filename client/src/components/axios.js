@@ -59,6 +59,13 @@ const searchInventory = async keyWord => {
     } catch (err) {}
 };
 
+const deleteWarehouseData = (id) => {
+    return axios
+        .delete(`${API_ADDRESS}api/warehouses/${id}`)
+        .then((response) => response.data)
+        .catch((error) => console.log(error));
+};
+
 export {
     getWarehouse,
     getInventories,
@@ -67,5 +74,7 @@ export {
     getInventory,
     searchWarehouse,
     searchInventory,
+    deleteWarehouseData,
+    API_ADDRESS,
 };
 

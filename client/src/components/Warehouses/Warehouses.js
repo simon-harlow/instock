@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import { API_URL, deleteWarehouseData } from '../Utils/const';
+import { API_ADDRESS, deleteWarehouseData } from '../axios';
 import WarehouseMobile from './WarehouseMobile';
 import WarehouseTabDesk from './WarehouseTabDesk';
 import { Search, AddWhite, Sort } from '../../assets/modifiedIcons';
@@ -28,7 +28,7 @@ function Warehouses() {
 
     useEffect(() => {
         axios
-            .get(`${API_URL}/warehouses`)
+            .get(`${API_ADDRESS}/api/warehouses`)
             .then(response => {
                 setWarehouseData(response.data);
             })
@@ -62,7 +62,7 @@ function Warehouses() {
 
     const getSortedData = (sortBy, orderBy) => {
         axios
-            .get(`${API_URL}/warehouses?sort_by=${sortBy}&order_by=${orderBy}`)
+            .get(`${API_ADDRESS}/api/warehouses?sort_by=${sortBy}&order_by=${orderBy}`)
             .then((response) => {
                 setWarehouseData(response.data)
             })

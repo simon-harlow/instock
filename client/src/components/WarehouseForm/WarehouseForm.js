@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios"
 import { InputMask }  from "react-input-mask";
 
-import { API_URL } from "../Utils/const";
+import { API_ADDRESS } from "../axios";
 import { ArrowBack, AddWhite, Error, Edit } from '../../assets/modifiedIcons'
 
 import { FormControl, FormLabel, FormErrorMessage, FormHelperText, Input, Box, Flex, Heading, Button } from '@chakra-ui/react'
@@ -41,7 +41,7 @@ function WarehouseForm() {
         // Only get data if isEdit is true
         if (isEdit) {
         axios
-            .get(`${API_URL}/warehouses/${warehouseId}`)
+            .get(`${API_ADDRESS}/api/warehouses/${warehouseId}`)
             .then((response) => {
                 const data = response.data;
                 console.log(data);
@@ -174,7 +174,7 @@ function WarehouseForm() {
             };
     
             const method = isEdit ? 'put' : 'post';
-            const url = isEdit ? `${API_URL}/warehouses/${warehouseId}` : `${API_URL}/warehouses`;
+            const url = isEdit ? `${API_ADDRESS}/api/warehouses/${warehouseId}` : `${API_ADDRESS}/api/warehouses`;
     
             axios[method](url, data)
                 .then(() => {
