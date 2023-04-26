@@ -66,36 +66,36 @@ function Inventories() {
             if (response !== undefined) {
                 setInventories(response.data);
             }
-        })
-    }
+        });
+    };
 
     const getSortedData = (sortBy, orderBy) => {
         axios
             .get(`${API_URL}/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
-            .then((response) => {
-                setInventories(response.data)
+            .then(response => {
+                setInventories(response.data);
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error(error);
             });
-    }
+    };
 
-    const handleSortClick = (column) => {
+    const handleSortClick = column => {
         let newSortOrder = { ...sortOrder };
         let newOrderBy;
-    
-        if (sortOrder[column] === "asc") {
-            newOrderBy = "desc";
-            newSortOrder[column] = "desc";
+
+        if (sortOrder[column] === 'asc') {
+            newOrderBy = 'desc';
+            newSortOrder[column] = 'desc';
         } else {
-            newOrderBy = "asc";
-            newSortOrder[column] = "asc";
+            newOrderBy = 'asc';
+            newSortOrder[column] = 'asc';
         }
         // Call the API with new sorting order
         getSortedData(column, newOrderBy);
-    
+
         setSortOrder(newSortOrder);
-    }
+    };
 
     return (
         <Flex
@@ -119,7 +119,7 @@ function Inventories() {
                 flexDirection={'column'}
             >
                 {warehouseId === undefined ? (
-                    <InventoryHeader search={searchAction}/>
+                    <InventoryHeader search={searchAction} />
                 ) : warehouseInfo ? (
                     <WarehouseDetail warehouse={warehouseInfo} />
                 ) : (
@@ -133,21 +133,26 @@ function Inventories() {
                     bg="$LightGrey"
                     display={{ base: 'none', md: 'flex' }}
                 >
-                    <Button onClick={() => handleSortClick("item_name")} w="150px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick('item_name')} w="150px" rightIcon={<Sort />} variant="tab">
                         Inventory Item
                     </Button>
-                    <Button onClick={() => handleSortClick("category")} w="90px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick('category')} w="90px" rightIcon={<Sort />} variant="tab">
                         Category
                     </Button>
-                    <Button onClick={() => handleSortClick("status")} w="95px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick('status')} w="95px" rightIcon={<Sort />} variant="tab">
                         Status
                     </Button>
-                    <Button onClick={() => handleSortClick("quantity")} w="40px" rightIcon={<Sort />} variant="tab">
+                    <Button onClick={() => handleSortClick('quantity')} w="40px" rightIcon={<Sort />} variant="tab">
                         QTY
                     </Button>
 
                     {warehouseId === undefined ? (
-                        <Button onClick={() => handleSortClick("warehouse_id")} w="85px" rightIcon={<Sort />} variant="tab">
+                        <Button
+                            onClick={() => handleSortClick('warehouse_id')}
+                            w="85px"
+                            rightIcon={<Sort />}
+                            variant="tab"
+                        >
                             Warehouse
                         </Button>
                     ) : (
@@ -162,6 +167,13 @@ function Inventories() {
                     flexDirection="column"
                     borderTop="1px"
                     borderTopColor={{ base: '$Cloud', sm: '$Cloud', md: '$White' }}
+                    maxH={{ base: '764px', md: '878px' }}
+                    overflowY="auto"
+                    sx={{
+                        '::-webkit-scrollbar': {
+                            display: 'none',
+                        },
+                    }}
                 >
                     {inventories.map((item, index) => {
                         return (
