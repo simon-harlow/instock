@@ -95,7 +95,7 @@ function Warehouses() {
             boxShadow="base"
             bg="$White"
             position="absolute"
-            top={{ base: '136px', md: '92px' }}
+            top={{ base: '136px', md: '80px' }}
             left={{ base: '4', md: '8' }}
             right={{ base: '4', md: '8' }}
             zIndex="1"
