@@ -66,6 +66,13 @@ const deleteWarehouseData = (id) => {
         .catch((error) => console.log(error));
 };
 
+const getWarehouses = async () => {
+    try {
+        const warehouses = await axios.get(`${API_ADDRESS}/api/warehouses`);
+        return warehouses;
+    } catch (err) {}
+};
+
 export {
     getWarehouse,
     getInventories,
@@ -75,6 +82,7 @@ export {
     searchWarehouse,
     searchInventory,
     deleteWarehouseData,
+    getWarehouses,
     API_ADDRESS,
 };
 
