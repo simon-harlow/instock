@@ -16,7 +16,7 @@ function WarehouseDetail(props) {
                 borderBottom="1px"
                 borderBottomColor="$Cloud"
             >
-                <Link href="/warehouses">
+                <Link href="/warehouses" _hover={{}}>
                     <Flex
                         alignItems="center"
                         fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
@@ -66,7 +66,12 @@ function WarehouseDetail(props) {
                         {props.warehouse.country}
                     </Box>
                 </Flex>
-                <Flex flex={{ md: '55%' }} pl={{ md: '10' }} borderLeft={{ md: '1px' }} borderLeftColor={{md: "$Cloud"}}>
+                <Flex
+                    flex={{ md: '55%' }}
+                    pl={{ md: '10' }}
+                    borderLeft={{ md: '1px' }}
+                    borderLeftColor={{ md: '$Cloud' }}
+                >
                     <Flex flexDirection="column" flex={1}>
                         <Box textTransform="uppercase">Contact Name:</Box>
                         <Box color="$InstockBlack">{props.warehouse.contact_name}</Box>
