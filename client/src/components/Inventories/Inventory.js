@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Flex,
     Box,
@@ -13,35 +13,52 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
+    useMediaQuery
 } from '@chakra-ui/react';
 import { Delete, Edit, ChevronRight } from '../../assets/modifiedIcons';
 
 function Inventory(props) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure(); 
+
+    const [tablet] = useMediaQuery('(min-width: 768px)');
+
+    const [isHovering, setHovering] = useState('');
+    
+    const handleMouseOver = () =>{
+        setHovering(true);
+    }
+
+    const handleMouseExit = () =>{
+        setHovering(false);
+    }
+
 
     return (
         <Flex
             justifyContent="space-between"
             px={{ base: '6', md: '8', xl: '10' }}
             py={{ base: '4', md: '18px' }}
-            color="$Slate"
-            fontWeight="bold"
+            color="$InstockBlack"
             fontSize={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
             lineHeight={{ base: 'mp2bodyMedium', md: 'p2bodyMedium' }}
             borderTop={props.index !== 0 ? '1px' : '0'}
             borderTopColor="$Cloud"
             flexWrap="wrap"
             rowGap={{ base: '5', md: '0' }}
+            _hover={{ bg: "#2E66E512"}}
         >
             <Flex flexDirection="column" gap={1} order={1} w={{ base: '50%', md: '150px' }}>
                 <Box textTransform="uppercase" display={{ base: 'block', md: 'none' }}>
                     Inventory Item
                 </Box>
-                <Link href={`/inventories/${props.info.id}`}>
+                { tablet? 
+                    <Link href={`/inventories/${props.info.id}`} onMouseEnter={handleMouseOver} onMouseLeave={ handleMouseExit}>
                     <Button
                         justifyContent="start"
                         color={'$InstockIndigo'}
-                        rightIcon={<ChevronRight color="$InstockIndigo" />}
+                        rightIcon={<ChevronRight color="$InstockIndigo" style={{ transform: isHovering? 'translate(4px)': ''}}/>}
+                        fontSize={{ base: 'mh3Labels', md: 'h3Labels' }}
+                        lineHeight={{ base: 'mh3Labels', md: 'h3Labels' }}
                         bg={''}
                         h={''}
                         p={0}
@@ -50,7 +67,22 @@ function Inventory(props) {
                     >
                         {props.info.item_name}
                     </Button>
-                </Link>
+                    </Link>:
+                    <Link href={`/inventories/${props.info.id}`} >
+                        <Button
+                            justifyContent="start"
+                            color={'$InstockIndigo'}
+                            rightIcon={<ChevronRight color="$InstockIndigo" style={{ transform: isHovering? 'translate(4px)': ''}}/>}
+                            bg={''}
+                            h={''}
+                            p={0}
+                            _hover={{ bg: '', textDecoration: 'underline' }}
+                            _active={{ bg: '' }}
+                        >
+                            {props.info.item_name}
+                        </Button>
+                    </Link>
+                }
             </Flex>
 
             <Flex flexDirection="column" gap={1} order={{ base: '3', md: '2' }} w={{ base: '90px', md: '90px' }}>
@@ -76,7 +108,8 @@ function Inventory(props) {
                             color="$Red"
                             bg="rgba(201, 69, 21, 0.07)"
                             borderRadius="20px"
-                            fontSize="p3bodySmall"
+                            fontSize={{ base: 'mh4TableHeader', md: 'h4TableHeader' }}
+                            lineHeight={{ base: 'mh4TableHeader', md: 'h4TableHeader' }}
                         >
                             {props.info.status}
                         </Center>
@@ -121,9 +154,9 @@ function Inventory(props) {
                 justifyContent={{ base: 'space-between', md: 'end' }}
                 order={7}
             >
-                <Delete cursor="pointer" boxSize={6} color="$Red" onClick={onOpen} />
+                <Delete cursor="pointer" boxSize={6} color="$Red" onClick={onOpen} _hover={{ transform: 'scale(1.2)'}}/>
                 <Link href={`/inventories/edit/${props.info.id}`}>
-                    <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" />
+                    <Edit cursor="pointer" boxSize={6} color="$InstockIndigo" _hover={{ transform: 'scale(1.2)'}}/>
                 </Link>
             </Flex>
 
