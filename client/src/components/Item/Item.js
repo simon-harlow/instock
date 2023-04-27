@@ -156,7 +156,7 @@ function Item() {
                                                 bg="rgba(201, 69, 21, 0.07)"
                                                 borderRadius="20px"
                                                 fontSize="p3bodySmall"
-                                                mb={{sm: "4", md:"0"}}
+                                                mb={{sm: "4", md:"8"}}
                                             >
                                                 {inventory.status}
                                             </Center>
@@ -170,7 +170,7 @@ function Item() {
                                                 bg="rgba(21, 132, 99, 0.07)"
                                                 borderRadius="20px"
                                                 fontSize="p3bodySmall"
-                                                mb={{sm: "4", md:"0"}}
+                                                mb={{sm: "4", md:"8"}}
                                             >
                                                 {inventory.status}
                                             </Center>
