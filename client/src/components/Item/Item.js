@@ -54,7 +54,7 @@ function Item() {
                 flexDirection={'column'}
             >
                 <Flex 
-                    px={{sm:"6", md:"8", lg:"10"}}
+                    px={{sm:"6", md:"8", xl:"10"}}
                     justifyContent="space-between"
                     alignItems="center"
                     pt={{sm:"8", md: "8"}}
@@ -66,7 +66,7 @@ function Item() {
                     borderBottomColor="$Cloud"
                 > 
                     <Flex alignItems="center">
-                        <ArrowBack color="$InstockIndigo"  onClick={goBack} cursor="pointer"/>
+                        <ArrowBack color="$InstockIndigo" boxSize={6} onClick={goBack} cursor="pointer"/>
                         <Text 
                             fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                             lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
