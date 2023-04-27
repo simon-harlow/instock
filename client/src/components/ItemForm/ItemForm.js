@@ -4,12 +4,14 @@ import axios from "axios";
 import { API_ADDRESS } from "../axios";
 import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl} from '@chakra-ui/react';
 import { AddWhite, ArrowBack, Error } from '../../assets/modifiedIcons';
+import { useToast } from "@chakra-ui/react";
 
 function ItemForm() {
 
     const {inventoryId} = useParams();
     const navigate = useNavigate();
     const isEdit = !!inventoryId;
+    const toast = useToast();
 
     const [item_name, setItemName] = useState("");
     const [description, setDescription] = useState("");
@@ -158,6 +160,27 @@ function ItemForm() {
                     setQuantity(0);
                     setWarehouse("");
                     goBack();
+                    if (isEdit) {
+                        toast({
+                            title: 'Inventory Item Updated!',
+                            description: 'Inventory item has been successfully updated.',
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                            bg: "$Green",
+                            color: "$White"
+                        });
+                    } else {
+                        toast({
+                            title: 'Inventory Item Added!',
+                            description: 'Inventory item has been successfully added.',
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                            bg: "$Green",
+                            color: "$White"
+                        });
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
@@ -196,10 +219,11 @@ function ItemForm() {
                     fontWeight="bold" pl={{sm:"28px"}} pr={{sm:"6"}} pt={{sm:"8"}} pb={{sm:"6"}}
                     borderBottom= '1px'
                     borderColor="$Cloud"
-                    
+                    direction="row" alignItems={{ base: 'baseline' }}
+                    px={{ base: '1rem', md: '2rem' }}
                     >
-                    <ArrowBack paddingRight={{sm:"12px"}} color="$InstockIndigo" onClick={goBack} cursor="pointer"/>
-                    <Text fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
+                    <ArrowBack onClick={goBack} cursor="pointer" boxSize={6} color="$InstockIndigo"/>
+                    <Text pl="0.5rem" fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                     lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
                             fontWeight="600">{isEdit? "Edit Inventory Item": "Add New Inventory Item"}
                     </Text>
@@ -300,9 +324,9 @@ function ItemForm() {
                         <FormControl  isInvalid={formErrors && formErrors.includes("Status is required")}  errorBorderColor='$Red' name="status">
                             <FormLabel htmlFor='name'>Status</FormLabel>
                             <RadioGroup onChange={handleInventoryStatus} value={status}>
-                                <Stack direction='row'>
-                                    <Radio value='In Stock'>In stock</Radio>
-                                    <Radio value='Out of Stock'>Out of stock</Radio>
+                                <Stack direction='row' >
+                                    <Radio value='In Stock' width="50%">In stock</Radio>
+                                    <Radio value='Out of Stock' width="50%">Out of stock</Radio>
                                 </Stack>
                             </RadioGroup>
                             <FormErrorMessage>
@@ -335,52 +359,20 @@ function ItemForm() {
                         </FormControl>
                     </Flex>                   
                 </Flex>
-                <Stack spacing={2} direction='row' align='center' justifyContent={{sm: "space-around", md:"flex-end"}} py={{sm:"4"}} px={{sm:"6"}} bg="$LightGrey">
-                    <Button h={{sm:"6", md:"9", lg:"8"}}
-                    width= {{sm:"125px", md: "72px", lg:"72px" }}
-                    borderRadius="50"
-                    color="$Slate"
-                    bg="white"
-                    border= '1px solid #BDC5D5'
-                    fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                    fontWeight="400"
-                    fontFamily="Titillium Web"
-                    onClick={goBack}>
-                        Cancel
-                    </Button>
-                   
-                   {isEdit? 
-                        <Button 
-                            type="submit"
-                            h={{sm:"6", md:"9", lg:"8"}}
-                            width= {{sm:"125px", md: "98px", lg:"98px" }}
-                            borderRadius="50"
-                            bg="$InstockIndigo"
-                            color="white"
-                            fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                            lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                            fontWeight="400"
-                            fontFamily="Titillium Web"
-                        >
-                            Save
-                        </Button> :
-                        <Button 
-                            type="submit"
-                            h={{sm:"6", md:"9", lg:"8"}}
-                            width= {{sm:"125px", md: "98px", lg:"98px" }}
-                            borderRadius="50"
-                            bg="$InstockIndigo"
-                            color="white"
-                            fontSize={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                            lineHeight={{sm: "mp3bodySmall", md: "p3bodySmall"}}
-                            fontWeight="400"
-                            fontFamily="Titillium Web"
-                        >
-                            <AddWhite/> Add Item
+                <Flex mt={8} gap={4} px={{ base: '1rem', md: '2rem' }} width="100%" bg="$LightGrey" justifyContent="flex-end" p="1rem" alignItems={{ base: 'center' }} justify={{ base: 'space-between', md: 'flex-end' }}>
+                        <Button onClick={goBack} flex={{ base: '1', md: 'none' }} h={{ base: '36px', md: '38px' }} borderRadius="20px" variant="outline" bg="$White" _hover={{ color: '$InstockIndigo', borderColor: '$InstockIndigo' }}>
+                            Cancel
                         </Button>
-                    }
-                </Stack>
+                        {isEdit ? (
+                        <Button type="submit" flex={{ base: '1', md: 'none' }} h={{ base: '36px', md: '38px' }} borderRadius="20px" variant="outline" bg="$InstockIndigo" color="$White" _hover={{ bg: '$InstockBlack' }}>
+                            Save
+                        </Button>
+                        ) : (
+                        <Button leftIcon={<AddWhite />} type="submit" flex={{ base: '1', md: 'none' }} h={{ base: '36px', md: '38px' }} borderRadius="20px" variant="outline" bg="$InstockIndigo" color="$White" _hover={{ bg: '$InstockBlack' }}>
+                            Add Item
+                        </Button>
+                        )}
+                    </Flex>
                 </form>
             </Flex>
         </Flex>

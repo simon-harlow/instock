@@ -11,7 +11,14 @@ function InventoryHeader(props) {
     };
 
     return (
-        <Flex w="100%" px={{ base: '6', md: '8' }} py={8} flexDirection={{ base: 'column', md: 'row' }} gap={3}>
+        <Flex
+            w="100%"
+            px={{ base: '6', md: '8' }}
+            py={8}
+            flexDirection={{ base: 'column', md: 'row' }}
+            gap={3}
+            h={{ md: '93px' }}
+        >
             <Heading
                 flex={1}
                 fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
