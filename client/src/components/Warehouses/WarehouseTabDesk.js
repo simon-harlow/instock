@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useNavigate } from "react-router-dom";
 
 import { Tr, Td, Button, Flex } from "@chakra-ui/react";
@@ -18,10 +18,21 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
     const handleClickWarehouseName = () => navigate(`/warehouses/${warehouse.id}/inventories`);
     const handleClickEditWarehouse = () => navigate(`/warehouses/edit/${warehouse.id}`)
 
+    const [isHovering, setHovering] = useState('');
+    
+    const handleMouseOver = () =>{
+        setHovering(true);
+    }
+
+    const handleMouseExit = () =>{
+        setHovering(false);
+    }
+
+
     return (
         <Tr key={id} bg="$White" _hover={{ bg: "#2E66E512"}}>
             <Td px="1rem">
-            <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
+            <Button onMouseEnter={handleMouseOver} onMouseLeave={ handleMouseExit} onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" style={{ transform: isHovering? 'translate(4px)': ''}} />} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
                 {warehouse.warehouse_name}
             </Button>   
             </Td>
