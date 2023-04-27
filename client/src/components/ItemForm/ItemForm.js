@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useNavigate, useParams, useNavigation } from "react-router-dom";
 import axios from "axios";
-import { API_ADDRESS, getWarehouses } from "../axios";
+import { API_ADDRESS} from "../axios";
 import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl, filter} from '@chakra-ui/react';
 import { AddWhite, ArrowBack, Error } from '../../assets/modifiedIcons';
 import { useToast } from "@chakra-ui/react";
@@ -154,7 +154,7 @@ function ItemForm() {
                 description,
                 category,
                 status,
-                quantity: parsed
+                quantity: status === 'Out of Stock'? 0 : parsed,
             };
             const editInventory = {
                     warehouse_id,
