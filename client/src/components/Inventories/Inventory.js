@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Flex,
     Box,
@@ -17,7 +17,18 @@ import {
 import { Delete, Edit, ChevronRight } from '../../assets/modifiedIcons';
 
 function Inventory(props) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure(); 
+
+    const [isHovering, setHovering] = useState('');
+    
+    const handleMouseOver = () =>{
+        setHovering(true);
+    }
+
+    const handleMouseExit = () =>{
+        setHovering(false);
+    }
+
 
     return (
         <Flex
@@ -32,6 +43,8 @@ function Inventory(props) {
             borderTopColor="$Cloud"
             flexWrap="wrap"
             rowGap={{ base: '5', md: '0' }}
+            onMouseEnter={handleMouseOver}
+            onMouseLeave={handleMouseExit}
         >
             <Flex flexDirection="column" gap={1} order={1} w={{ base: '50%', md: '150px' }}>
                 <Box textTransform="uppercase" display={{ base: 'block', md: 'none' }}>
@@ -41,7 +54,7 @@ function Inventory(props) {
                     <Button
                         justifyContent="start"
                         color={'$InstockIndigo'}
-                        rightIcon={<ChevronRight color="$InstockIndigo" />}
+                        rightIcon={<ChevronRight color="$InstockIndigo" style={{ transform: isHovering? 'translate(4px)': ''}}/>}
                         bg={''}
                         h={''}
                         p={0}
