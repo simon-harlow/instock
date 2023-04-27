@@ -4,12 +4,14 @@ import axios from "axios";
 import { API_URL } from "../Utils/const";
 import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl} from '@chakra-ui/react';
 import { AddWhite, ArrowBack, Error } from '../../assets/modifiedIcons';
+import { useToast } from "@chakra-ui/react";
 
 function ItemForm() {
 
     const {inventoryId} = useParams();
     const navigate = useNavigate();
     const isEdit = !!inventoryId;
+    const toast = useToast();
 
     const [item_name, setItemName] = useState("");
     const [description, setDescription] = useState("");
@@ -158,6 +160,27 @@ function ItemForm() {
                     setQuantity(0);
                     setWarehouse("");
                     goBack();
+                    if (isEdit) {
+                        toast({
+                            title: 'Inventory Item Updated!',
+                            description: 'Inventory item has been successfully updated.',
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                            bg: "$Green",
+                            color: "$White"
+                        });
+                    } else {
+                        toast({
+                            title: 'Inventory Item Added!',
+                            description: 'Inventory item has been successfully added.',
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                            bg: "$Green",
+                            color: "$White"
+                        });
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
