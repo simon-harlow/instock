@@ -159,7 +159,7 @@ function Inventories() {
                         <></>
                     )}
 
-                    <Button w="75px" justifyContent="end" variant="tab">
+                    <Button w="75px" justifyContent="end" variant="tab" cursor='auto'>
                         Actions
                     </Button>
                 </Flex>
