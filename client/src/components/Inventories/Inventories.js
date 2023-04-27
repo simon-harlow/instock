@@ -167,7 +167,7 @@ function Inventories() {
                     flexDirection="column"
                     borderTop="1px"
                     borderTopColor={{ base: '$Cloud', sm: '$Cloud', md: '$White' }}
-                    maxH={{ base: '764px', md: '878px' }}
+                    maxH={{ base: 'auto', md: '650px' }}
                     overflowY="auto"
                     sx={{
                         '::-webkit-scrollbar': {

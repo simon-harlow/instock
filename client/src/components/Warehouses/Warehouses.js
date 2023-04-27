@@ -154,7 +154,7 @@ function Warehouses() {
                 <Table variant="simple">
                     <Thead position="sticky" top="0" bg="$LightGrey" zIndex="1">
                     <Tr>
-                        <Th color="$Slate" px="1rem">
+                        <Th color="$Slate" px="2rem">
                         <Button onClick={() => handleSortClick("warehouse_name")} rightIcon={<Sort />} variant="tab">WAREHOUSE</Button>
                         </Th>
                         <Th color="$Slate" px="1rem">
