@@ -234,6 +234,7 @@ function WarehouseForm() {
             right={{ base: '4', md: '8' }}
             zIndex="1"
             borderRadius="5px"
+			maxH={{ base: 'auto', md: '650px' }}
 		>
 			<Flex
 				direction="row"

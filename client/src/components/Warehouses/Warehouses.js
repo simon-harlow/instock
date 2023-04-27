@@ -105,7 +105,7 @@ function Warehouses() {
                 direction={{ base: 'column', md: 'row' }}
                 alignItems={{ base: 'flex-start' }}
                 justify={{ base: 'flex-start', md: 'space-between' }}
-                px="2rem"
+                px={{ base: '1.5rem', md: '2rem' }}
                 pt="2rem"
                 pb="1rem"
             >
@@ -186,7 +186,8 @@ function Warehouses() {
                 </Table>
             </Box>
             ) : (
-                <>
+                <Box mb="2rem">
+                    {/* maxH={{ base: '460px'}} overflowY="scroll" sx={{'::-webkit-scrollbar': {display: 'none'}}} */}
                     {warehouseData.map(warehouse => (
                         <WarehouseMobile
                             key={warehouse.id}
@@ -194,7 +195,7 @@ function Warehouses() {
                             deleteWarehouse={deleteWarehouse}
                         />
                     ))}
-                </>
+                </Box>
             )}
         </Box>
     );

@@ -9,7 +9,7 @@ function Footer() {
             width= "100%"
             textAlign="center"
             justifyContent="center"
-            p="2rem"
+            p={{base: "1rem", md: "2rem"}}
             >
                 <Text
                     fontSize={{sm:"mp3bodySmall", md:"p3bodySmall", lg:"p3bodySmall"}}
