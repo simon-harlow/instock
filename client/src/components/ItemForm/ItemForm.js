@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useNavigate, useParams, useNavigation } from "react-router-dom";
 import axios from "axios";
-import { API_ADDRESS } from "../axios";
-import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl} from '@chakra-ui/react';
+import { API_ADDRESS} from "../axios";
+import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl, filter} from '@chakra-ui/react';
 import { AddWhite, ArrowBack, Error } from '../../assets/modifiedIcons';
 import { useToast } from "@chakra-ui/react";
 
@@ -20,39 +20,52 @@ function ItemForm() {
     const [quantity , setQuantity] = useState(0);
     const [warehouse_id , setWarehouse] = useState("");
 
+    const [warehouseList, setWarehouseList] = useState([]);
+
     const [formErrors, setFormErrors] = useState();
 
     const [tablet] = useMediaQuery('(min-width: 768px)');
 
-    const warehouseNameToId ={
-        Seattle: "ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7",
-        Boston: "150a36cf-f38e-4f59-8e31-39974207372d",
-        Miami: "bb1491eb-30e6-4728-a5fa-72f89feaf622",
-        SantaMonica: "89898957-04ba-4bd0-9f5c-a7aea7447963",
-        SF: "bfc9bea7-66f1-44e9-879b-4d363a888eb4",
-        Jersey: "90ac3319-70d1-4a51-b91d-ba6c2464408c",                   
-        Washington: "5bf7bd6c-2b16-4129-bddc-9d37ff8539e9",                   
-        Manhatta: "2922c286-16cd-4d43-ab98-c79f698aeab0"                  
-                            
+    const fetchedWarehouseList = () =>{
+        axios.get(`${API_ADDRESS}/api/warehouses`)
+            .then(res =>{
+                setWarehouseList(res.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching warehouse data:", error);
+            });
     }
+
+    const findWarehouseIdByName = (name) => {
+        const warehouse = warehouseList.find((warehouse) => warehouse.warehouse_name === name);
+        if (warehouse) {
+            return warehouse.id;
+        } else {
+            return null;
+        }
+    }
+
+    useEffect(() => {
+        fetchedWarehouseList();
+    }, []);
 
     useEffect(() => {
         if(isEdit){
             axios.get(`${API_ADDRESS}/api/inventories/${inventoryId}`)
             .then(response => {
-                const fetchedWarehouseID = warehouseNameToId[response.data.warehouse_name.trim()];
+                const warehouseId = findWarehouseIdByName(response.data.warehouse_name);
+                setWarehouse(warehouseId);
                 setItemName(response.data.item_name);
                 setDescription(response.data.description);
                 setCategory(response.data.category);
                 setStatus(response.data.status);
-                setWarehouse(fetchedWarehouseID);
                 setQuantity(response.data.quantity);
             })
             .catch((error) => {
-                console.error("Error fetching warehouse data:", error);
+                console.error("Error fetching inventory data:", error);
             });
         }
-    }, [isEdit, inventoryId]);
+    }, [isEdit, inventoryId, warehouseList]);
     
 
 
@@ -77,7 +90,14 @@ function ItemForm() {
     };
 
     const handleInventoryWarehouse = (event) => {
-        setWarehouse(event.target.value);
+        const value = event.target.value;
+        const selectedWarehouse = warehouseList.find((warehouse) => warehouse.id === value);
+        
+        if (value !== "") {
+            setWarehouse(value);
+        } else {
+            setWarehouse(null);
+        }
     };
 
     const goBack = () =>{
@@ -121,7 +141,7 @@ function ItemForm() {
     const handleFormSubmit = (event) => {
         event.preventDefault();
         const errors = isFormValid();
-        if(status == "Out of Stock"){
+        if(status === 'Out of Stock'){
             setQuantity(0);
         }
 
@@ -129,12 +149,12 @@ function ItemForm() {
 
         if (errors.length === 0) {
             const newInventory = { 
-                warehouse_id: warehouse_id,
+                warehouse_id,
                 item_name,
                 description,
                 category,
                 status,
-                quantity: parsed
+                quantity: status === 'Out of Stock'? 0 : parsed,
             };
             const editInventory = {
                     warehouse_id,
@@ -142,7 +162,7 @@ function ItemForm() {
                     description,
                     category,
                     status,
-                    quantity: parsed
+                    quantity: status === 'Out of Stock'? 0 : parsed,
             };
 
             const method = isEdit ? 'put' : 'post';
@@ -343,15 +363,11 @@ function ItemForm() {
                         }
                         <FormControl  isInvalid={formErrors && formErrors.includes("Warehouse name is required")}  errorBorderColor='$Red' name="warehouse_id">
                         <FormLabel htmlFor='name' pt={{sm:"4"}}>Warehouse</FormLabel>
-                        <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_id} placeholder='Please select' >
-                            <option value='150a36cf-f38e-4f59-8e31-39974207372d'>Boston</option>
-                            <option value='ade0a47b-cee6-4693-b4cd-a7e6cb25f4b7'>Seattle</option>
-                            <option value='bb1491eb-30e6-4728-a5fa-72f89feaf622'>Miami</option>
-                            <option value='89898957-04ba-4bd0-9f5c-a7aea7447963'>Santa Monica</option>
-                            <option value='bfc9bea7-66f1-44e9-879b-4d363a888eb4'>SF</option>
-                            <option value='90ac3319-70d1-4a51-b91d-ba6c2464408c'>Jersey</option>
-                            <option value='5bf7bd6c-2b16-4129-bddc-9d37ff8539e9'>Washington</option>
-                            <option value='2922c286-16cd-4d43-ab98-c79f698aeab0'>Manhattan</option>
+                        <Select size="sm" borderRadius="20" onChange={handleInventoryWarehouse} value={warehouse_id ? warehouse_id : ""} placeholder='Please select' >
+                        {
+                            warehouseList.map(function(ware, i){
+                                return (<option value={ware.id} key={ware.id}>{ware.warehouse_name}</option>);
+                            })}
                         </Select>
                         <FormErrorMessage>
                         <Error mr="1"/>{formErrors && formErrors.includes("Warehouse name is required") && "This field is required"}
