@@ -19,9 +19,9 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
     const handleClickEditWarehouse = () => navigate(`/warehouses/edit/${warehouse.id}`)
 
     return (
-        <Tr key={id} bg="$White" _hover={{ bg: "$LightGrey"}}>
+        <Tr key={id} bg="$White" _hover={{ bg: "#2E66E512"}}>
             <Td px="1rem">
-            <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
+            <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="p2bodyMedium" lineHeight="p2bodyMedium">
                 {warehouse.warehouse_name}
             </Button>   
             </Td>
@@ -36,8 +36,8 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
             </Td>
             <Td px="1rem">
                 <Flex gap={2}>
-                    <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen()}}/>
-                    <Modal onClose={onClose} isOpen={isOpen}>
+                    <Delete cursor="pointer" boxSize={6} color="$Red" onClick={() => {onOpen()}} _hover={{ transform: 'scale(1.2)'}}/>
+                    <Modal onClose={onClose} isOpen={isOpen} size="xl">
                         <ModalOverlay bg="rgba(35, 41, 64, 0.5)" />
                         <ModalContent>
                             <ModalHeader>Delete {warehouse.warehouse_name} warehouse?</ModalHeader>
@@ -61,7 +61,7 @@ function WarehouseTabDesk({ id, warehouseData, deleteWarehouse }) {
                             </ModalFooter>
                         </ModalContent>
                     </Modal>
-                    <Edit onClick={handleClickEditWarehouse} cursor="pointer" boxSize={6} color="$InstockIndigo" />
+                    <Edit onClick={handleClickEditWarehouse} cursor="pointer" boxSize={6} color="$InstockIndigo" _hover={{ transform: 'scale(1.2)'}}/>
                 </Flex>
             </Td>
         </Tr>

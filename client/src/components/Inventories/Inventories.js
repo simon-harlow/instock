@@ -6,7 +6,7 @@ import Inventory from './Inventory';
 import InventoryHeader from './InventoryHeader';
 import WarehouseDetail from './WarehouseDetail';
 import { Sort } from '../../assets/modifiedIcons';
-import { API_URL } from '../Utils/const';
+import { API_ADDRESS } from '../axios';
 import axios from 'axios';
 
 function Inventories() {
@@ -71,9 +71,9 @@ function Inventories() {
 
     const getSortedData = (sortBy, orderBy) => {
         axios
-            .get(`${API_URL}/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
-            .then(response => {
-                setInventories(response.data);
+            .get(`${API_ADDRESS}/api/inventories?sort_by=${sortBy}&order_by=${orderBy}`)
+            .then((response) => {
+                setInventories(response.data)
             })
             .catch(error => {
                 console.error(error);
