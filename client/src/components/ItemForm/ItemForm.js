@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useNavigate, useParams, useNavigation } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from "../Utils/const";
+import { API_ADDRESS } from "../axios";
 import { Flex, Text, Input, Button, FormLabel, Select, FormErrorMessage, Stack, Radio, RadioGroup, Textarea, useMediaQuery, FormControl} from '@chakra-ui/react';
 import { AddWhite, ArrowBack, Error } from '../../assets/modifiedIcons';
 
@@ -36,7 +36,7 @@ function ItemForm() {
 
     useEffect(() => {
         if(isEdit){
-            axios.get(API_URL+`/inventories/${inventoryId}`)
+            axios.get(`${API_ADDRESS}/api/inventories/${inventoryId}`)
             .then(response => {
                 const fetchedWarehouseID = warehouseNameToId[response.data.warehouse_name.trim()];
                 setItemName(response.data.item_name);
@@ -144,7 +144,7 @@ function ItemForm() {
             };
 
             const method = isEdit ? 'put' : 'post';
-            const url = isEdit ? `${API_URL}/inventories/${inventoryId}` : `${API_URL}/inventories`;
+            const url = isEdit ? `${API_ADDRESS}/api/inventories/${inventoryId}` : `${API_ADDRESS}/api/inventories`;
             const post = isEdit ? editInventory: newInventory;
             
 
