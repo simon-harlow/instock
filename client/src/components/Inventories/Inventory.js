@@ -13,11 +13,14 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
+    useMediaQuery
 } from '@chakra-ui/react';
 import { Delete, Edit, ChevronRight } from '../../assets/modifiedIcons';
 
 function Inventory(props) {
     const { isOpen, onOpen, onClose } = useDisclosure(); 
+
+    const [tablet] = useMediaQuery('(min-width: 768px)');
 
     const [isHovering, setHovering] = useState('');
     
@@ -43,14 +46,13 @@ function Inventory(props) {
             borderTopColor="$Cloud"
             flexWrap="wrap"
             rowGap={{ base: '5', md: '0' }}
-            onMouseEnter={handleMouseOver}
-            onMouseLeave={handleMouseExit}
         >
             <Flex flexDirection="column" gap={1} order={1} w={{ base: '50%', md: '150px' }}>
                 <Box textTransform="uppercase" display={{ base: 'block', md: 'none' }}>
                     Inventory Item
                 </Box>
-                <Link href={`/inventories/${props.info.id}`}>
+                { tablet? 
+                    <Link href={`/inventories/${props.info.id}`} onMouseEnter={handleMouseOver} onMouseLeave={ handleMouseExit}>
                     <Button
                         justifyContent="start"
                         color={'$InstockIndigo'}
@@ -63,7 +65,22 @@ function Inventory(props) {
                     >
                         {props.info.item_name}
                     </Button>
-                </Link>
+                    </Link>:
+                    <Link href={`/inventories/${props.info.id}`} >
+                        <Button
+                            justifyContent="start"
+                            color={'$InstockIndigo'}
+                            rightIcon={<ChevronRight color="$InstockIndigo" style={{ transform: isHovering? 'translate(4px)': ''}}/>}
+                            bg={''}
+                            h={''}
+                            p={0}
+                            _hover={{ bg: '', textDecoration: 'underline' }}
+                            _active={{ bg: '' }}
+                        >
+                            {props.info.item_name}
+                        </Button>
+                    </Link>
+                }
             </Flex>
 
             <Flex flexDirection="column" gap={1} order={{ base: '3', md: '2' }} w={{ base: '90px', md: '90px' }}>
