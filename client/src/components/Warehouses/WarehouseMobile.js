@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useNavigate } from "react-router-dom";
 
 import { Box, Flex, Text, Heading, Button } from "@chakra-ui/react";
@@ -18,15 +18,27 @@ function WarehouseMobile({ id, warehouseData, deleteWarehouse }) {
     const handleClickWarehouseName = () => navigate(`/warehouses/${warehouse.id}/inventories`);
     const handleClickEditWarehouse = () => navigate(`/warehouses/edit/${warehouse.id}`)
 
+    const [isHovering, setHovering] = useState('');
+    
+    const handleMouseOver = () =>{
+        setHovering(true);
+    }
+
+    const handleMouseExit = () =>{
+        setHovering(false);
+    }
+
+
     return (
-        <Flex key={id} direction="column" alignItems="flex-start" borderTop="1px solid" pt="1rem" borderTopColor="$Cloud">
+        <Flex key={id} direction="column" alignItems="flex-start" borderTop="1px solid" pt="1rem" borderTopColor="$Cloud" onMouseEnter={handleMouseOver}
+        onMouseLeave={handleMouseExit}>
             <Flex justifyContent="space-between" w="100%" direction="row" px="2rem">
                 <Flex direction="column" w="50%" mr="1rem">
                     <Box mb={4}>
                         <Heading color="$Slate" fontSize="mh4TableHeader" lineHeight="mh4TableHeader" as="h4" size="sm" mb={2} >
                             WAREHOUSE
                         </Heading>
-                        <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" />} p={0} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="mp2bodyMedium" lineHeight="mp2bodyMedium">
+                        <Button onClick={handleClickWarehouseName} color={'$InstockIndigo'} bg={''} h={''} rightIcon={<ChevronRight color="$InstockIndigo" style={{ transform: isHovering? 'translate(4px)': ''}}/>} p={0} _hover={{ bg: '', textDecoration: 'underline' }} _active={{ bg: '' }} fontSize="mp2bodyMedium" lineHeight="mp2bodyMedium">
                             {warehouse.warehouse_name}
                         </Button>
                     </Box>
