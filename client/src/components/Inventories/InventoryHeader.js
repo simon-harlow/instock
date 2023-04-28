@@ -14,7 +14,7 @@ function InventoryHeader(props) {
         <Flex
             w="100%"
             px={{ base: '6', md: '8', xl:'10' }}
-            pt={8}
+            py={8}
             flexDirection={{ base: 'column', md: 'row' }}
             gap={3}
             h={{ md: '93px' }}
