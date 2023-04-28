@@ -95,7 +95,7 @@ function Warehouses() {
             boxShadow="base"
             bg="$White"
             position="absolute"
-            top={{ base: '136px', md: '80px' }}
+            top={{ base: '136px', md: '92px' }}
             left={{ base: '4', md: '8' }}
             right={{ base: '4', md: '8' }}
             zIndex="1"
@@ -108,6 +108,7 @@ function Warehouses() {
                 px={{ base: '1.5rem', md: '2rem' }}
                 pt="2rem"
                 pb="1rem"
+                h={{ md: '93px' }}
             >
                 <Heading
                     as="h1"

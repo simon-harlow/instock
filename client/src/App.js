@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Warehouses from './components/Warehouses/Warehouses';
-import WarehouseDetail from './components/WarehouseDetails/WarehouseDetails';
 import WarehousesForm from './components/WarehouseForm/WarehouseForm';
 import Inventories from './components/Inventories/Inventories';
 import Item from './components/Item/Item';

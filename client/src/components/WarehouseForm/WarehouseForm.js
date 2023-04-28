@@ -229,7 +229,7 @@ function WarehouseForm() {
             boxShadow="base"
             bg="$White"
             position="absolute"
-            top={{ base: '136px', md: '80px' }}
+            top={{ base: '136px', md: '92px' }}
             left={{ base: '4', md: '8' }}
             right={{ base: '4', md: '8' }}
             zIndex="1"
@@ -244,6 +244,7 @@ function WarehouseForm() {
 				py="1rem"
 				borderBottom="1px solid"
 				borderBottomColor="$Cloud"
+				h={{ md: '93px' }}
 			>
 				<ArrowBack
 					onClick={backPage}
