@@ -61,7 +61,7 @@ const searchInventory = async keyWord => {
 
 const deleteWarehouseData = (id) => {
     return axios
-        .delete(`${API_ADDRESS}api/warehouses/${id}`)
+        .delete(`${API_ADDRESS}/api/warehouses/${id}`)
         .then((response) => response.data)
         .catch((error) => console.log(error));
 };
