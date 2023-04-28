@@ -218,7 +218,7 @@ function ItemForm() {
             boxShadow="base"
             bg="$White"
             position="absolute"
-            top={{ base: '136px', md: '80px' }}
+            top={{ base: '136px', md: '92px' }}
             left={{ base: '4', md: '8' }}
             right={{ base: '4', md: '8' }}
             zIndex="1"
@@ -244,6 +244,7 @@ function ItemForm() {
                     px={{ base: '1rem', md: '2rem' }}
                     pt={{sm:"8"}}
                     pb={{ base: '0', md: '2rem' }}
+                    h={{ md: '93px' }}
                     >
                     <ArrowBack onClick={goBack} cursor="pointer" boxSize={6} color="$InstockIndigo"/>
                     <Text pl="0.5rem" fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
