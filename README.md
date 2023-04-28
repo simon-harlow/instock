@@ -43,11 +43,16 @@ This was a group project and the first project where we were using a MySQL datab
 
 The site is for a company to manage the inventory of stock across multiple warehouses.
 
+## 📜 API Documentation
+
+[All of the API's can be found here](https://documenter.getpostman.com/view/24908455/2s93Y5PKzo)
+
 ## 🧰 New Tech Stack
 
 * `Knex.js`
 * `MySQL`
 * `Chakra UI`
+
 
 ## 👷 Contributors
 * [Simon](https://github.com/simon-harlow)

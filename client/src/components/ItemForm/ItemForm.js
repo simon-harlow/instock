@@ -218,11 +218,12 @@ function ItemForm() {
             boxShadow="base"
             bg="$White"
             position="absolute"
-            top={{ base: '136px', md: '92px' }}
+            top={{ base: '136px', md: '80px' }}
             left={{ base: '4', md: '8' }}
             right={{ base: '4', md: '8' }}
             zIndex="1"
             borderRadius="5px"
+            maxH={{ base: 'auto', md: '650px' }}
         >
             <Flex
                 w={{ base: '100%', xl: '1020px' }}
@@ -236,11 +237,13 @@ function ItemForm() {
                 <Flex 
                     fontSize={{ base: "mh1PageHeader", md: 'h1PageHeader' }}
                     lineHeight={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}
-                    fontWeight="bold" pl={{sm:"28px"}} pr={{sm:"6"}} pt={{sm:"8"}} pb={{sm:"6"}}
+                    fontWeight="bold"
                     borderBottom= '1px'
                     borderColor="$Cloud"
                     direction="row" alignItems={{ base: 'baseline' }}
                     px={{ base: '1rem', md: '2rem' }}
+                    pt={{sm:"8"}}
+                    pb={{ base: '0', md: '2rem' }}
                     >
                     <ArrowBack onClick={goBack} cursor="pointer" boxSize={6} color="$InstockIndigo"/>
                     <Text pl="0.5rem" fontSize={{ base: 'mh1PageHeader', md: 'h1PageHeader' }}

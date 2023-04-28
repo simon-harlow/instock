@@ -10,7 +10,7 @@ import { Search, AddWhite, Sort } from '../../assets/modifiedIcons';
 
 import { useMediaQuery } from '@chakra-ui/media-query';
 import { Box, Flex, Heading, Input, InputGroup, InputRightElement, Button } from '@chakra-ui/react';
-import { Table, Thead, Tbody, Tr, Th } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 
 import { searchWarehouse } from '../axios';
 
@@ -105,7 +105,7 @@ function Warehouses() {
                 direction={{ base: 'column', md: 'row' }}
                 alignItems={{ base: 'flex-start' }}
                 justify={{ base: 'flex-start', md: 'space-between' }}
-                px="2rem"
+                px={{ base: '1.5rem', md: '2rem' }}
                 pt="2rem"
                 pb="1rem"
             >
@@ -150,35 +150,44 @@ function Warehouses() {
                 </Button>
             </Flex>
             {isTablet ? (
-            <Table variant="simple">
-                <Thead>
-                <Tr bg="$LightGrey">
-                    <Th color="$Slate" pl="2rem">
+            <Box maxH={{ base: 'auto', md: '650px' }} overflowY="scroll" sx={{'::-webkit-scrollbar': {display: 'none'}}}>
+                <Table variant="simple">
+                    <Thead position="sticky" top="0" bg="$LightGrey" zIndex="1">
+                    <Tr>
+                        <Th color="$Slate" px="2rem">
                         <Button onClick={() => handleSortClick("warehouse_name")} rightIcon={<Sort />} variant="tab">WAREHOUSE</Button>
-                    </Th>
-                    <Th color="$Slate" px="1rem">
+                        </Th>
+                        <Th color="$Slate" px="1rem">
                         <Button onClick={() => handleSortClick("address,city,country")}rightIcon={<Sort />} variant="tab">ADDRESS</Button>
-                    </Th>
-                    <Th color="$Slate" px="1rem">
+                        </Th>
+                        <Th color="$Slate" px="1rem">
                         <Button onClick={() => handleSortClick("contact_name")} rightIcon={<Sort />} variant="tab">CONTACT NAME</Button>
-                    </Th>
-                    <Th color="$Slate" px="1rem">
+                        </Th>
+                        <Th color="$Slate" px="1rem">
                         <Button onClick={() => handleSortClick("contact_phone,contact_email")} rightIcon={<Sort />} variant="tab">CONTACT INFORMATION</Button>
-                    </Th>
-                    <Th color="$Slate" pr="1rem">ACTIONS</Th>
-                </Tr>
-                </Thead>
-                <Tbody >
-                {warehouseData.map(warehouse => (
-                    <WarehouseTabDesk
-                    key={warehouse.id}
-                    warehouseData={warehouse}
-                    deleteWarehouse={deleteWarehouse} />
-                ))}
-                </Tbody>
-            </Table>
+                        </Th>
+                        <Th color="$Slate" px="1rem">ACTIONS</Th>
+                    </Tr>
+                    </Thead>
+                    <Tbody>
+                    {warehouseData.length > 0 ? (
+                        warehouseData.map(warehouse => (
+                        <WarehouseTabDesk
+                            key={warehouse.id}
+                            warehouseData={warehouse}
+                            deleteWarehouse={deleteWarehouse} />
+                        ))
+                    ) : (
+                        <Tr>
+                        <Td colSpan={5}>No data available</Td>
+                        </Tr>
+                    )}
+                    </Tbody>
+                </Table>
+            </Box>
             ) : (
-                <>
+                <Box mb="2rem">
+                    {/* maxH={{ base: '460px'}} overflowY="scroll" sx={{'::-webkit-scrollbar': {display: 'none'}}} */}
                     {warehouseData.map(warehouse => (
                         <WarehouseMobile
                             key={warehouse.id}
@@ -186,7 +195,7 @@ function Warehouses() {
                             deleteWarehouse={deleteWarehouse}
                         />
                     ))}
-                </>
+                </Box>
             )}
         </Box>
     );
