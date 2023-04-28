@@ -5,7 +5,7 @@
 Steps to setup local environment for the project
 
 ### .env file
-Copy this file to .env and replace the values with your own configuration values.
+Make an .env file in your `/server` folder and replace the values with your own configuration values.
 
 ```
 #The port that the server will listen on.
